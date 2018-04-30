@@ -57,8 +57,6 @@
   <ItemGroup>
     <Compile Include="BaseMono.cs" />
     <Compile Include="DragManager.cs" />
-    <Content Include="HSceneMono.cs" />
-    <Content Include="NeoMono.cs" />
     <Compile Include="KKMono.cs" />
     <Compile Include="TogglePOVInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

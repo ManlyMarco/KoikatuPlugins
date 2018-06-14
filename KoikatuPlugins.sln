@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TogglePOVKK", "TogglePOVKK\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTreeDebugKK", "ObjectTreeDebugKK\ObjectTreeDebugKK.csproj", "{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterSceneLoader", "BetterSceneLoader\BetterSceneLoader.csproj", "{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -47,7 +47,7 @@ namespace ObjectTreeDebugKK
             }
             catch(Exception ex)
             {
-                BepInLogger.Log(ex.ToString());
+                BepInEx.Logger.Log(BepInEx.Logging.LogLevel.Error, ex);
             }
 
             Application.logMessageReceived += this.HandleLog;

@@ -6,13 +6,14 @@ using System.Reflection;
 using UnityEngine;
 using System.Xml.Linq;
 using dnlib.DotNet;
+using UnityEngine.SceneManagement;
 
 namespace AutoModReloadKK
 {
-    [BepInPlugin("keelhauled.autoreloadkk", "AutoModReloadKK", "1.0.0")]
+    [BepInPlugin("com.keelhauled.autoreloadkk", "AutoModReloadKK", "1.0.0")]
     public class AutoReloadPlugin : BaseUnityPlugin
     {
-        static string XML_PATH = "/BepInEx/AutoModReload.xml";
+        static string XML_PATH = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/AutoModReload.xml";
         Dictionary<string, AssemblyInfo> classes = new Dictionary<string, AssemblyInfo>();
 
         void Awake()
@@ -24,8 +25,9 @@ namespace AutoModReloadKK
         {
             if(Input.GetKeyDown(KeyCode.RightAlt))
             {
-                var xml = XElement.Load(Environment.CurrentDirectory + XML_PATH);
+                Console.WriteLine("Current scene is {0}", SceneManager.GetActiveScene().name);
 
+                var xml = XElement.Load(XML_PATH);
                 foreach(var item in xml.Element("mods").Elements())
                 {
                     var info = new AssemblyInfo(item);

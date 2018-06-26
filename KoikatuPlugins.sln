@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{14B2DA69-1DD3-482D-8D95-1722DBCE46F3}"
 EndProject
@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TogglePOVKK", "TogglePOVKK\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTreeDebugKK", "ObjectTreeDebugKK\ObjectTreeDebugKK.csproj", "{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterSceneLoader", "BetterSceneLoader\BetterSceneLoader.csproj", "{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardOrganizer", "CardOrganizer\CardOrganizer.csproj", "{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixCompilation", "FixCompilation\FixCompilation.csproj", "{3FE9332D-9875-4556-A7CD-0741811BA548}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,12 +41,19 @@ Global
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9D77B88-9AF7-4E15-944B-C9CA1E33B333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FE9332D-9875-4556-A7CD-0741811BA548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FE9332D-9875-4556-A7CD-0741811BA548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FE9332D-9875-4556-A7CD-0741811BA548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FE9332D-9875-4556-A7CD-0741811BA548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20BD17DF-F863-4CE8-A095-B79F271FFA15}
 	EndGlobalSection
 EndGlobal

@@ -25,8 +25,6 @@ namespace AutoModReloadKK
         {
             if(Input.GetKeyDown(KeyCode.RightAlt))
             {
-                Console.WriteLine("Current scene is {0}", SceneManager.GetActiveScene().name);
-
                 var xml = XElement.Load(XML_PATH);
                 foreach(var item in xml.Element("mods").Elements())
                 {
@@ -50,6 +48,7 @@ namespace AutoModReloadKK
                 if(targetFolder != null)
                 {
                     Console.WriteLine(new string('=', 40));
+                    Console.WriteLine("Current scene is {0}", SceneManager.GetActiveScene().name);
                     foreach(var path in Directory.GetFiles(targetFolder)) InvokeBootstrapWrap(path);
                     Console.WriteLine(new string('=', 40));
                 }

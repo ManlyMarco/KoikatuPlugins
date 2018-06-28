@@ -70,7 +70,7 @@ namespace CardOrganizer
         void Awake()
         {
             UIUtility.Init();
-            MakeBetterSceneLoader();
+            CreateUI();
             LoadSettings();
             StartCoroutine(StartingScene());
         }
@@ -133,11 +133,11 @@ namespace CardOrganizer
             }
         }
 
-        void MakeBetterSceneLoader()
+        void CreateUI()
         {
             UISystem = UIUtility.CreateNewUISystem("CardOrganizerCanvas");
             UISystem.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1920f / UIScale, 1080f / UIScale);
-            //UISystem.gameObject.SetActive(false);
+            UISystem.gameObject.SetActive(false);
             UISystem.gameObject.transform.SetParent(transform);
 
             mainPanel = UIUtility.CreatePanel("Panel", UISystem.transform);
@@ -534,25 +534,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() =>
-                    {
-                        int type = (int)LoaderType.Scene;
-
-                        if(UISystem.gameObject.activeSelf && cardType.value != type)
-                        {
-                            cardType.value = type;
-                            ChangeListType(type);
-                        }
-                        else if(UISystem.gameObject.activeSelf)
-                        {
-                            UISystem.gameObject.SetActive(false);
-                        }
-                        else
-                        {
-                            UISystem.gameObject.SetActive(true);
-                            ChangeListType(type);
-                        }
-                    });
+                    button.onClick.AddListener(() => ChangeUI(LoaderType.Scene));
                 }
             }
 
@@ -575,25 +557,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() =>
-                    {
-                        int type = (int)LoaderType.Character;
-
-                        if(UISystem.gameObject.activeSelf && cardType.value != type)
-                        {
-                            cardType.value = type;
-                            ChangeListType(type);
-                        }
-                        else if(UISystem.gameObject.activeSelf)
-                        {
-                            UISystem.gameObject.SetActive(false);
-                        }
-                        else
-                        {
-                            UISystem.gameObject.SetActive(true);
-                            ChangeListType(type);
-                        }
-                    });
+                    button.onClick.AddListener(() => ChangeUI(LoaderType.Character));
                 }
             }
 
@@ -605,6 +569,37 @@ namespace CardOrganizer
                 {
                     button.onClick = new Button.ButtonClickedEvent();
                     button.interactable = false;
+                }
+            }
+
+            var costumeButton = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/00_Root/Viewport/Content/Cos");
+            if(costumeButton)
+            {
+                var button = costumeButton.GetComponent<Button>();
+                if(button)
+                {
+                    button.onClick = new Button.ButtonClickedEvent();
+                    button.onClick.AddListener(() => ChangeUI(LoaderType.Coordinate));
+                }
+            }
+
+            void ChangeUI(LoaderType loaderType)
+            {
+                int type = (int)loaderType;
+
+                if(UISystem.gameObject.activeSelf && cardType.value != type)
+                {
+                    cardType.value = type;
+                    ChangeListType(type);
+                }
+                else if(UISystem.gameObject.activeSelf)
+                {
+                    UISystem.gameObject.SetActive(false);
+                }
+                else
+                {
+                    UISystem.gameObject.SetActive(true);
+                    ChangeListType(type);
                 }
             }
         }

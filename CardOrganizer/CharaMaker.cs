@@ -72,10 +72,10 @@ namespace CardOrganizer
             //optionspanel.gameObject.SetActive(false);
             //if(autoClose) UISystem.gameObject.SetActive(false);
 
-            ChaControl chaCtrl = CustomBase.Instance.chaCtrl;
             bool face = true, body = true, hair = true;
-            bool parameter = true;
-            bool coordinate = true;
+            bool parameter = true, coordinate = true;
+
+            ChaControl chaCtrl = CustomBase.Instance.chaCtrl;
             chaCtrl.chaFile.LoadFileLimited(path, chaCtrl.sex, face, body, hair, parameter, coordinate);
             chaCtrl.ChangeCoordinateType(true);
             chaCtrl.Reload(!coordinate, !face && !coordinate, !hair, !body);

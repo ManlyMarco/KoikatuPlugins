@@ -17,6 +17,7 @@ namespace CardOrganizer
         {
             customCharaFile = FindObjectOfType<CustomCharaFile>();
             listCtrl = Traverse.Create(customCharaFile).Field("listCtrl").GetValue<CustomFileListCtrl>();
+            BepInEx.Config.ReloadConfig();
             folderName = BepInEx.Config.GetEntry("FolderName", "", CardOrganizer.configName);
             StartCoroutine(SetListFolderDelayed());
         }
@@ -27,13 +28,13 @@ namespace CardOrganizer
             if(folderName != "") SetListFolder(folderName);
         }
 
-        void SetListFolder(string folderName)
+        void SetListFolder(string folderName, bool clearList = true)
         {
             int modeSex = Singleton<CustomBase>.Instance.modeSex;
             FolderAssist folderAssist = new FolderAssist();
-            string folder = UserData.Path + (modeSex != 0 ? string.Format("CardOrganizer/chara/{0}/", folderName) : "chara/male/");
+            string folder = Environment.CurrentDirectory + (modeSex != 0 ? string.Format("/UserData/CardOrganizer/chara/{0}/", folderName) : "/UserData/chara/male/");
             folderAssist.CreateFolderInfoEx(folder, new string[]{ "*.png" }, true);
-            listCtrl.ClearList();
+            if(clearList) listCtrl.ClearList();
 
             int num = 0;
             for(int i = 0; i < folderAssist.GetFileCount(); i++)

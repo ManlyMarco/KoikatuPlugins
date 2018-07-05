@@ -9,6 +9,8 @@ using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Studio;
 using UILib;
+using Harmony;
+using ChaCustom;
 
 // change sex of studio character accordingly when loading
 
@@ -94,6 +96,7 @@ namespace CardOrganizer
 
         bool LoadSettings()
         {
+            BepInEx.Config.ReloadConfig();
             smallWindow = bool.Parse(BepInEx.Config.GetEntry("SmallWindow", "true", CardOrganizer.configName));
             scrollSensitivity = float.Parse(BepInEx.Config.GetEntry("ScrollSensitivity", "3", CardOrganizer.configName));
             sceneColumnCount = int.Parse(BepInEx.Config.GetEntry("SceneColumns", "3", CardOrganizer.configName));
@@ -287,7 +290,7 @@ namespace CardOrganizer
                     currentTypePath = charaPath;
                     loadText.text = "Load";
                     importText.text = "Replace";
-                    savebutton.interactable = false;
+                    savebutton.interactable = true;
                     importbutton.interactable = true;
                     break;
                 }
@@ -306,27 +309,30 @@ namespace CardOrganizer
 
             category.options = GetCategories();
             category.value = cardTypes[currentType];
-            imagelist.content.GetComponentInChildren<Image>().gameObject.SetActive(false);
+            imagelist.content.GetComponentInChildren<Image>()?.gameObject.SetActive(false);
             imagelist.content.anchoredPosition = new Vector2(0f, 0f);
             PopulateGrid();
         }
 
         void LoadCard(string path)
         {
-            confirmpanel.gameObject.SetActive(false);
-            optionspanel.gameObject.SetActive(false);
-
             switch(currentType)
             {
                 case LoaderType.Scene:
                 {
+                    confirmpanel.gameObject.SetActive(false);
+                    optionspanel.gameObject.SetActive(false);
+
                     StartCoroutine(Studio.Studio.Instance.LoadSceneCoroutine(path));
                     if(sceneAutoClose) UISystem.gameObject.SetActive(false);
                     break;
                 }
 
                 case LoaderType.Character:
-                { 
+                {
+                    confirmpanel.gameObject.SetActive(false);
+                    optionspanel.gameObject.SetActive(false);
+
                     var ocicharFemale = AddObjectFemale.Add(path);
                     if(Studio.Studio.optionSystem.autoSelect && ocicharFemale != null)
                         Studio.Studio.Instance.treeNodeCtrl.SelectSingle(ocicharFemale.treeNodeObject);
@@ -346,6 +352,7 @@ namespace CardOrganizer
                     {
                         confirmpanel.gameObject.SetActive(false);
                         optionspanel.gameObject.SetActive(false);
+
                         list.ForEach(x => x.LoadClothesFile(path));
                         if(charaAutoClose) UISystem.gameObject.SetActive(false);
                     }
@@ -372,6 +379,46 @@ namespace CardOrganizer
 
                 case LoaderType.Character:
                 {
+                    var list = (from v in GuideObjectManager.Instance.selectObjectKey
+                                select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
+                                where v != null
+                                //where v.oiCharInfo.sex == 1
+                                select v).ToList();
+
+                    if(list.Count > 0)
+                    {
+                        confirmpanel.gameObject.SetActive(false);
+                        optionspanel.gameObject.SetActive(false);
+
+                        string format = ".png";
+                        string date = DateTime.Now.ToString("yyyy_MMdd_HHmm_ss_fff");
+                        string folder = GetCategoryFolder();
+
+                        foreach(var item in list)
+                        {
+                            var param = item.charInfo.fileParam;
+                            var charFile = item.oiCharInfo.charFile;
+                            var path = string.Format("{0}{1}_{2}_{3}{4}", folder, param.lastname, param.firstname, date, format);
+
+                            Traverse.Create(charFile).Property("charaFileName").SetValue(Path.GetFileName(path));
+                            CustomCapture.CreatePng(ref charFile.pngData, 252, 352, null, null, Camera.main, null);
+                            CustomCapture.CreatePng(ref charFile.facePngData, 252, 352, null, null, Camera.main, null);
+
+                            using(var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                            {
+                                if(charFile.SaveCharaFile(fileStream, true))
+                                {
+                                    var button = CreateSceneButton(imagelist.content.GetComponentInChildren<Image>().transform, PngAssist.LoadTexture(path), path);
+                                    button.transform.SetAsFirstSibling();
+                                }
+                                else
+                                {
+                                    BepInEx.Logger.Log(BepInEx.Logging.LogLevel.Error, "Failed to save card at " + path);
+                                }
+                            }
+                        }
+                    }
+
                     break;
                 }
 
@@ -384,13 +431,13 @@ namespace CardOrganizer
 
         void ImportCard(string path)
         {
-            confirmpanel.gameObject.SetActive(false);
-            optionspanel.gameObject.SetActive(false);
-
             switch(currentType)
             {
                 case LoaderType.Scene:
                 {
+                    confirmpanel.gameObject.SetActive(false);
+                    optionspanel.gameObject.SetActive(false);
+
                     Studio.Studio.Instance.ImportScene(path);
                     break;
                 }
@@ -410,11 +457,6 @@ namespace CardOrganizer
                         list.ForEach(x => x.ChangeChara(path));
                     }
 
-                    break;
-                }
-
-                case LoaderType.Coordinate:
-                {
                     break;
                 }
             }
@@ -534,7 +576,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUI(LoaderType.Scene));
+                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Scene));
                 }
             }
 
@@ -557,7 +599,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUI(LoaderType.Character));
+                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Character));
                 }
             }
 
@@ -579,11 +621,11 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUI(LoaderType.Coordinate));
+                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Coordinate));
                 }
             }
 
-            void ChangeUI(LoaderType loaderType)
+            void ChangeUIType(LoaderType loaderType)
             {
                 int type = (int)loaderType;
 
@@ -598,6 +640,7 @@ namespace CardOrganizer
                 }
                 else
                 {
+                    cardType.value = type;
                     UISystem.gameObject.SetActive(true);
                     ChangeListType(type);
                 }

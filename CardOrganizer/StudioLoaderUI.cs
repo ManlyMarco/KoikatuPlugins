@@ -7,22 +7,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
-using Studio;
-using UILib;
 using Harmony;
+using UILib;
+using Studio;
 using ChaCustom;
 
 // change sex of studio character accordingly when loading
+// save scroll position for each list
+// add options to load cards partially (only clothes/accessories/body)
 
 namespace CardOrganizer
 {
     class StudioLoaderUI : MonoBehaviour
     {
-        static string mainPath = Environment.CurrentDirectory + "/UserData/CardOrganizer/";
-        static string scenePath = mainPath + "scene/";
-        static string charaPath = mainPath + "chara/";
-        static string coordPath = mainPath + "coordinate/";
-
         float buttonSize = 10f;
         float marginSize = 5f;
         float headerSize = 20f;
@@ -50,23 +47,18 @@ namespace CardOrganizer
         Text importText;
 
         float scrollSensitivity;
-        int sceneColumnCount;
-        int charaColumnCount;
-        bool sceneAutoClose;
-        bool charaAutoClose;
         bool smallWindow;
 
         Dictionary<string, Image> listCache = new Dictionary<string, Image>();
         Button currentButton;
         string currentPath;
-        string currentTypePath = scenePath;
-        LoaderType currentType = LoaderType.Scene;
+        int currentType = 0;
 
-        Dictionary<LoaderType, int> cardTypes = new Dictionary<LoaderType, int>()
+        Dictionary<int, CardType> cardTypes = new Dictionary<int, CardType>()
         {
-            { LoaderType.Scene, 0 },
-            { LoaderType.Character, 0 },
-            { LoaderType.Coordinate, 0 },
+            { 0, new CardType("Scene", 3, false, 16f/9f, "scene/") },
+            { 1, new CardType("Chara", 5, false, 3f/4f, "chara/") },
+            { 2, new CardType("Coord", 5, false, 3f/4f, "coordinate/") },
         };
 
         void Awake()
@@ -80,7 +72,7 @@ namespace CardOrganizer
         IEnumerator StartingScene()
         {
             for(int i = 0; i < 10; i++) yield return null;
-            var files = Directory.GetFiles(scenePath, "defaultscene.png", SearchOption.TopDirectoryOnly).ToList();
+            var files = Directory.GetFiles(cardTypes[0].path, "defaultscene.png", SearchOption.TopDirectoryOnly).ToList();
             if(files.Count > 0) LoadCard(files[0]);
         }
 
@@ -96,15 +88,8 @@ namespace CardOrganizer
 
         bool LoadSettings()
         {
-            BepInEx.Config.ReloadConfig();
             smallWindow = bool.Parse(BepInEx.Config.GetEntry("SmallWindow", "true", CardOrganizer.configName));
             scrollSensitivity = float.Parse(BepInEx.Config.GetEntry("ScrollSensitivity", "3", CardOrganizer.configName));
-            sceneColumnCount = int.Parse(BepInEx.Config.GetEntry("SceneColumns", "3", CardOrganizer.configName));
-            charaColumnCount = int.Parse(BepInEx.Config.GetEntry("CharaColumns", "5", CardOrganizer.configName));
-            sceneAutoClose = bool.Parse(BepInEx.Config.GetEntry("SceneAutoClose", "false", CardOrganizer.configName));
-            charaAutoClose = bool.Parse(BepInEx.Config.GetEntry("CharaAutoClose", "false", CardOrganizer.configName));
-
-            //listCache = new Dictionary<string, Image>(); // hack to ensure every list has the right amount of columns
 
             UpdateWindow();
             return true;
@@ -117,12 +102,12 @@ namespace CardOrganizer
                 var gridlayout = scene.Value.gameObject.GetComponent<AutoGridLayout>();
                 if(gridlayout != null)
                 {
-                    gridlayout.m_Column = sceneColumnCount;
+                    gridlayout.m_Column = cardTypes[currentType].columnCount;
                     gridlayout.CalculateLayoutInputHorizontal();
                 }
             }
 
-            if(imagelist != null)
+            if(imagelist)
             {
                 imagelist.scrollSensitivity = Mathf.Lerp(30f, 300f, scrollSensitivity / 10f);
             }
@@ -164,7 +149,7 @@ namespace CardOrganizer
             category.options = GetCategories();
             category.onValueChanged.AddListener((x) =>
             {
-                cardTypes[currentType] = x;
+                cardTypes[currentType].savedCategory = x;
                 imagelist.content.GetComponentInChildren<Image>().gameObject.SetActive(false);
                 imagelist.content.anchoredPosition = new Vector2(0f, 0f);
                 PopulateGrid();
@@ -180,14 +165,14 @@ namespace CardOrganizer
 
             var folder = UIUtility.CreateButton("FolderButton", drag.transform, "Folder");
             folder.transform.SetRect(0f, 0f, 0f, 1f, 340f, 0f, 420f);
-            folder.onClick.AddListener(() => Process.Start(currentTypePath));
+            folder.onClick.AddListener(() => Process.Start(cardTypes[currentType].path));
 
             cardType = UIUtility.CreateDropdown("CardType", drag.transform, "CardType");
             cardType.transform.SetRect(0f, 0f, 0f, 1f, 0f, 0f, 80f);
             cardType.captionText.transform.SetRect(0f, 0f, 1f, 1f, 0f, 2f, -15f, -2f);
             cardType.captionText.alignment = TextAnchor.MiddleCenter;
             cardType.onValueChanged.AddListener((x) => ChangeListType(x));
-            cardType.options = cardTypes.Keys.Select((x) => new Dropdown.OptionData(x.ToString().Substring(0, 5))).ToList();
+            cardType.options = cardTypes.Keys.Select((x) => new Dropdown.OptionData(cardTypes[x].title)).ToList();
 
             var loadingPanel = UIUtility.CreatePanel("LoadingIconPanel", drag.transform);
             loadingPanel.transform.SetRect(0f, 0f, 0f, 1f, 420f, 0f, 420f + headerSize);
@@ -240,17 +225,19 @@ namespace CardOrganizer
 
         List<Dropdown.OptionData> GetCategories()
         {
-            if(!File.Exists(currentTypePath)) Directory.CreateDirectory(currentTypePath);
-            var folders = Directory.GetDirectories(currentTypePath);
+            string path = cardTypes[currentType].path;
+
+            if(!File.Exists(path)) Directory.CreateDirectory(path);
+            var folders = Directory.GetDirectories(path);
 
             if(folders.Length == 0)
             {
-                Directory.CreateDirectory(currentTypePath + "Category1");
-                Directory.CreateDirectory(currentTypePath + "Category2");
-                folders = Directory.GetDirectories(currentTypePath);
+                Directory.CreateDirectory(path + "Category1");
+                Directory.CreateDirectory(path + "Category2");
+                folders = Directory.GetDirectories(path);
             }
 
-            string orderPath = currentTypePath + "order.txt";
+            string orderPath = path + "order.txt";
             string[] order;
             if(File.Exists(orderPath))
             {
@@ -270,13 +257,12 @@ namespace CardOrganizer
         {
             confirmpanel.gameObject.SetActive(false);
             optionspanel.gameObject.SetActive(false);
+            currentType = index;
 
             switch(index)
             {
                 case 0:
                 {
-                    currentType = LoaderType.Scene;
-                    currentTypePath = scenePath;
                     loadText.text = "Load";
                     importText.text = "Import";
                     savebutton.interactable = true;
@@ -286,8 +272,6 @@ namespace CardOrganizer
 
                 case 1:
                 {
-                    currentType = LoaderType.Character;
-                    currentTypePath = charaPath;
                     loadText.text = "Load";
                     importText.text = "Replace";
                     savebutton.interactable = true;
@@ -297,8 +281,6 @@ namespace CardOrganizer
 
                 case 2:
                 {
-                    currentType = LoaderType.Coordinate;
-                    currentTypePath = coordPath;
                     loadText.text = "Load";
                     importText.text = "";
                     savebutton.interactable = false;
@@ -308,7 +290,7 @@ namespace CardOrganizer
             }
 
             category.options = GetCategories();
-            category.value = cardTypes[currentType];
+            category.value = cardTypes[currentType].savedCategory;
             imagelist.content.GetComponentInChildren<Image>()?.gameObject.SetActive(false);
             imagelist.content.anchoredPosition = new Vector2(0f, 0f);
             PopulateGrid();
@@ -318,17 +300,17 @@ namespace CardOrganizer
         {
             switch(currentType)
             {
-                case LoaderType.Scene:
+                case 0:
                 {
                     confirmpanel.gameObject.SetActive(false);
                     optionspanel.gameObject.SetActive(false);
 
                     StartCoroutine(Studio.Studio.Instance.LoadSceneCoroutine(path));
-                    if(sceneAutoClose) UISystem.gameObject.SetActive(false);
+                    if(cardTypes[currentType].autoClose) UISystem.gameObject.SetActive(false);
                     break;
                 }
 
-                case LoaderType.Character:
+                case 1:
                 {
                     confirmpanel.gameObject.SetActive(false);
                     optionspanel.gameObject.SetActive(false);
@@ -336,11 +318,11 @@ namespace CardOrganizer
                     var ocicharFemale = AddObjectFemale.Add(path);
                     if(Studio.Studio.optionSystem.autoSelect && ocicharFemale != null)
                         Studio.Studio.Instance.treeNodeCtrl.SelectSingle(ocicharFemale.treeNodeObject);
-                    if(charaAutoClose) UISystem.gameObject.SetActive(false);
+                    if(cardTypes[currentType].autoClose) UISystem.gameObject.SetActive(false);
                     break;
                 }
 
-                case LoaderType.Coordinate:
+                case 2:
                 {
                     var list = (from v in GuideObjectManager.Instance.selectObjectKey
                                 select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
@@ -354,7 +336,7 @@ namespace CardOrganizer
                         optionspanel.gameObject.SetActive(false);
 
                         list.ForEach(x => x.LoadClothesFile(path));
-                        if(charaAutoClose) UISystem.gameObject.SetActive(false);
+                        if(cardTypes[currentType].autoClose) UISystem.gameObject.SetActive(false);
                     }
 
                     break;
@@ -366,7 +348,7 @@ namespace CardOrganizer
         {
             switch(currentType)
             {
-                case LoaderType.Scene:
+                case 0:
                 {
                     Studio.Studio.Instance.dicObjectCtrl.Values.ToList().ForEach(x => x.OnSavePreprocessing());
                     Studio.Studio.Instance.sceneInfo.cameraSaveData = Studio.Studio.Instance.cameraCtrl.Export();
@@ -377,7 +359,7 @@ namespace CardOrganizer
                     break;
                 }
 
-                case LoaderType.Character:
+                case 1:
                 {
                     var list = (from v in GuideObjectManager.Instance.selectObjectKey
                                 select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
@@ -422,7 +404,7 @@ namespace CardOrganizer
                     break;
                 }
 
-                case LoaderType.Coordinate:
+                case 2:
                 {
                     break;
                 }
@@ -433,7 +415,7 @@ namespace CardOrganizer
         {
             switch(currentType)
             {
-                case LoaderType.Scene:
+                case 0:
                 {
                     confirmpanel.gameObject.SetActive(false);
                     optionspanel.gameObject.SetActive(false);
@@ -442,7 +424,7 @@ namespace CardOrganizer
                     break;
                 }
 
-                case LoaderType.Character:
+                case 1:
                 {
                     var list = (from v in GuideObjectManager.Instance.selectObjectKey
                                        select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
@@ -503,8 +485,8 @@ namespace CardOrganizer
                 var gridlayout = container.gameObject.AddComponent<AutoGridLayout>();
                 gridlayout.spacing = new Vector2(marginSize, marginSize);
                 gridlayout.m_IsColumn = true;
-                gridlayout.m_Column = currentType == LoaderType.Scene ? sceneColumnCount : charaColumnCount;
-                gridlayout.aspectRatio = currentType == LoaderType.Scene ? 16f / 9f : 3f / 4f;
+                gridlayout.m_Column = cardTypes[currentType].columnCount;
+                gridlayout.aspectRatio = cardTypes[currentType].aspectRatio;
 
                 StartCoroutine(LoadButtonsAsync(container.transform, scenefiles));
                 listCache.Add(categoryText, container);
@@ -562,9 +544,9 @@ namespace CardOrganizer
         string GetCategoryFolder()
         {
             if(category?.captionText?.text != null)
-                return currentTypePath + category.captionText.text + "/";
+                return string.Format("{0}{1}/", cardTypes[currentType].path, category.captionText.text);
 
-            return currentTypePath;
+            return cardTypes[currentType].path;
         }
 
         void FixButtons()
@@ -576,7 +558,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Scene));
+                    button.onClick.AddListener(() => ChangeUIType(0));
                 }
             }
 
@@ -599,7 +581,7 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Character));
+                    button.onClick.AddListener(() => ChangeUIType(1));
                 }
             }
 
@@ -621,14 +603,12 @@ namespace CardOrganizer
                 if(button)
                 {
                     button.onClick = new Button.ButtonClickedEvent();
-                    button.onClick.AddListener(() => ChangeUIType(LoaderType.Coordinate));
+                    button.onClick.AddListener(() => ChangeUIType(2));
                 }
             }
 
-            void ChangeUIType(LoaderType loaderType)
+            void ChangeUIType(int type)
             {
-                int type = (int)loaderType;
-
                 if(UISystem.gameObject.activeSelf && cardType.value != type)
                 {
                     cardType.value = type;
@@ -647,11 +627,25 @@ namespace CardOrganizer
             }
         }
 
-        enum LoaderType
+        class CardType
         {
-            Scene,
-            Character,
-            Coordinate
+            static string mainPath = Environment.CurrentDirectory + "/UserData/CardOrganizer/";
+
+            public string path;
+            public string title;
+            public int columnCount;
+            public bool autoClose;
+            public float aspectRatio;
+            public int savedCategory = 0;
+
+            public CardType(string title, int columnCount, bool autoClose, float aspectRatio, string path)
+            {
+                this.title = title;
+                this.columnCount = columnCount;
+                this.autoClose = autoClose;
+                this.aspectRatio = aspectRatio;
+                this.path = mainPath + path;
+            }
         }
     }
 }

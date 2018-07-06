@@ -49,16 +49,17 @@ namespace CardOrganizer
         float scrollSensitivity;
         bool smallWindow;
 
-        Dictionary<string, Image> listCache = new Dictionary<string, Image>();
         Button currentButton;
         string currentPath;
         int currentType = 0;
+        string currentCategory;
+        bool updateSave = true;
 
         Dictionary<int, CardType> cardTypes = new Dictionary<int, CardType>()
         {
-            { 0, new CardType("Scene", 3, false, 16f/9f, "scene/") },
-            { 1, new CardType("Chara", 5, false, 3f/4f, "chara/") },
-            { 2, new CardType("Coord", 5, false, 3f/4f, "coordinate/") },
+            { 0, new CardType("Scene", "scene/", 3, false, 16f/9f) },
+            { 1, new CardType("Chara", "chara/", 5, false, 3f/4f) },
+            { 2, new CardType("Coord", "coordinate/", 5, false, 3f/4f) },
         };
 
         void Awake()
@@ -97,13 +98,16 @@ namespace CardOrganizer
 
         void UpdateWindow()
         {
-            foreach(var scene in listCache)
+            foreach(var cardType in cardTypes.Values)
             {
-                var gridlayout = scene.Value.gameObject.GetComponent<AutoGridLayout>();
-                if(gridlayout != null)
+                foreach(var cachedList in cardType.cache.Values)
                 {
-                    gridlayout.m_Column = cardTypes[currentType].columnCount;
-                    gridlayout.CalculateLayoutInputHorizontal();
+                    var gridlayout = cachedList.list.gameObject.GetComponent<AutoGridLayout>();
+                    if(gridlayout)
+                    {
+                        gridlayout.m_Column = cardType.columnCount;
+                        gridlayout.CalculateLayoutInputHorizontal();
+                    }
                 }
             }
 
@@ -147,13 +151,8 @@ namespace CardOrganizer
             category.captionText.transform.SetRect(0f, 0f, 1f, 1f, 0f, 2f, -15f, -2f);
             category.captionText.alignment = TextAnchor.MiddleCenter;
             category.options = GetCategories();
-            category.onValueChanged.AddListener((x) =>
-            {
-                cardTypes[currentType].savedCategory = x;
-                imagelist.content.GetComponentInChildren<Image>().gameObject.SetActive(false);
-                imagelist.content.anchoredPosition = new Vector2(0f, 0f);
-                PopulateGrid();
-            });
+            currentCategory = category.captionText.text;
+            category.onValueChanged.AddListener(x => ChangeCategory(x));
 
             var refresh = UIUtility.CreateButton("RefreshButton", drag.transform, "Refresh");
             refresh.transform.SetRect(0f, 0f, 0f, 1f, 180f, 0f, 260f);
@@ -171,7 +170,7 @@ namespace CardOrganizer
             cardType.transform.SetRect(0f, 0f, 0f, 1f, 0f, 0f, 80f);
             cardType.captionText.transform.SetRect(0f, 0f, 1f, 1f, 0f, 2f, -15f, -2f);
             cardType.captionText.alignment = TextAnchor.MiddleCenter;
-            cardType.onValueChanged.AddListener((x) => ChangeListType(x));
+            cardType.onValueChanged.AddListener(x => ChangeListType(x));
             cardType.options = cardTypes.Keys.Select((x) => new Dropdown.OptionData(cardTypes[x].title)).ToList();
 
             var loadingPanel = UIUtility.CreatePanel("LoadingIconPanel", drag.transform);
@@ -253,11 +252,45 @@ namespace CardOrganizer
             return sorted.Select(x => new Dropdown.OptionData(x)).ToList();
         }
 
+        void ChangeCategory(int index)
+        {
+            confirmpanel.gameObject.SetActive(false);
+            optionspanel.gameObject.SetActive(false);
+
+            imagelist.StopMovement();
+            cardTypes[currentType].savedCategory = index;
+            var position = imagelist.content.anchoredPosition;
+
+            GetCurrentList()?.gameObject.SetActive(false);
+            PopulateGrid();
+
+            if(updateSave) cardTypes[currentType].cache[currentCategory].savedPosition = position;
+            updateSave = true;
+            currentCategory = category.captionText.text;
+            imagelist.content.anchoredPosition = cardTypes[currentType].cache[category.captionText.text].savedPosition;
+
+            StartCoroutine(FUCKYOU());
+            IEnumerator FUCKYOU()
+            {
+                yield return null;
+                imagelist.content.anchoredPosition = cardTypes[currentType].cache[category.captionText.text].savedPosition;
+            }
+        }
+
         void ChangeListType(int index)
         {
             confirmpanel.gameObject.SetActive(false);
             optionspanel.gameObject.SetActive(false);
+            
+            var position = imagelist.content.anchoredPosition;
+            cardTypes[currentType].cache[category.captionText.text].savedPosition = position;
+
             currentType = index;
+            category.options = GetCategories();
+
+            updateSave = false;
+            if(category.value == cardTypes[currentType].savedCategory) ChangeCategory(category.value);
+            category.value = cardTypes[currentType].savedCategory;
 
             switch(index)
             {
@@ -288,12 +321,6 @@ namespace CardOrganizer
                     break;
                 }
             }
-
-            category.options = GetCategories();
-            category.value = cardTypes[currentType].savedCategory;
-            imagelist.content.GetComponentInChildren<Image>()?.gameObject.SetActive(false);
-            imagelist.content.anchoredPosition = new Vector2(0f, 0f);
-            PopulateGrid();
         }
 
         void LoadCard(string path)
@@ -354,7 +381,7 @@ namespace CardOrganizer
                     Studio.Studio.Instance.sceneInfo.cameraSaveData = Studio.Studio.Instance.cameraCtrl.Export();
                     string path = GetCategoryFolder() + DateTime.Now.ToString("yyyy_MMdd_HHmm_ss_fff") + ".png";
                     Studio.Studio.Instance.sceneInfo.Save(path);
-                    var button = CreateSceneButton(imagelist.content.GetComponentInChildren<Image>().transform, PngAssist.LoadTexture(path), path);
+                    var button = CreateSceneButton(GetCurrentList().transform, PngAssist.LoadTexture(path), path);
                     button.transform.SetAsFirstSibling();
                     break;
                 }
@@ -390,7 +417,7 @@ namespace CardOrganizer
                             {
                                 if(charFile.SaveCharaFile(fileStream, true))
                                 {
-                                    var button = CreateSceneButton(imagelist.content.GetComponentInChildren<Image>().transform, PngAssist.LoadTexture(path), path);
+                                    var button = CreateSceneButton(GetCurrentList().transform, PngAssist.LoadTexture(path), path);
                                     button.transform.SetAsFirstSibling();
                                 }
                                 else
@@ -459,19 +486,20 @@ namespace CardOrganizer
             optionspanel.gameObject.SetActive(false);
             confirmpanel.gameObject.SetActive(false);
 
-            Destroy(imagelist.content.GetComponentInChildren<Image>().gameObject);
+            Destroy(GetCurrentList().gameObject);
             imagelist.content.anchoredPosition = new Vector2(0f, 0f);
             PopulateGrid(true);
         }
 
         void PopulateGrid(bool forceUpdate = false)
         {
-            string categoryText = currentType.ToString() + category.captionText.text;
-            if(forceUpdate) listCache.Remove(categoryText);
+            var cache = cardTypes[currentType].cache;
+            var categoryText = category.captionText.text;
+            if(forceUpdate) cache.Remove(categoryText);
 
-            if(listCache.TryGetValue(categoryText, out Image list))
+            if(cache.TryGetValue(categoryText, out CachedList cachedList))
             {
-                list.gameObject.SetActive(true);
+                cachedList.list.gameObject.SetActive(true);
             }
             else
             {
@@ -489,7 +517,7 @@ namespace CardOrganizer
                 gridlayout.aspectRatio = cardTypes[currentType].aspectRatio;
 
                 StartCoroutine(LoadButtonsAsync(container.transform, scenefiles));
-                listCache.Add(categoryText, container);
+                cache.Add(categoryText, new CachedList(container));
             }
 
             IEnumerator LoadButtonsAsync(Transform parent, List<KeyValuePair<DateTime, string>> scenefiles)
@@ -547,6 +575,11 @@ namespace CardOrganizer
                 return string.Format("{0}{1}/", cardTypes[currentType].path, category.captionText.text);
 
             return cardTypes[currentType].path;
+        }
+
+        Image GetCurrentList()
+        {
+            return imagelist.content.GetComponentInChildren<Image>();
         }
 
         void FixButtons()
@@ -631,20 +664,33 @@ namespace CardOrganizer
         {
             static string mainPath = Environment.CurrentDirectory + "/UserData/CardOrganizer/";
 
-            public string path;
+            public Dictionary<string, CachedList> cache = new Dictionary<string, CachedList>();
+            public int savedCategory = 0;
+
             public string title;
             public int columnCount;
             public bool autoClose;
             public float aspectRatio;
-            public int savedCategory = 0;
+            public string path;
 
-            public CardType(string title, int columnCount, bool autoClose, float aspectRatio, string path)
+            public CardType(string title, string path, int columnCount, bool autoClose, float aspectRatio)
             {
                 this.title = title;
                 this.columnCount = columnCount;
                 this.autoClose = autoClose;
                 this.aspectRatio = aspectRatio;
                 this.path = mainPath + path;
+            }
+        }
+
+        class CachedList
+        {
+            public Vector2 savedPosition = new Vector2();
+            public Image list;
+
+            public CachedList(Image list)
+            {
+                this.list = list;
             }
         }
     }

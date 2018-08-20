@@ -48,7 +48,7 @@ namespace AutoModReloadKK
                 if(targetFolder != null)
                 {
                     Console.WriteLine(new string('=', 40));
-                    Console.WriteLine("Current scene is {0}", SceneManager.GetActiveScene().name);
+                    Console.WriteLine($"Current scene is {SceneManager.GetActiveScene().name}");
                     foreach(var path in Directory.GetFiles(targetFolder)) InvokeBootstrapWrap(path);
                     Console.WriteLine(new string('=', 40));
                 }

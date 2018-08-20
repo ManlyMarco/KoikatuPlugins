@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardOrganizer", "CardOrgani
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixCompilation", "FixCompilation\FixCompilation.csproj", "{3FE9332D-9875-4556-A7CD-0741811BA548}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideUIKK", "HideUIKK\HideUIKK.csproj", "{26DB5288-DD42-451C-91D8-6D0136461124}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockHPositions", "UnlockHPositions\UnlockHPositions.csproj", "{476E4113-AF49-45E0-9CDD-1D76EE51FA24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,13 +46,20 @@ Global
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{426DD1A2-D1B0-442B-87DF-82CF8EB60EB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEFF2695-37E9-4BA3-A057-6739CE23E5D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3FE9332D-9875-4556-A7CD-0741811BA548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3FE9332D-9875-4556-A7CD-0741811BA548}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FE9332D-9875-4556-A7CD-0741811BA548}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FE9332D-9875-4556-A7CD-0741811BA548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26DB5288-DD42-451C-91D8-6D0136461124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26DB5288-DD42-451C-91D8-6D0136461124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26DB5288-DD42-451C-91D8-6D0136461124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26DB5288-DD42-451C-91D8-6D0136461124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

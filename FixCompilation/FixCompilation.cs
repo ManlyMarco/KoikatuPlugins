@@ -32,7 +32,7 @@ namespace FixCompilation
             {
                 //QualitySettings.shadowProjection = ShadowProjection.CloseFit;
                 //QualitySettings.shadowResolution = ShadowResolution.VeryHigh;
-                GameObject.Find("HScene/CameraBase/Camera/CameraTarget")?.SetActive(false); ;
+                GameObject.Find("HScene/CameraBase/Camera/CameraTarget")?.SetActive(false);
             }
         }
 

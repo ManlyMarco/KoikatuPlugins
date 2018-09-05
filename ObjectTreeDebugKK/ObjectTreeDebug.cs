@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,18 +11,6 @@ namespace ObjectTreeDebugKK
     [BepInPlugin("ObjectTreeDebugKKPort", "ObjectTreeDebugKK", "1.0.0")]
     public class ObjectTreeDebug : BaseUnityPlugin
     {
-        //static void Bootstrap()
-        //{
-        //    string name = "ObjectTreeDebugObject";
-        //    var gameobject = GameObject.Find(name);
-        //    if(gameobject != null) GameObject.DestroyImmediate(gameobject);
-        //    new GameObject(name).AddComponent<ObjectTreeDebug>();
-
-        //    //var comp = Chainloader.ManagerObject.GetComponent("ObjectTreeDebugKK.ObjectTreeDebug");
-        //    //if(comp) GameObject.DestroyImmediate(comp);
-        //    //Chainloader.ManagerObject.AddComponent<ObjectTreeDebug>();
-        //}
-
         private Transform _target;
         private readonly HashSet<GameObject> _openedObjects = new HashSet<GameObject>();
         private Vector2 _scroll;
@@ -33,25 +20,17 @@ namespace ObjectTreeDebugKK
         private static bool _debug;
         private Rect _rect = new Rect(Screen.width / 4f, Screen.height / 4f, Screen.width / 2f, Screen.height / 2f);
         private int _randomId;
-        KeyCode key = KeyCode.RightControl;
+        private SavedKeyboardShortcut ShowConsole { get; }
+
+        ObjectTreeDebug()
+        {
+            ShowConsole = new SavedKeyboardShortcut("Show Debug Console", this, new KeyboardShortcut(KeyCode.RightControl));
+        }
 
         void Awake()
         {
-            try
-            {
-                string keyS = BepInEx.Config.GetEntry(this, "key");
-                if(keyS == "")
-                    BepInEx.Config.SetEntry(this, "key", key.ToString());
-                else
-                    key = (KeyCode)Enum.Parse(typeof(KeyCode), keyS);
-            }
-            catch(Exception ex)
-            {
-                BepInEx.Logger.Log(BepInEx.Logging.LogLevel.Error, ex);
-            }
-
-            Application.logMessageReceived += this.HandleLog;
-            this._randomId = (int)(UnityEngine.Random.value * UInt32.MaxValue);
+            Application.logMessageReceived += HandleLog;
+            _randomId = (int)(UnityEngine.Random.value * UInt32.MaxValue);
             for (int i = 0; i < 32; i++)
             {
                 string n = LayerMask.LayerToName(i);
@@ -61,13 +40,13 @@ namespace ObjectTreeDebugKK
 
         void Update()
         {
-            if (Input.GetKeyDown(key))
+            if (ShowConsole.IsDown())
                 _debug = !_debug;
         }
 
         void OnDestroy()
         {
-            Application.logMessageReceived -= this.HandleLog;
+            Application.logMessageReceived -= HandleLog;
         }
 
         private void HandleLog(string condition, string stackTrace, LogType type)
@@ -75,27 +54,27 @@ namespace ObjectTreeDebugKK
             _lastlogs.AddLast(new KeyValuePair<LogType, string>(type, type + " " + condition));
             if (_lastlogs.Count == 101)
                 _lastlogs.RemoveFirst();
-            this._scroll3.y += 999999;
+            _scroll3.y += 999999;
         }
 
         private void DisplayObjectTree(GameObject go, int indent)
         {
             Color c = GUI.color;
-            if (this._target == go.transform)
+            if (_target == go.transform)
                 GUI.color = Color.cyan;
             GUILayout.BeginHorizontal();
             GUILayout.Space(indent * 20f);
             if (go.transform.childCount != 0)
             {
-                if (GUILayout.Toggle(this._openedObjects.Contains(go), "", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Toggle(_openedObjects.Contains(go), "", GUILayout.ExpandWidth(false)))
                 {
-                    if (this._openedObjects.Contains(go) == false)
-                        this._openedObjects.Add(go);
+                    if (_openedObjects.Contains(go) == false)
+                        _openedObjects.Add(go);
                 }
                 else
                 {
-                    if (this._openedObjects.Contains(go))
-                        this._openedObjects.Remove(go);
+                    if (_openedObjects.Contains(go))
+                        _openedObjects.Remove(go);
 
                 }
             }
@@ -103,37 +82,37 @@ namespace ObjectTreeDebugKK
                 GUILayout.Space(20f);
             if (GUILayout.Button(go.name, GUILayout.ExpandWidth(false)))
             {
-                this._target = go.transform;
+                _target = go.transform;
             }
             GUI.color = c;
             go.SetActive(GUILayout.Toggle(go.activeSelf, "", GUILayout.ExpandWidth(false)));
             GUILayout.EndHorizontal();
-            if (this._openedObjects.Contains(go))
+            if (_openedObjects.Contains(go))
                 for (int i = 0; i < go.transform.childCount; ++i)
-                    this.DisplayObjectTree(go.transform.GetChild(i).gameObject, indent + 1);
+                    DisplayObjectTree(go.transform.GetChild(i).gameObject, indent + 1);
         }
 
         void OnGUI()
         {
             if (_debug == false)
                 return;
-            this._rect = GUILayout.Window(this._randomId, this._rect, this.WindowFunc, "Debug Console");
+            _rect = GUILayout.Window(_randomId, _rect, WindowFunc, "Debug Console");
         }
 
         private void WindowFunc(int id)
         {
             GUILayout.BeginHorizontal();
-            this._scroll = GUILayout.BeginScrollView(this._scroll, GUI.skin.box, GUILayout.ExpandHeight(true), GUILayout.MinWidth(300));
+            _scroll = GUILayout.BeginScrollView(_scroll, GUI.skin.box, GUILayout.ExpandHeight(true), GUILayout.MinWidth(300));
             foreach (Transform t in Resources.FindObjectsOfTypeAll<Transform>())
                 if (t.parent == null)
-                    this.DisplayObjectTree(t.gameObject, 0);
+                    DisplayObjectTree(t.gameObject, 0);
             GUILayout.EndScrollView();
             GUILayout.BeginVertical();
-            this._scroll2 = GUILayout.BeginScrollView(this._scroll2, GUI.skin.box);
-            if (this._target != null)
+            _scroll2 = GUILayout.BeginScrollView(_scroll2, GUI.skin.box);
+            if (_target != null)
             {
-                Transform t = this._target.parent;
-                string n = this._target.name;
+                Transform t = _target.parent;
+                string n = _target.name;
                 while (t != null)
                 {
                     n = t.name + "/" + n;
@@ -144,8 +123,8 @@ namespace ObjectTreeDebugKK
                 if (GUILayout.Button("Copy to clipboard", GUILayout.ExpandWidth(false)))
                     GUIUtility.systemCopyBuffer = n;
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Layer: " + LayerMask.LayerToName(this._target.gameObject.layer) + " " + this._target.gameObject.layer);
-                foreach (Component c in this._target.GetComponents<Component>())
+                GUILayout.Label("Layer: " + LayerMask.LayerToName(_target.gameObject.layer) + " " + _target.gameObject.layer);
+                foreach (Component c in _target.GetComponents<Component>())
                 {
                     if (c == null)
                         continue;
@@ -234,7 +213,7 @@ namespace ObjectTreeDebugKK
                 }
             }
             GUILayout.EndScrollView();
-            this._scroll3 = GUILayout.BeginScrollView(this._scroll3, GUI.skin.box, GUILayout.Height(Screen.height / 4f));
+            _scroll3 = GUILayout.BeginScrollView(_scroll3, GUI.skin.box, GUILayout.Height(Screen.height / 4f));
             foreach (KeyValuePair<LogType, string> lastlog in _lastlogs)
             {
                 Color c = GUI.color;

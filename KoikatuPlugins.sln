@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HideUIKK", "HideUIKK\HideUI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlockHPositions", "UnlockHPositions\UnlockHPositions.csproj", "{476E4113-AF49-45E0-9CDD-1D76EE51FA24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioAddonLite", "StudioAddonLite\StudioAddonLite.csproj", "{921651CF-6A2C-4064-91FE-AF949CFA9A16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{476E4113-AF49-45E0-9CDD-1D76EE51FA24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921651CF-6A2C-4064-91FE-AF949CFA9A16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

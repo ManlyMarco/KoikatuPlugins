@@ -9,15 +9,8 @@ using TMPro;
 
 namespace StudioAddonLite
 {
-    public class FKIKAssistMgr : BaseMgr<FKIKAssistMgr>
+    public class FKIKAssistMgr : MonoBehaviour
     {
-        //private Dictionary<KEY, string> DEFAULT_KEYS = new Dictionary<KEY, string>
-        //{
-        //    { KEY.FORCE_FK_ON, "Ctrl+K" }
-        //};
-
-        //private Dictionary<KEY, KeyUtil> keyUtils = new Dictionary<KEY, KeyUtil>();
-
         private static HashSet<string> FKIKBodyBone_Female = new HashSet<string>
         {
             "cf_J_Toes01_L",
@@ -35,53 +28,44 @@ namespace StudioAddonLite
         private static FieldInfo f_enable = t_TargetInfo.GetField("enable", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.SetField);
         private static FieldInfo f_gameObject = t_TargetInfo.GetField("gameObject", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField);
 
-        public override void Init()
+        void Start()
         {
             InstallFKMenu();
         }
 
-        //private void InitKey()
-        //{
-        //    keyUtils = new Dictionary<KEY, KeyUtil>();
-        //    foreach(KEY key in DEFAULT_KEYS.Keys)
-        //    {
-        //        keyUtils[key] = KeyUtil.Parse(DEFAULT_KEYS[key]);
-        //    }
-        //}
-
         public void InstallFKMenu()
         {
-            Studio.Studio instance = Studio.Studio.Instance;
-            if(instance != null)
+            var transform = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/02_Kinematic/Viewport/Content").transform;
+            var button = transform.Find("HSNA_ForceFKActive");
+            if(button == null)
             {
-                Transform transform = instance.gameObject.transform.Find("Canvas Main Menu/02_Manipulate/00_Chara/02_Kinematic/Viewport/Content");
-                if(transform.Find("HSNA_ForceFKActive") == null)
-                {
-                    Transform transform2 = transform.Find("Pose");
-                    GameObject gameObject = GameObject.Instantiate<GameObject>(transform2.gameObject);
-                    gameObject.name = "HSNA_ForceFKActive";
-                    var component = gameObject.transform.Find("TextMeshPro").gameObject.GetComponent<TextMeshProUGUI>();
-                    component.text = "FK&IK";
-                    component.SetLayoutDirty();
-                    gameObject.transform.SetParent(transform2.transform.parent);
-                    Button component2 = gameObject.GetComponent<Button>();
-                    component2.onClick = new Button.ButtonClickedEvent();
-                    component2.onClick.AddListener(new UnityAction(OnForceFKIKButtonClick));
-                    gameObject.transform.localPosition = transform2.transform.localPosition - new Vector3(0f, 30f, 0f);
-                    gameObject.transform.localScale = Vector3.one;
-                    Console.WriteLine("FK button installed.");
-                }
-            }
-        }
+                Transform transform2 = transform.Find("Pose");
+                GameObject gameObject = Instantiate(transform2.gameObject);
+                gameObject.name = "HSNA_ForceFKActive";
+                gameObject.transform.SetParent(transform2.transform.parent);
+                gameObject.transform.localPosition = transform2.transform.localPosition - new Vector3(0f, 30f, 0f);
+                gameObject.transform.localScale = Vector3.one;
 
-        private void OnForceFKIKButtonClick()
-        {
-            DoActivateFKIKForce();
+                var textMesh = gameObject.transform.Find("TextMeshPro").gameObject.GetComponent<TextMeshProUGUI>();
+                textMesh.text = "FK&IK";
+                textMesh.SetLayoutDirty();
+
+                Button btn = gameObject.GetComponent<Button>();
+                btn.onClick = new Button.ButtonClickedEvent();
+                btn.onClick.AddListener(DoActivateFKIKForce);
+
+                Console.WriteLine("FK&IK button installed.");
+            }
+            else
+            {
+                DestroyImmediate(button);
+                InstallFKMenu();
+            }
         }
 
         private void DoActivateFKIKForce()
         {
-            foreach(ObjectCtrlInfo objectCtrlInfo in Singleton<Studio.Studio>.Instance.treeNodeCtrl.selectObjectCtrl)
+            foreach(ObjectCtrlInfo objectCtrlInfo in Studio.Studio.Instance.treeNodeCtrl.selectObjectCtrl)
             {
                 if(objectCtrlInfo is OCIChar)
                 {
@@ -146,15 +130,5 @@ namespace StudioAddonLite
                 //IL_168:;
             }
         }
-
-        //private bool GetKeyDown(KEY key)
-        //{
-        //    return keyUtils.ContainsKey(key) && keyUtils[key].TestKeyDown();
-        //}
-
-        //public enum KEY
-        //{
-        //    FORCE_FK_ON
-        //}
     }
 }

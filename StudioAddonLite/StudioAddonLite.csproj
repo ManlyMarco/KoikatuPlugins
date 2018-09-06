@@ -62,9 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseMgr.cs" />
     <Compile Include="FKIKAssistMgr.cs" />
-    <None Include="KeyUtil.cs" />
     <Compile Include="ObjMoveRotAssistMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudioAddonLite.cs" />

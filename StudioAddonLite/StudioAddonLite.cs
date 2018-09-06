@@ -70,7 +70,7 @@ namespace StudioAddonLite
             if(FindObjectOfType<StudioScene>())
             {
                 gameObject.AddComponent<ObjMoveRotAssistMgr>();
-                BaseMgr<FKIKAssistMgr>.Install(gameObject);
+                gameObject.AddComponent<FKIKAssistMgr>();
             }
         }
     }

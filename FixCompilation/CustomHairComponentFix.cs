@@ -8,7 +8,7 @@ namespace FixCompilation
     {
         public static void Patch()
         {
-            var harmony = HarmonyInstance.Create("keelhauled.CustomHairComponentFix.harmony");
+            var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.customhaircomponentfix.harmony");
             harmony.PatchAll(typeof(CustomHairComponentFix));
         }
 

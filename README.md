@@ -12,10 +12,13 @@ Plugins.
 #### FixCompilation - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/FixCompilation.v1.0.0.zip)
 Random fixes and tweaks for the game.  
 A restart is required for most things in the options menu to take effect.
-- Hide the cameratarget
-- Fix exceptions in certain hair accessories
-- Huge performance gains in chara maker
-- Disable character name in maker
+
+<details><summary>Feature list</summary>
+- Hide the cameratarget  
+- Fix exceptions in certain hair accessories  
+- Huge performance gains in chara maker  
+- Disable character name in maker  
+</details>
 
 #### HideUIKK - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/HideUIKK.v1.0.0.zip)
 Hide all the UI with one click, hotkey is `M` by default.  

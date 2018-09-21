@@ -14,10 +14,13 @@ Random fixes and tweaks for the game.
 A restart is required for most things in the options menu to take effect.
 
 <details><summary>Feature list</summary>
-- Hide the cameratarget  
-- Fix exceptions in certain hair accessories  
-- Huge performance gains in chara maker  
-- Disable character name in maker  
+
+```
+- Hide the cameratarget
+- Fix exceptions in certain hair accessories
+- Huge performance gains in chara maker
+- Disable character name in maker
+```
 </details>
 
 #### HideUIKK - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/HideUIKK.v1.0.0.zip)

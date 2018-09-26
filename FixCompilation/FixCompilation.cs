@@ -10,19 +10,23 @@ namespace FixCompilation
     public class FixCompilation : BaseUnityPlugin
     {
         [DisplayName("Disable animation for new items")]
+        [Description("Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableNewAnimation { get; set; }
 
         [DisplayName("Disable indicator for new items")]
+        [Description("Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
 
         [DisplayName("Disable method 'UpdateIKCalc'")]
-        [Description("Disabling this increases performance and reduces stuttering but it could have unknown adverse effects")]
+        [Description("Disabling this increases performance and reduces stuttering but it could have unknown adverse effects.\nChanges take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; set; }
 
         [DisplayName("Disable cameratarget")]
+        [Description("Changes take effect after scene change.")]
         public static ConfigWrapper<bool> DisableCameraTarget { get; set; }
 
         [DisplayName("Disable character name")]
+        [Description("Changes take effect after scene change.")]
         public static ConfigWrapper<bool> DisableCharaName { get; set; }
 
         FixCompilation()

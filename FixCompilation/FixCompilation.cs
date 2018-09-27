@@ -17,8 +17,8 @@ namespace FixCompilation
         [Description("Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
 
-        [DisplayName("Disable method 'UpdateIKCalc'")]
-        [Description("Disabling this increases performance and reduces stuttering but it could have unknown adverse effects.\nChanges take effect after game restart.")]
+        [DisplayName("Disable maker IK")]
+        [Description("Disabling IK increases performance and reduces stuttering but the lack of it is especially noticeable on characters with wide hips.\nChanges take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; set; }
 
         [DisplayName("Disable cameratarget")]

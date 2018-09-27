@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BepInEx;
-using ConfigurationManager;
 
 namespace StudioAddonLite
 {

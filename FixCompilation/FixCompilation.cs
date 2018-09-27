@@ -40,12 +40,12 @@ namespace FixCompilation
 
         void Awake()
         {
-            SceneManager.sceneLoaded += (scene, mode) => SceneLoaded();
+            SceneManager.sceneLoaded += SceneLoaded;
             CustomHairComponentFix.Patch();
             MakerOptimization.Patch();
         }
 
-        static void SceneLoaded()
+        void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
             //QualitySettings.shadowProjection = ShadowProjection.CloseFit;
             //QualitySettings.shadowResolution = ShadowResolution.VeryHigh;

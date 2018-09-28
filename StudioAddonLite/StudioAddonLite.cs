@@ -55,15 +55,15 @@ namespace StudioAddonLite
 
         void Awake()
         {
-            SceneManager.sceneLoaded += (scene, mode) => StartMod();
+            SceneManager.sceneLoaded += SceneLoaded;
         }
 
-        void OnDestroy()
+        void OnDestroy() // for ScriptEngine
         {
-            SceneManager.sceneLoaded -= (scene, mode) => StartMod();
+            SceneManager.sceneLoaded -= SceneLoaded;
         }
 
-        void StartMod()
+        void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if(FindObjectOfType<StudioScene>())
             {

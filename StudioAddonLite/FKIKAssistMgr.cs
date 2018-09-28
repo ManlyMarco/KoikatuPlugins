@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using static BepInEx.Logger;
+using BepInEx.Logging;
 
 namespace StudioAddonLite
 {
@@ -54,12 +56,7 @@ namespace StudioAddonLite
                 btn.onClick = new Button.ButtonClickedEvent();
                 btn.onClick.AddListener(DoActivateFKIKForce);
 
-                Console.WriteLine("FK&IK button installed.");
-            }
-            else
-            {
-                DestroyImmediate(button);
-                InstallFKMenu();
+                Log(LogLevel.Debug ,"FK&IK button installed.");
             }
         }
 
@@ -90,6 +87,7 @@ namespace StudioAddonLite
             {
                 fkikBodyBone = FKIKBodyBone_Female;
             }
+
             ociChar.ActiveKinematicMode((OICharInfo.KinematicMode)2, true, true);
             ociChar.fkCtrl.enabled = true;
             ociChar.oiCharInfo.enableFK = true;

@@ -1,41 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using BepInEx;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TogglePOVKK
 {
-    [BepInPlugin("somenicedudewhomadetogglepov.togglepov", "TogglePOVKK", "1.0.0")]
+    [BepInPlugin("togglepov", "TogglePOVKK", "1.0.0")]
     public class TogglePOVInit : BaseUnityPlugin
     {
-        const string OBJECTNAME = "TogglePOVKKObject";
-
-        void OnLevelWasLoaded(int level)
+        void Awake()
         {
-            StartMod();
+            SceneManager.sceneLoaded += SceneLoaded;
         }
 
-        static void StartMod()
+        void OnDestroy() // for ScriptEngine
         {
-            //Console.WriteLine(SceneManager.GetActiveScene().name);
-            //switch(SceneManager.GetActiveScene().name)
-            //{
-            //    case "StaffAdultRoom":
-            //    {
-                    new GameObject(OBJECTNAME).AddComponent<KKMono>();
-                    //break;
-            //    }
-            //}
+            SceneManager.sceneLoaded -= SceneLoaded;
         }
 
-        static void Bootstrap()
+        void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            var gameobject = GameObject.Find(OBJECTNAME);
-            if(gameobject != null) GameObject.DestroyImmediate(gameobject);
-            StartMod();
+            if(!gameObject.GetComponent<KKMono>())
+            {
+                gameObject.AddComponent<KKMono>();
+            }
         }
     }
 }

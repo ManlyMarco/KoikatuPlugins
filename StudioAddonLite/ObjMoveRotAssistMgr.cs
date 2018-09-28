@@ -18,7 +18,7 @@ namespace StudioAddonLite
         private GuideObject firstTarget;
         private Dictionary<int, GuideObject> targets = new Dictionary<int, GuideObject>();
 
-        private Dictionary<KEY, SavedKeyboardShortcut> keys = new Dictionary<KEY, SavedKeyboardShortcut>()
+        private Dictionary<KEY, SavedKeyboardShortcut> rotationKeys = new Dictionary<KEY, SavedKeyboardShortcut>()
         {
             { KEY.OBJ_ROT_X, StudioAddonLite.KEY_OBJ_ROT_X },
             { KEY.OBJ_ROT_Y, StudioAddonLite.KEY_OBJ_ROT_Y },
@@ -205,7 +205,7 @@ namespace StudioAddonLite
                 }
                 else if(instance.mode == 1)
                 {
-                    foreach(var key in keys)
+                    foreach(var key in rotationKeys)
                     {
                         if(key.Value.IsPressed())
                         {

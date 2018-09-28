@@ -10,7 +10,7 @@ namespace TitleShortcuts
 {
     [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", "1.0.0")]
     [BepInProcess("Koikatu.exe")]
-    public class TitleShortcuts : BaseUnityPlugin
+    class TitleShortcuts : BaseUnityPlugin
     {
         ConfigWrapper<bool> AutoStart { get; }
         SavedKeyboardShortcut StartFemaleEditor { get; }
@@ -60,29 +60,29 @@ namespace TitleShortcuts
             {
                 if(!Manager.Scene.Instance.IsNowLoadingFade)
                 {
-                    if(StartFemaleEditor.IsDown())
+                    if(StartFemaleEditor.IsPressed())
                     {
                         OnCustomFemale();
                     }
-                    else if(StartMaleEditor.IsDown())
+                    else if(StartMaleEditor.IsPressed())
                     {
                         OnCustomMale();
                     }
 
-                    else if(StartUploader.IsDown())
+                    else if(StartUploader.IsPressed())
                     {
                         OnUploader();
                     }
-                    else if(StartDownloader.IsDown())
+                    else if(StartDownloader.IsPressed())
                     {
                         OnDownloader();
                     }
 
-                    else if(StartFreeH.IsDown())
+                    else if(StartFreeH.IsPressed())
                     {
                         OnOtherFreeH();
                     }
-                    else if(StartLiveShow.IsDown())
+                    else if(StartLiveShow.IsPressed())
                     {
                         OnOtherIdolLive();
                     }

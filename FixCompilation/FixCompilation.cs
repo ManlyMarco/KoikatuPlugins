@@ -9,24 +9,24 @@ namespace FixCompilation
     [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.0.0")]
     public class FixCompilation : BaseUnityPlugin
     {
-        [DisplayName("Disable animation for new items")]
-        [Description("Changes take effect after game restart.")]
+        [DisplayName("Disable \"NEW\" indicator animation")]
+        [Description("Major performance improvement in some cases. Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableNewAnimation { get; set; }
 
-        [DisplayName("Disable indicator for new items")]
-        [Description("Changes take effect after game restart.")]
+        [DisplayName("Disable \"NEW\" indicator for new items completely")]
+        [Description("Good performance improvement in some cases. Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
 
         [DisplayName("Disable maker IK")]
         [Description("Disabling IK increases performance and reduces stuttering but the lack of it is especially noticeable on characters with wide hips.\nChanges take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; set; }
 
-        [DisplayName("Disable cameratarget")]
+        [DisplayName("Disable camera target (white focus ring)")]
         [Description("Changes take effect after scene change.")]
         public static ConfigWrapper<bool> DisableCameraTarget { get; set; }
 
-        [DisplayName("Disable character name")]
-        [Description("Changes take effect after scene change.")]
+        [DisplayName("Disable character name box in maker")]
+        [Description("Less clutter on the screen. Changes take effect after scene change.")]
         public static ConfigWrapper<bool> DisableCharaName { get; set; }
 
         FixCompilation()
@@ -34,7 +34,7 @@ namespace FixCompilation
             DisableNewAnimation = new ConfigWrapper<bool>("DisableNewAnimation", this, true);
             DisableNewIndicator = new ConfigWrapper<bool>("DisableNewIndicator", this, true);
             DisableIKCalc = new ConfigWrapper<bool>("DisableIKCalc", this, true);
-            DisableCameraTarget = new ConfigWrapper<bool>("DisableCameraTarget", this, true);
+            DisableCameraTarget = new ConfigWrapper<bool>("DisableCameraTarget", this, false);
             DisableCharaName = new ConfigWrapper<bool>("DisableCharaName", this, true);
         }
 

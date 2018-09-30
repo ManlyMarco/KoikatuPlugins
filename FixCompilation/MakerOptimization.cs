@@ -1,5 +1,5 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
+using BepInEx;
 using Harmony;
 using ChaCustom;
 using Illusion.Extensions;
@@ -8,33 +8,42 @@ namespace FixCompilation
 {
     public static class MakerOptimization
     {
+        private const BindingFlags FullBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+
         public static void Patch()
         {
             var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.makeroptimization.harmony");
-            var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+            
+            SetupSetting(harmony, 
+                typeof(CustomSelectInfoComponent).GetMethod("Disvisible", FullBindingFlags), 
+                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomSelectInfoComponent_Disvisible", FullBindingFlags), 
+                FixCompilation.DisableNewIndicator);
 
-            if(FixCompilation.DisableNewAnimation.Value)
-            {
-                var replace = typeof(CustomNewAnime).GetMethod("Update", bindingFlags);
-                var prefix = typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomNewAnime_Update", bindingFlags);
-                harmony.Patch(replace, new HarmonyMethod(prefix), null); 
-            }
+            SetupSetting(harmony, 
+                typeof(CustomNewAnime).GetMethod("Update", FullBindingFlags),
+                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomNewAnime_Update", FullBindingFlags),
+                FixCompilation.DisableNewAnimation);
 
-            if(FixCompilation.DisableNewIndicator.Value)
-            {
-                var replace = typeof(CustomSelectInfoComponent).GetMethod("Disvisible", bindingFlags);
-                var prefix = typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomSelectInfoComponent_Disvisible", bindingFlags);
-                harmony.Patch(replace, new HarmonyMethod(prefix), null);
-            }
-
-            if(FixCompilation.DisableIKCalc.Value)
-            {
-                var replace = typeof(CustomBase).GetMethod("UpdateIKCalc", bindingFlags);
-                var prefix = typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomBase_UpdateIKCalc", bindingFlags);
-                harmony.Patch(replace, new HarmonyMethod(prefix), null);
-            }
+            SetupSetting(harmony, 
+                typeof(CustomBase).GetMethod("UpdateIKCalc", FullBindingFlags),
+                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomBase_UpdateIKCalc", FullBindingFlags),
+                FixCompilation.DisableIKCalc);
         }
 
+        private static void SetupSetting(HarmonyInstance harmony, MethodInfo targetMethod, MethodInfo patchMethod, ConfigWrapper<bool> targetSetting)
+        {
+            if (targetSetting.Value)
+                harmony.Patch(targetMethod, new HarmonyMethod(patchMethod), null);
+
+            targetSetting.SettingChanged += (sender, args) =>
+            {
+                if (targetSetting.Value)
+                    harmony.Patch(targetMethod, new HarmonyMethod(patchMethod), null);
+                else
+                    harmony.RemovePatch(targetMethod, patchMethod);
+            };
+        }
+        
         // Stop animation on new items
         static bool HarmonyPatch_CustomNewAnime_Update()
         {
@@ -47,7 +56,7 @@ namespace FixCompilation
             __instance.objNew.SetActiveIfDifferent(false);
         }
 
-        // Disable heavy method I know nothing about
+        // Disable heavy method with little use
         static bool HarmonyPatch_CustomBase_UpdateIKCalc()
         {
             return false;

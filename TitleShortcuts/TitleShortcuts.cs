@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using BepInEx;
 using static BepInEx.Logger;
@@ -12,38 +14,66 @@ namespace TitleShortcuts
     [BepInProcess("Koikatu.exe")]
     class TitleShortcuts : BaseUnityPlugin
     {
-        ConfigWrapper<bool> AutoStart { get; }
-        SavedKeyboardShortcut StartFemaleEditor { get; }
-        SavedKeyboardShortcut StartMaleEditor { get; }
+        [DisplayName("Automatic start mode")]
+        [Description("Choose which mode to start automatically when launching.\nDuring startup, hold esc to cancel automatic behaviour or hold another shortcut to use that instead.")]
+        ConfigWrapper<AutoStartOption> AutoStart { get; }
+
+        [DisplayName("!Start female maker")]
+        SavedKeyboardShortcut StartFemaleMaker { get; }
+        
+        [DisplayName("!Start male maker")]
+        SavedKeyboardShortcut StartMaleMaker { get; }
+
+        [DisplayName("Start uploader")]
         SavedKeyboardShortcut StartUploader { get; }
+
+        [DisplayName("Start downloader")]
         SavedKeyboardShortcut StartDownloader { get; }
+
+        [DisplayName("Start free h")]
         SavedKeyboardShortcut StartFreeH { get; }
+
+        [DisplayName("Start live show")]
         SavedKeyboardShortcut StartLiveShow { get; }
+
         bool check = false;
+        bool cancelAuto = false;
+        TitleScene titleScene;
+
+        enum AutoStartOption
+        {
+            Disabled,
+            FemaleMaker,
+            MaleMaker,
+            FreeH
+        }
 
         TitleShortcuts()
         {
-            AutoStart = new ConfigWrapper<bool>("AutoStart", this, false);
-            StartFemaleEditor = new SavedKeyboardShortcut("Start Female Editor", this, new KeyboardShortcut(KeyCode.F));
-            StartMaleEditor = new SavedKeyboardShortcut("Start Male Editor", this, new KeyboardShortcut(KeyCode.M));
-            StartUploader = new SavedKeyboardShortcut("Start Uploader", this, new KeyboardShortcut(KeyCode.U));
-            StartDownloader = new SavedKeyboardShortcut("Start Downloader", this, new KeyboardShortcut(KeyCode.D));
-            StartFreeH = new SavedKeyboardShortcut("Start FreeH", this, new KeyboardShortcut(KeyCode.H));
-            StartLiveShow = new SavedKeyboardShortcut("Start Live Show", this, new KeyboardShortcut(KeyCode.L));
+            AutoStart = new ConfigWrapper<AutoStartOption>("AutoStart", this, AutoStartOption.Disabled);
+            StartFemaleMaker = new SavedKeyboardShortcut("StartFemaleMaker", this, new KeyboardShortcut(KeyCode.F));
+            StartMaleMaker = new SavedKeyboardShortcut("StartMaleMaker", this, new KeyboardShortcut(KeyCode.M));
+            StartUploader = new SavedKeyboardShortcut("StartUploader", this, new KeyboardShortcut(KeyCode.U));
+            StartDownloader = new SavedKeyboardShortcut("StartDownloader", this, new KeyboardShortcut(KeyCode.D));
+            StartFreeH = new SavedKeyboardShortcut("StartFreeH", this, new KeyboardShortcut(KeyCode.H));
+            StartLiveShow = new SavedKeyboardShortcut("StartLiveShow", this, new KeyboardShortcut(KeyCode.L));
         }
 
         void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += (x, y) => StartInput(x);
+            SceneManager.sceneLoaded += StartInput;
         }
 
-        void StartInput(Scene scene)
+        void StartInput(Scene scene, LoadSceneMode mode)
         {
-            if(scene.name == "Title")
+            var title = FindObjectOfType<TitleScene>();
+
+            if(title)
             {
                 if(!check)
                 {
+                    titleScene = title;
                     check = true;
                     StartCoroutine(InputCheck()); 
                 }
@@ -58,85 +88,72 @@ namespace TitleShortcuts
         {
             while(check)
             {
+                if(!cancelAuto && AutoStart.Value != AutoStartOption.Disabled && (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.F1)))
+                {
+                    Log(LogLevel.Message, "Automatic start cancelled");
+                    cancelAuto = true;
+                }
+
                 if(!Manager.Scene.Instance.IsNowLoadingFade)
                 {
-                    if(StartFemaleEditor.IsPressed())
+                    if(StartFemaleMaker.IsPressed())
                     {
-                        OnCustomFemale();
+                        StartMode(titleScene.OnCustomFemale, "Starting female maker");
                     }
-                    else if(StartMaleEditor.IsPressed())
+                    else if(StartMaleMaker.IsPressed())
                     {
-                        OnCustomMale();
+                        StartMode(titleScene.OnCustomMale, "Starting male maker");
                     }
 
                     else if(StartUploader.IsPressed())
                     {
-                        OnUploader();
+                        StartMode(titleScene.OnUploader, "Starting uploader");
                     }
                     else if(StartDownloader.IsPressed())
                     {
-                        OnDownloader();
+                        StartMode(titleScene.OnDownloader, "Starting downloader");
                     }
 
                     else if(StartFreeH.IsPressed())
                     {
-                        OnOtherFreeH();
+                        StartMode(titleScene.OnOtherFreeH, "Starting free h");
                     }
                     else if(StartLiveShow.IsPressed())
                     {
-                        OnOtherIdolLive();
+                        StartMode(titleScene.OnOtherIdolLive, "Starting live show");
                     }
 
-                    else if(AutoStart.Value)
+                    else if(!cancelAuto && AutoStart.Value != AutoStartOption.Disabled)
                     {
-                        OnCustomFemale();
+                        switch(AutoStart.Value)
+                        {
+                            case AutoStartOption.FemaleMaker:
+                                StartMode(titleScene.OnCustomFemale, "Automatically starting female maker");
+                                break;
+
+                            case AutoStartOption.MaleMaker:
+                                StartMode(titleScene.OnCustomMale, "Automatically starting male maker");
+                                break;
+
+                            case AutoStartOption.FreeH:
+                                StartMode(titleScene.OnOtherFreeH, "Automatically starting free h");
+                                break;
+                        }
                     }
+
+                    cancelAuto = true;
                 }
 
                 yield return null;
             }
         }
 
-        void OnCustomMale()
+        void StartMode(UnityAction action, string msg)
         {
-            Log(LogLevel.Message, StartMaleEditor.Key);
-            Singleton<TitleScene>.Instance.OnCustomMale();
+            if(FindObjectOfType<ConfigScene>()) return;
+            Log(LogLevel.Message, msg);
             check = false;
-        }
-
-        void OnCustomFemale()
-        {
-            Log(LogLevel.Message, StartFemaleEditor.Key);
-            Singleton<TitleScene>.Instance.OnCustomFemale();
-            check = false;
-        }
-
-        void OnUploader()
-        {
-            Log(LogLevel.Message, StartUploader.Key);
-            Singleton<TitleScene>.Instance.OnUploader();
-            check = false;
-        }
-
-        void OnDownloader()
-        {
-            Log(LogLevel.Message, StartDownloader.Key);
-            Singleton<TitleScene>.Instance.OnDownloader();
-            check = false;
-        }
-
-        void OnOtherFreeH()
-        {
-            Log(LogLevel.Message, StartFreeH.Key);
-            Singleton<TitleScene>.Instance.OnOtherFreeH();
-            check = false;
-        }
-
-        void OnOtherIdolLive()
-        {
-            Log(LogLevel.Message, StartLiveShow.Key);
-            Singleton<TitleScene>.Instance.OnOtherIdolLive();
-            check = false;
+            action();
         }
     }
 }

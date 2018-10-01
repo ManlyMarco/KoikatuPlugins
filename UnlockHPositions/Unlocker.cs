@@ -14,7 +14,7 @@ namespace UnlockHPositions
         void Awake()
         {
             var harmony = HarmonyInstance.Create("keelhauled.unlockhpositions.harmony");
-            harmony.PatchAll(typeof(HarmonyPatches)); ;
+            harmony.PatchAll(typeof(HarmonyPatches));
         }
     }
 

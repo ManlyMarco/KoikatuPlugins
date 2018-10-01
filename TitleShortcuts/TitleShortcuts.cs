@@ -30,7 +30,7 @@ namespace TitleShortcuts
         [DisplayName("Start downloader")]
         SavedKeyboardShortcut StartDownloader { get; }
 
-        [DisplayName("Start free h")]
+        [DisplayName("Start free H")]
         SavedKeyboardShortcut StartFreeH { get; }
 
         [DisplayName("Start live show")]
@@ -43,8 +43,11 @@ namespace TitleShortcuts
         enum AutoStartOption
         {
             Disabled,
+            [Description("Female maker")]
             FemaleMaker,
+            [Description("Male maker")]
             MaleMaker,
+            [Description("Free H")]
             FreeH
         }
 
@@ -116,7 +119,7 @@ namespace TitleShortcuts
 
                     else if(StartFreeH.IsPressed())
                     {
-                        StartMode(titleScene.OnOtherFreeH, "Starting free h");
+                        StartMode(titleScene.OnOtherFreeH, "Starting free H");
                     }
                     else if(StartLiveShow.IsPressed())
                     {
@@ -136,7 +139,7 @@ namespace TitleShortcuts
                                 break;
 
                             case AutoStartOption.FreeH:
-                                StartMode(titleScene.OnOtherFreeH, "Automatically starting free h");
+                                StartMode(titleScene.OnOtherFreeH, "Automatically starting free H");
                                 break;
                         }
                     }

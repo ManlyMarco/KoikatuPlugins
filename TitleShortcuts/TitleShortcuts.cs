@@ -10,7 +10,7 @@ using BepInEx.Logging;
 
 namespace TitleShortcuts
 {
-    [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", "1.0.0")]
+    [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", "1.1.0")]
     [BepInProcess("Koikatu.exe")]
     class TitleShortcuts : BaseUnityPlugin
     {

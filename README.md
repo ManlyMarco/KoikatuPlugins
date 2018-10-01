@@ -1,12 +1,12 @@
 # KoikatuPlugins
 
 ## Description
-Random koikatsu plugins.  
+Random koikatu plugins.  
 ConfigurationManager from BepisPlugins can be used to change settings for some of the plugins.
 
 ## Installation
-1. Install BepInEx and BepinPlugins
-2. Put the plugin dll files to the BepInEx folder
+1. Install BepInEx and BepisPlugins
+2. Unpack zip file into the koikatu root folder
 
 ## Plugins
 
@@ -49,3 +49,9 @@ Unlock all H positions right away (hopefully).
 #### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/TitleShortcuts.v1.0.0.zip)
 Title menu keyboard shortcuts to open different modes.  
 For example F to open the female editor.
+
+## Credits
+Keelhauled  
+MarC0  
+Joan6694 for ObjectTreeDebug  
+Original maker of TogglePOV

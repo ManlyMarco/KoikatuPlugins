@@ -13,21 +13,23 @@ namespace FixCompilation
         public static void Patch()
         {
             var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.makeroptimization.harmony");
-            
-            SetupSetting(harmony, 
-                typeof(CustomSelectInfoComponent).GetMethod("Disvisible", FullBindingFlags), 
-                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomSelectInfoComponent_Disvisible", FullBindingFlags), 
+
+            SetupSetting(harmony,
+                typeof(CustomSelectInfoComponent).GetMethod("Disvisible", FullBindingFlags),
+                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomSelectInfoComponent_Disvisible), FullBindingFlags),
                 FixCompilation.DisableNewIndicator);
 
-            SetupSetting(harmony, 
+            SetupSetting(harmony,
                 typeof(CustomNewAnime).GetMethod("Update", FullBindingFlags),
-                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomNewAnime_Update", FullBindingFlags),
+                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomNewAnime_Update), FullBindingFlags),
                 FixCompilation.DisableNewAnimation);
 
-            SetupSetting(harmony, 
-                typeof(CustomBase).GetMethod("UpdateIKCalc", FullBindingFlags),
-                typeof(MakerOptimization).GetMethod("HarmonyPatch_CustomBase_UpdateIKCalc", FullBindingFlags),
-                FixCompilation.DisableIKCalc);
+            if(FixCompilation.DisableIKCalc.Value)
+            {
+                var replace = typeof(CustomBase).GetMethod("UpdateIKCalc", FullBindingFlags);
+                var prefix = typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomBase_UpdateIKCalc), FullBindingFlags);
+                harmony.Patch(replace, new HarmonyMethod(prefix), null);
+            }
         }
 
         private static void SetupSetting(HarmonyInstance harmony, MethodInfo targetMethod, MethodInfo patchMethod, ConfigWrapper<bool> targetSetting)

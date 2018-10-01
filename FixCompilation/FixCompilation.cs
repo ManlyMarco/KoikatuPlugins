@@ -17,8 +17,9 @@ namespace FixCompilation
         public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
 
         [DisplayName("Disable maker IK")]
-        [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n" +
-                     "Most noticeable on characters with wide hips where the hands are not moving with the hip line.")]
+        [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n\n" +
+                     "Most noticeable on characters with wide hips where the hands are not moving with the hip line.\n\n" +
+                     "Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; set; }
 
         [DisplayName("Disable camera target (white focus ring)")]

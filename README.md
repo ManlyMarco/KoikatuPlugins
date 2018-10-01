@@ -1,12 +1,12 @@
 # KoikatuPlugins
 
 ## Description
-Random koikatu plugins.  
+Various koikatu plugins.  
 ConfigurationManager from BepisPlugins can be used to change settings for some of the plugins.
 
 ## Installation
-1. Install BepInEx and BepisPlugins
-2. Unpack zip file into the koikatu root folder
+1. Install BepInEx and BepisPlugins.
+2. Unpack the plugin zip file into the koikatu root folder.
 
 ## Plugins
 

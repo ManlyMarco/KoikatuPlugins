@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using BepInEx;
+using Manager;
 
 namespace ObjectTreeDebugKK
 {
@@ -21,6 +22,8 @@ namespace ObjectTreeDebugKK
         private Rect _rect = new Rect(Screen.width / 4f, Screen.height / 4f, Screen.width / 2f, Screen.height / 2f);
         private int _randomId;
         private SavedKeyboardShortcut ShowConsole { get; }
+        private bool _isStudio;
+        private bool noCtrlConditionDone = false;
 
         ObjectTreeDebug()
         {
@@ -36,12 +39,23 @@ namespace ObjectTreeDebugKK
                 string n = LayerMask.LayerToName(i);
                 //UnityEngine.Debug.Log("Layer " + i + " " + n);
             }
+
+            _isStudio = Application.productName == "CharaStudio";
         }
 
         void Update()
         {
-            if (ShowConsole.IsDown())
+            if(ShowConsole.IsDown())
+            {
                 _debug = !_debug;
+
+                if(!noCtrlConditionDone && _isStudio && !Scene.Instance.IsNowLoadingFade && Singleton<StudioScene>.Instance)
+                {
+                    var oldCondition = Studio.Studio.Instance.cameraCtrl.noCtrlCondition;
+                    Studio.Studio.Instance.cameraCtrl.noCtrlCondition = () => (_debug && _rect.Contains(Event.current.mousePosition)) || oldCondition();
+                    noCtrlConditionDone = true;
+                }
+            }
         }
 
         void OnDestroy()

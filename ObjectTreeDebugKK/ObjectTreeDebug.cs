@@ -9,7 +9,7 @@ using Manager;
 
 namespace ObjectTreeDebugKK
 {
-    [BepInPlugin("ObjectTreeDebugKKPort", "ObjectTreeDebugKK", "1.0.0")]
+    [BepInPlugin("ObjectTreeDebugKKPort", "ObjectTreeDebugKK", "1.0.1")]
     public class ObjectTreeDebug : BaseUnityPlugin
     {
         private Transform _target;

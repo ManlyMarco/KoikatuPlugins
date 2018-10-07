@@ -10,7 +10,7 @@ ConfigurationManager from BepisPlugins can be used to change settings for some o
 
 ## Plugins
 
-#### FixCompilation - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/FixCompilation.v1.0.0.zip)
+#### FixCompilation - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/FixCompilation.v1.0.1.zip)
 Random fixes and tweaks for the game.  
 A restart is required for most things in the options menu to take effect.
 
@@ -24,6 +24,14 @@ A restart is required for most things in the options menu to take effect.
 ```
 </details>
 
+<details><summary>Changelog</summary>
+
+```
+v1.0.1
+- Better descriptions in ConfigurationManager
+```
+</details>
+
 #### HideUIKK - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/HideUIKK.v1.0.0.zip)
 Hide all the UI with one click, hotkey is `M` by default.  
 More menus can be added by editing `HideUI.txt`.
@@ -31,10 +39,18 @@ More menus can be added by editing `HideUI.txt`.
 #### LockOnPluginKK - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/LockOnPluginKK.v1.0.0.zip)
 Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).
 
-#### ObjectTreeDebugKK - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/ObjectTreeDebugKK.v1.0.0.zip)
+#### ObjectTreeDebugKK - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/ObjectTreeDebugKK.v1.0.1.zip)
 Show debug info about GameObjects in the scene.  
 Default hotkey is `right ctrl`.  
 Original version for HS made by Joan6694.
+
+<details><summary>Changelog</summary>
+
+```
+v1.0.1
+- Camera will no longer move when using the UI
+```
+</details>
 
 #### StudioAddonLite - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/StudioAddonLite.v1.0.0.zip)
 A few HSStudioAddon features ported over to KK.  
@@ -46,11 +62,20 @@ A port of the TogglePOV mod from HS.
 #### UnlockHPositions - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/UnlockHPositions.v1.0.0.zip)
 Unlock all H positions right away (hopefully).
 
-#### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/TitleShortcuts.v1.0.0.zip)
+#### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/TitleShortcuts.v1.1.0.zip)
 Title menu keyboard shortcuts to open different modes.  
 For example F to open the female editor.
 
-#### DefaultParamEditor - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/DefaultParamEditor.v1.0.0.zip)
+<details><summary>Changelog</summary>
+
+```
+v1.1.0
+- Autostart options for ConfigurationManager
+- Ability to cancel automatic start
+```
+</details>
+
+#### DefaultParamEditor - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/DefaultParamEditor.v1.0.0.zip)
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
 This only affects parameters that make sense to be saved.
 

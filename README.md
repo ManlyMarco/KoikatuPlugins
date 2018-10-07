@@ -50,6 +50,13 @@ Unlock all H positions right away (hopefully).
 Title menu keyboard shortcuts to open different modes.  
 For example F to open the female editor.
 
+#### DefaultParamEditor - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/DefaultParamEditor.v1.0.0.zip)
+Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
+This only affects parameters that make sense to be saved.
+
+To use, set your preferred settings normally and then save them in ConfigurationManager.  
+Now when loading a character or starting the studio these settings will be the defaults.
+
 ## Credits
 Keelhauled  
 MarC0  

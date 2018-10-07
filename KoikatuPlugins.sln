@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfieCam", "SelfieCam\Self
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitleShortcuts", "TitleShortcuts\TitleShortcuts.csproj", "{7609FC13-64E8-4402-A3AF-383B4A7779BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "DefaultParamEditor\DefaultParamEditor.csproj", "{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7609FC13-64E8-4402-A3AF-383B4A7779BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

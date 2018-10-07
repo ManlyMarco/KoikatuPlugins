@@ -70,8 +70,8 @@ For example F to open the female editor.
 
 ```
 v1.1.0
-- Autostart options for ConfigurationManager
-- Ability to cancel automatic start
+- Autostart options in ConfigurationManager
+- Ability to cancel automatic start by holding esc
 ```
 </details>
 

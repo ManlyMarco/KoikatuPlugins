@@ -67,6 +67,7 @@ namespace DefaultParamEditor
             public void PrintProperties()
             {
                 Console.WriteLine(new string('=', 40));
+                Console.WriteLine(nameof(CharacterParamData));
                 foreach(var prop in AccessTools.GetDeclaredProperties(typeof(CharacterParamData)))
                 {
                     var target = AccessTools.Property(typeof(CharacterParamData), prop.Name);
@@ -76,27 +77,21 @@ namespace DefaultParamEditor
                 Console.WriteLine(new string('=', 40));
             }
 
-            public int coordinateType { get; set; }
-            public int backCoordinateType { get; set; }
             public byte[] clothesState { get; set; }
             public byte shoesType { get; set; }
-            public bool[] showAccessory { get; set; }
+            //public byte[] siruLv { get; set; }
+            public float hohoAkaRate { get; set; }
+            public float nipStandRate { get; set; }
+            public byte tearsLv { get; set; }
+
+            public int eyesLookPtn { get; set; }
+            public int neckLookPtn { get; set; }
             public int eyebrowPtn { get; set; }
-            public float eyebrowOpenMax { get; set; }
             public int eyesPtn { get; set; }
             public float eyesOpenMax { get; set; }
             public bool eyesBlink { get; set; }
-            public bool eyesYure { get; set; }
             public int mouthPtn { get; set; }
-            public float mouthOpenMax { get; set; }
-            public bool mouthFixed { get; set; }
-            public bool mouthAdjustWidth { get; set; }
-            public byte tongueState { get; set; }
-            public int eyesLookPtn { get; set; }
-            public int neckLookPtn { get; set; }
-            public float nipStandRate { get; set; }
-            public byte tearsLv { get; set; }
-            //public byte[] siruLv { get; set; }
+            //public float mouthOpenMax { get; set; }
         }
     }
 }

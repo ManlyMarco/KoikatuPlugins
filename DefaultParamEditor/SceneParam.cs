@@ -21,7 +21,7 @@ namespace DefaultParamEditor
             if(File.Exists(savePath))
             {
                 data = MessagePackSerializer.Deserialize<SceneParamData>(File.ReadAllBytes(savePath));
-                data.PrintProperties();
+                data.PrintFields();
                 propertiesInitialized = true;
             }
 
@@ -64,9 +64,10 @@ namespace DefaultParamEditor
         [MessagePackObject(true)]
         public class SceneParamData
         {
-            public void PrintProperties()
+            public void PrintFields()
             {
                 Console.WriteLine(new string('=', 40));
+                Console.WriteLine(nameof(SceneParamData));
                 foreach(var prop in AccessTools.GetDeclaredFields(typeof(SceneParamData)))
                 {
                     var target = AccessTools.Field(typeof(SceneParamData), prop.Name);

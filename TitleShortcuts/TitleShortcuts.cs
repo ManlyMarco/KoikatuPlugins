@@ -64,7 +64,6 @@ namespace TitleShortcuts
 
         void Awake()
         {
-            DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += StartInput;
         }
 

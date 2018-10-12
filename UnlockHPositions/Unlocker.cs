@@ -1,25 +1,30 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Harmony;
 using BepInEx;
-using Manager;
 
 namespace UnlockHPositions
 {
-    [BepInPlugin("keelhauled.unlockhpositions", "H Position Unlocker", "1.0.0")]
+    [BepInPlugin("keelhauled.unlockhpositions", "UnlockHPositions", "1.1.0")]
     public class Unlocker : BaseUnityPlugin
     {
+        [DisplayName("Unlock all positions")]
+        [Description("Unlocks every possible position, including ones that are not supposed to be used in that spot.\n" +
+                     "Scene restart required for changes to take effect.")]
+        public static ConfigWrapper<bool> UnlockAll { get; set; }
+
+        Unlocker()
+        {
+            UnlockAll = new ConfigWrapper<bool>("UnlockAll", this, false);
+        }
+
         void Awake()
         {
             var harmony = HarmonyInstance.Create("keelhauled.unlockhpositions.harmony");
-            harmony.PatchAll(typeof(HarmonyPatches));
+            harmony.PatchAll(typeof(Unlocker));
         }
-    }
 
-    public static class HarmonyPatches
-    {
         [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "CreateListAnimationFileName")]
         public static bool HarmonyPatch_HSceneProc_CreateListAnimationFileName(HSceneProc __instance, ref bool _isAnimListCreate, ref int _list)
         {
@@ -27,16 +32,6 @@ namespace UnlockHPositions
 
             if(_isAnimListCreate)
                 traverse.Method("CreateAllAnimationList").GetValue();
-
-            //SaveData saveData = Singleton<Game>.Instance.saveData;
-            //Dictionary<int, HashSet<int>> clubContents = saveData.clubContents;
-
-            //clubContents.TryGetValue(1, out HashSet<int> hashSet);
-            //if(hashSet == null)
-            //    hashSet = new HashSet<int>();
-
-            //var playHList = Singleton<Game>.Instance.glSaveData.playHList;
-            //bool flag = __instance.categorys.Any(c => MathfEx.IsRange(1010, c, 1099, true) || MathfEx.IsRange(1100, c, 1199, true));
 
             var lstAnimInfo = traverse.Field("lstAnimInfo").GetValue<List<HSceneProc.AnimationListInfo>[]>();
             var lstUseAnimInfo = traverse.Field("lstUseAnimInfo").GetValue<List<HSceneProc.AnimationListInfo>[]>();
@@ -46,36 +41,13 @@ namespace UnlockHPositions
                 lstUseAnimInfo[i] = new List<HSceneProc.AnimationListInfo>();
                 if(_list == -1 || i == _list)
                 {
-                    //if(!playHList.TryGetValue(i, out HashSet<int> hashSet2))
-                    //    hashSet2 = new HashSet<int>();
-
-                    //if(!__instance.flags.isFreeH || hashSet2.Count != 0 || flag)
-                    //{
-                        for(int j = 0; j < lstAnimInfo[i].Count; j++)
+                    for(int j = 0; j < lstAnimInfo[i].Count; j++)
+                    {
+                        if(UnlockAll.Value || lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
                         {
-                            if(lstAnimInfo[i][j].lstCategory.Any(c => __instance.categorys.Contains(c.category)))
-                            {
-                                //if(!__instance.flags.isFreeH)
-                                //{
-                                //    if(lstAnimInfo[i][j].isRelease && !hashSet.Contains(i * 1000 + lstAnimInfo[i][j].id))
-                                //        continue;
-
-                                //    if(lstAnimInfo[i][j].isExperience != 2 && lstAnimInfo[i][j].isExperience > (int)__instance.flags.experience)
-                                //        continue;
-                                //}
-                                //else
-                                //{
-                                //    if(lstAnimInfo[i][j].stateRestriction > (int)__instance.flags.lstHeroine[0].HExperience)
-                                //        continue;
-
-                                //    if(!hashSet2.Contains(lstAnimInfo[i][j].id) && !flag)
-                                //        continue;
-                                //}
-
-                                lstUseAnimInfo[i].Add(lstAnimInfo[i][j]);
-                            }
+                            lstUseAnimInfo[i].Add(lstAnimInfo[i][j]);
                         }
-                    //}
+                    }
                 }
             }
 

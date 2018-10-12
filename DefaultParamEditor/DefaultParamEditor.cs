@@ -16,8 +16,10 @@ namespace DefaultParamEditor
         private const string ResetValue = "Reset";
 
         [Browsable(true)]
-        [DisplayName("Save character parameters")]
-        [CustomSettingDraw(nameof(SaveCharaParam))]
+        [DisplayName("Set default character parameters")]
+        [Description("Saves paramerers like Blinking, Type of shoes, Eye follow, etc.\nas the default values for newly loaded characters.\n\n" +
+                     "Values are taken from the currently selected character.")]
+        [CustomSettingDraw(nameof(CharaParamSettingDrawer))]
         [DefaultValue(ResetValue)]
         protected string CharaParamSetting
         {
@@ -28,14 +30,16 @@ namespace DefaultParamEditor
                 {
                     Logger.Log(LogLevel.Debug, "Resetting charaParam");
                     charaParam.Reset();
-                    Save();
+                    SaveToFile();
                 }
             }
         }
 
         [Browsable(true)]
-        [DisplayName("Save scene parameters")]
-        [CustomSettingDraw(nameof(SaveSceneParam))]
+        [DisplayName("Set default scene parameters")]
+        [Description("Saves paramerers like Bloom, Vignette, Shading, etc.\nas the default values for newly created scenes.\n\n" +
+                     "Values are taken from the current scene. They are used when starting Studio and when resetting the current scene.")]
+        [CustomSettingDraw(nameof(SceneParamSettingDrawer))]
         [DefaultValue(ResetValue)]
         protected string SceneParamSetting
         {
@@ -46,7 +50,7 @@ namespace DefaultParamEditor
                 {
                     Logger.Log(LogLevel.Debug, "Resetting sceneParam");
                     sceneParam.Reset();
-                    Save();
+                    SaveToFile();
                 }
             }
         }
@@ -61,28 +65,28 @@ namespace DefaultParamEditor
             savePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DefaultParamEditorData.bin");
         }
 
-        private void Save()
+        private void SaveToFile()
         {
             var bytes = MessagePackSerializer.Serialize(data);
             File.WriteAllBytes(savePath, bytes);
             //data.PrintData();
         }
 
-        private void SaveCharaParam()
+        private void CharaParamSettingDrawer()
         {
-            if (GUILayout.Button("Save", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
                 charaParam.Save();
-                Save();
+                SaveToFile();
             }
         }
 
-        private void SaveSceneParam()
+        private void SceneParamSettingDrawer()
         {
-            if (GUILayout.Button("Save", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button("Save current as default", GUILayout.ExpandWidth(true)))
             {
                 sceneParam.Save();
-                Save();
+                SaveToFile();
             }
         }
 

@@ -61,6 +61,7 @@
     <Compile Include="CharacterParam.cs" />
     <Compile Include="DefaultParamEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ParamData.cs" />
     <Compile Include="SceneParam.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

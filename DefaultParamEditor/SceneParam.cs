@@ -1,30 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Harmony;
-using MessagePack;
+﻿using Harmony;
 using Studio;
-using UnityEngine;
+using static BepInEx.Logger;
+using BepInEx.Logging;
 
 namespace DefaultParamEditor
 {
     public class SceneParam
     {
-        static string savePath;
-        static bool propertiesInitialized = false;
-        static SceneParamData data = new SceneParamData();
+        static ParamData.SceneData sceneData;
 
-        public SceneParam()
+        public SceneParam(ParamData.SceneData data)
         {
-            savePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DefaultParamEditor_SceneParamData.bin");
-
-            if(File.Exists(savePath))
-            {
-                data = MessagePackSerializer.Deserialize<SceneParamData>(File.ReadAllBytes(savePath));
-                data.PrintFields();
-                propertiesInitialized = true;
-            }
-
+            sceneData = data;
             var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.sceneparam.harmony");
             harmony.PatchAll(typeof(SceneParam));
         }
@@ -32,79 +19,74 @@ namespace DefaultParamEditor
         public void Save()
         {
             var sceneInfo = Studio.Studio.Instance.sceneInfo;
+            var systemButtonCtrl = Studio.Studio.Instance.systemButtonCtrl;
 
-            if(sceneInfo != null)
+            if(sceneInfo != null && systemButtonCtrl != null)
             {
-                foreach(var field in AccessTools.GetDeclaredFields(typeof(SceneParamData)))
-                {
-                    var target = AccessTools.Field(sceneInfo.GetType(), field.Name);
-                    var value = target.GetValue(sceneInfo);
-                    field.SetValue(data, value);
-                }
+                sceneData.aceNo = sceneInfo.aceNo;
+                sceneData.aceBlend = sceneInfo.aceBlend;
+                sceneData.enableAOE = Traverse.Create(systemButtonCtrl).Field("amplifyOcculusionEffectInfo").Property("aoe").Property("enabled").GetValue<bool>();
+                sceneData.aoeColor = sceneInfo.aoeColor;
+                sceneData.aoeRadius = sceneInfo.aoeRadius;
+                sceneData.enableBloom = sceneInfo.enableBloom;
+                sceneData.bloomIntensity = sceneInfo.bloomIntensity;
+                sceneData.bloomThreshold = sceneInfo.bloomThreshold;
+                sceneData.bloomBlur = sceneInfo.bloomBlur;
+                sceneData.enableDepth = sceneInfo.enableDepth;
+                sceneData.depthFocalSize = sceneInfo.depthFocalSize;
+                sceneData.depthAperture = sceneInfo.depthAperture;
+                sceneData.enableVignette = sceneInfo.enableVignette;
+                sceneData.enableFog = sceneInfo.enableFog;
+                sceneData.fogColor = sceneInfo.fogColor;
+                sceneData.fogHeight = sceneInfo.fogHeight;
+                sceneData.fogStartDistance = sceneInfo.fogStartDistance;
+                sceneData.enableSunShafts = sceneInfo.enableSunShafts;
+                sceneData.sunThresholdColor = sceneInfo.sunThresholdColor;
+                sceneData.sunColor = sceneInfo.sunColor;
+                sceneData.enableShadow = Traverse.Create(systemButtonCtrl).Field("selfShadowInfo").Field("toggleEnable").Property("isOn").GetValue<bool>();
+                sceneData.rampG = sceneInfo.rampG;
+                sceneData.ambientShadowG = sceneInfo.ambientShadowG;
+                sceneData.lineWidthG = sceneInfo.lineWidthG;
+                sceneData.lineColorG = sceneInfo.lineColorG;
+                sceneData.ambientShadow = sceneInfo.ambientShadow;
 
-                var bytes = MessagePackSerializer.Serialize(data);
-                File.WriteAllBytes(savePath, bytes);
-                propertiesInitialized = true;
+                sceneData.saved = true;
+                Log(LogLevel.Message, "Default scene settings saved");
             }
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(SceneInfo), nameof(SceneInfo.Init))]
         public static void HarmonyPatch_SceneInfo_Init(SceneInfo __instance)
         {
-            if(propertiesInitialized)
+            if(sceneData.saved)
             {
-                foreach(var prop in AccessTools.GetDeclaredFields(typeof(SceneParamData)))
-                {
-                    var target = AccessTools.Field(__instance.GetType(), prop.Name);
-                    target.SetValue(__instance, prop.GetValue(data));
-                }
+                __instance.aceNo = sceneData.aceNo;
+                __instance.aceBlend = sceneData.aceBlend;
+                __instance.enableAOE = sceneData.enableAOE;
+                __instance.aoeColor = sceneData.aoeColor;
+                __instance.aoeRadius = sceneData.aoeRadius;
+                __instance.enableBloom = sceneData.enableBloom;
+                __instance.bloomIntensity = sceneData.bloomIntensity;
+                __instance.bloomThreshold = sceneData.bloomThreshold;
+                __instance.bloomBlur = sceneData.bloomBlur;
+                __instance.enableDepth = sceneData.enableDepth;
+                __instance.depthFocalSize = sceneData.depthFocalSize;
+                __instance.depthAperture = sceneData.depthAperture;
+                __instance.enableVignette = sceneData.enableVignette;
+                __instance.enableFog = sceneData.enableFog;
+                __instance.fogColor = sceneData.fogColor;
+                __instance.fogHeight = sceneData.fogHeight;
+                __instance.fogStartDistance = sceneData.fogStartDistance;
+                __instance.enableSunShafts = sceneData.enableSunShafts;
+                __instance.sunThresholdColor = sceneData.sunThresholdColor;
+                __instance.sunColor = sceneData.sunColor;
+                __instance.enableShadow = sceneData.enableShadow;
+                __instance.rampG = sceneData.rampG;
+                __instance.ambientShadowG = sceneData.ambientShadowG;
+                __instance.lineWidthG = sceneData.lineWidthG;
+                __instance.lineColorG = sceneData.lineColorG;
+                __instance.ambientShadow = sceneData.ambientShadow;
             }
-        }
-
-        [MessagePackObject(true)]
-        public class SceneParamData
-        {
-            public void PrintFields()
-            {
-                Console.WriteLine(new string('=', 40));
-                Console.WriteLine(nameof(SceneParamData));
-                foreach(var prop in AccessTools.GetDeclaredFields(typeof(SceneParamData)))
-                {
-                    var target = AccessTools.Field(typeof(SceneParamData), prop.Name);
-                    var value = target.GetValue(this);
-                    Console.WriteLine($"{prop.Name} = {value}");
-                }
-                Console.WriteLine(new string('=', 40));
-            }
-
-            public int aceNo;
-            public float aceBlend;
-            public bool enableAOE;
-            public Color aoeColor;
-            public float aoeRadius;
-            public bool enableBloom;
-            public float bloomIntensity;
-            public float bloomThreshold;
-            public float bloomBlur;
-            public bool enableDepth;
-            public float depthFocalSize;
-            public float depthAperture;
-            public bool enableVignette;
-            public bool enableFog;
-            public Color fogColor;
-            public float fogHeight;
-            public float fogStartDistance;
-            public bool enableSunShafts;
-            public Color sunThresholdColor;
-            public Color sunColor;
-            public bool enableShadow;
-            //public bool faceNormal;
-            //public bool faceShadow;
-            public float lineColorG;
-            public Color ambientShadow;
-            public float lineWidthG;
-            public int rampG;
-            public float ambientShadowG;
         }
     }
 }

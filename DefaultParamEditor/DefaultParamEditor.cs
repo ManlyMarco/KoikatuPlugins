@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using BepInEx;
@@ -93,7 +94,17 @@ namespace DefaultParamEditor
         protected void Awake()
         {
             if (File.Exists(savePath))
-                data = MessagePackSerializer.Deserialize<ParamData>(File.ReadAllBytes(savePath));
+            {
+                try
+                {
+                    data = MessagePackSerializer.Deserialize<ParamData>(File.ReadAllBytes(savePath));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(LogLevel.Error, $"[DefaultParamEditor] Failed to load settings from {savePath} with error: " + ex);
+                    data = new ParamData();
+                }
+            }
 
             charaParam = new CharacterParam(data.charaParamData);
             sceneParam = new SceneParam(data.sceneParamData);

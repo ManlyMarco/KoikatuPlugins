@@ -38,7 +38,7 @@ namespace DefaultParamEditor
         {
             var bytes = MessagePackSerializer.Serialize(data);
             File.WriteAllBytes(savePath, bytes);
-            data.PrintData();
+            //data.PrintData();
         }
 
         void SaveCharaParam()

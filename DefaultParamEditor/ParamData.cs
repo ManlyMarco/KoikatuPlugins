@@ -70,9 +70,11 @@ namespace DefaultParamEditor
             public int mouthPtn;
 
             // parameters to add
-            // animation
+            // default animation
             // siru
             // mouth open
+            // eyebrow and eye overlaying
+            // donger options
         }
 
         [MessagePackObject(true)]
@@ -106,6 +108,9 @@ namespace DefaultParamEditor
             public float lineWidthG;
             public int rampG;
             public float ambientShadowG;
+
+            // parameters to add
+            // all character lighting options
         }
     }
 }

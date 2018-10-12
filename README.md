@@ -62,7 +62,7 @@ A port of the TogglePOV mod from HS.
 #### UnlockHPositions - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/UnlockHPositions.v1.0.0.zip)
 Unlock all H positions right away (hopefully).
 
-#### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/second/TitleShortcuts.v1.1.0.zip)
+#### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/TitleShortcuts.v1.1.1.zip)
 Title menu keyboard shortcuts to open different modes.  
 For example F to open the female editor.
 
@@ -73,9 +73,13 @@ v1.1.0
 - Autostart options in ConfigurationManager
 - Ability to cancel automatic start by holding esc
 ```
+```
+v1.1.1
+- Removed method affecting the bepinex gameobject
+```
 </details>
 
-#### DefaultParamEditor - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/DefaultParamEditor.v1.0.0.zip)
+#### DefaultParamEditor - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/DefaultParamEditor.v1.0.0.zip)
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
 This only affects parameters that make sense to be saved.
 

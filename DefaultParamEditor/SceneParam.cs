@@ -7,11 +7,11 @@ namespace DefaultParamEditor
 {
     public class SceneParam
     {
-        static ParamData.SceneData sceneData;
+        private static ParamData.SceneData _sceneData;
 
         public SceneParam(ParamData.SceneData data)
         {
-            sceneData = data;
+            _sceneData = data;
             var harmony = HarmonyInstance.Create("keelhauled.defaultparameditor.sceneparam.harmony");
             harmony.PatchAll(typeof(SceneParam));
         }
@@ -23,69 +23,76 @@ namespace DefaultParamEditor
 
             if(sceneInfo != null && systemButtonCtrl != null)
             {
-                sceneData.aceNo = sceneInfo.aceNo;
-                sceneData.aceBlend = sceneInfo.aceBlend;
-                sceneData.enableAOE = Traverse.Create(systemButtonCtrl).Field("amplifyOcculusionEffectInfo").Property("aoe").Property("enabled").GetValue<bool>();
-                sceneData.aoeColor = sceneInfo.aoeColor;
-                sceneData.aoeRadius = sceneInfo.aoeRadius;
-                sceneData.enableBloom = sceneInfo.enableBloom;
-                sceneData.bloomIntensity = sceneInfo.bloomIntensity;
-                sceneData.bloomThreshold = sceneInfo.bloomThreshold;
-                sceneData.bloomBlur = sceneInfo.bloomBlur;
-                sceneData.enableDepth = sceneInfo.enableDepth;
-                sceneData.depthFocalSize = sceneInfo.depthFocalSize;
-                sceneData.depthAperture = sceneInfo.depthAperture;
-                sceneData.enableVignette = sceneInfo.enableVignette;
-                sceneData.enableFog = sceneInfo.enableFog;
-                sceneData.fogColor = sceneInfo.fogColor;
-                sceneData.fogHeight = sceneInfo.fogHeight;
-                sceneData.fogStartDistance = sceneInfo.fogStartDistance;
-                sceneData.enableSunShafts = sceneInfo.enableSunShafts;
-                sceneData.sunThresholdColor = sceneInfo.sunThresholdColor;
-                sceneData.sunColor = sceneInfo.sunColor;
-                sceneData.enableShadow = Traverse.Create(systemButtonCtrl).Field("selfShadowInfo").Field("toggleEnable").Property("isOn").GetValue<bool>();
-                sceneData.rampG = sceneInfo.rampG;
-                sceneData.ambientShadowG = sceneInfo.ambientShadowG;
-                sceneData.lineWidthG = sceneInfo.lineWidthG;
-                sceneData.lineColorG = sceneInfo.lineColorG;
-                sceneData.ambientShadow = sceneInfo.ambientShadow;
+                _sceneData.aceNo = sceneInfo.aceNo;
+                _sceneData.aceBlend = sceneInfo.aceBlend;
+                _sceneData.enableAOE = Traverse.Create(systemButtonCtrl).Field("amplifyOcculusionEffectInfo").Property("aoe").Property("enabled").GetValue<bool>();
+                _sceneData.aoeColor = sceneInfo.aoeColor;
+                _sceneData.aoeRadius = sceneInfo.aoeRadius;
+                _sceneData.enableBloom = sceneInfo.enableBloom;
+                _sceneData.bloomIntensity = sceneInfo.bloomIntensity;
+                _sceneData.bloomThreshold = sceneInfo.bloomThreshold;
+                _sceneData.bloomBlur = sceneInfo.bloomBlur;
+                _sceneData.enableDepth = sceneInfo.enableDepth;
+                _sceneData.depthFocalSize = sceneInfo.depthFocalSize;
+                _sceneData.depthAperture = sceneInfo.depthAperture;
+                _sceneData.enableVignette = sceneInfo.enableVignette;
+                _sceneData.enableFog = sceneInfo.enableFog;
+                _sceneData.fogColor = sceneInfo.fogColor;
+                _sceneData.fogHeight = sceneInfo.fogHeight;
+                _sceneData.fogStartDistance = sceneInfo.fogStartDistance;
+                _sceneData.enableSunShafts = sceneInfo.enableSunShafts;
+                _sceneData.sunThresholdColor = sceneInfo.sunThresholdColor;
+                _sceneData.sunColor = sceneInfo.sunColor;
+                _sceneData.enableShadow = Traverse.Create(systemButtonCtrl).Field("selfShadowInfo").Field("toggleEnable").Property("isOn").GetValue<bool>();
+                _sceneData.rampG = sceneInfo.rampG;
+                _sceneData.ambientShadowG = sceneInfo.ambientShadowG;
+                _sceneData.lineWidthG = sceneInfo.lineWidthG;
+                _sceneData.lineColorG = sceneInfo.lineColorG;
+                _sceneData.ambientShadow = sceneInfo.ambientShadow;
 
-                sceneData.saved = true;
+                _sceneData.saved = true;
                 Log(LogLevel.Message, "Default scene settings saved");
             }
+        }
+
+        public void Reset()
+        {
+            _sceneData.saved = false;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(SceneInfo), nameof(SceneInfo.Init))]
         public static void HarmonyPatch_SceneInfo_Init(SceneInfo __instance)
         {
-            if(sceneData.saved)
+            if(_sceneData.saved)
             {
-                __instance.aceNo = sceneData.aceNo;
-                __instance.aceBlend = sceneData.aceBlend;
-                __instance.enableAOE = sceneData.enableAOE;
-                __instance.aoeColor = sceneData.aoeColor;
-                __instance.aoeRadius = sceneData.aoeRadius;
-                __instance.enableBloom = sceneData.enableBloom;
-                __instance.bloomIntensity = sceneData.bloomIntensity;
-                __instance.bloomThreshold = sceneData.bloomThreshold;
-                __instance.bloomBlur = sceneData.bloomBlur;
-                __instance.enableDepth = sceneData.enableDepth;
-                __instance.depthFocalSize = sceneData.depthFocalSize;
-                __instance.depthAperture = sceneData.depthAperture;
-                __instance.enableVignette = sceneData.enableVignette;
-                __instance.enableFog = sceneData.enableFog;
-                __instance.fogColor = sceneData.fogColor;
-                __instance.fogHeight = sceneData.fogHeight;
-                __instance.fogStartDistance = sceneData.fogStartDistance;
-                __instance.enableSunShafts = sceneData.enableSunShafts;
-                __instance.sunThresholdColor = sceneData.sunThresholdColor;
-                __instance.sunColor = sceneData.sunColor;
-                __instance.enableShadow = sceneData.enableShadow;
-                __instance.rampG = sceneData.rampG;
-                __instance.ambientShadowG = sceneData.ambientShadowG;
-                __instance.lineWidthG = sceneData.lineWidthG;
-                __instance.lineColorG = sceneData.lineColorG;
-                __instance.ambientShadow = sceneData.ambientShadow;
+                Log(LogLevel.Debug, "Loading defaults for a new scene");
+
+                __instance.aceNo = _sceneData.aceNo;
+                __instance.aceBlend = _sceneData.aceBlend;
+                __instance.enableAOE = _sceneData.enableAOE;
+                __instance.aoeColor = _sceneData.aoeColor;
+                __instance.aoeRadius = _sceneData.aoeRadius;
+                __instance.enableBloom = _sceneData.enableBloom;
+                __instance.bloomIntensity = _sceneData.bloomIntensity;
+                __instance.bloomThreshold = _sceneData.bloomThreshold;
+                __instance.bloomBlur = _sceneData.bloomBlur;
+                __instance.enableDepth = _sceneData.enableDepth;
+                __instance.depthFocalSize = _sceneData.depthFocalSize;
+                __instance.depthAperture = _sceneData.depthAperture;
+                __instance.enableVignette = _sceneData.enableVignette;
+                __instance.enableFog = _sceneData.enableFog;
+                __instance.fogColor = _sceneData.fogColor;
+                __instance.fogHeight = _sceneData.fogHeight;
+                __instance.fogStartDistance = _sceneData.fogStartDistance;
+                __instance.enableSunShafts = _sceneData.enableSunShafts;
+                __instance.sunThresholdColor = _sceneData.sunThresholdColor;
+                __instance.sunColor = _sceneData.sunColor;
+                __instance.enableShadow = _sceneData.enableShadow;
+                __instance.rampG = _sceneData.rampG;
+                __instance.ambientShadowG = _sceneData.ambientShadowG;
+                __instance.lineWidthG = _sceneData.lineWidthG;
+                __instance.lineColorG = _sceneData.lineColorG;
+                __instance.ambientShadow = _sceneData.ambientShadow;
             }
         }
     }

@@ -59,9 +59,17 @@ Simultaneous FK & IK and better object manipulation controls.
 #### TogglePOVKK - [~~Download~~](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/TogglePOVKK.v1.0.0.zip)
 A port of the TogglePOV mod from HS.
 
-#### UnlockHPositions - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/UnlockHPositions.v1.0.0.zip)
+#### UnlockHPositions - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/fourth/UnlockHPositions.v1.1.0.zip)
 Unlock all H positions right away without having a save file to unlock them.  
 Optionally every possible position can be unlocked regardless of if it was meant to be used in that spot or not.
+
+<details><summary>Changelog</summary>
+
+```
+v1.1.0
+- Option to unlock all possible positions
+```
+</details>
 
 #### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/TitleShortcuts.v1.1.1.zip)
 Title menu keyboard shortcuts to open different modes.  
@@ -80,12 +88,22 @@ v1.1.0
 ```
 </details>
 
-#### DefaultParamEditor - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/DefaultParamEditor.v1.0.0.zip)
+#### DefaultParamEditor - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/fourth/DefaultParamEditor.v1.1.0.zip)
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
 This only affects parameters that make sense to be saved.
 
 To use, set your preferred settings normally and then save them in ConfigurationManager.  
 Now when loading a character or starting the studio these settings will be the defaults.
+
+<details><summary>Changelog</summary>
+
+```
+v1.1.0
+- Button to reset options
+- Better descriptions
+- Bugfixes
+```
+</details>
 
 ## Credits
 Keelhauled  

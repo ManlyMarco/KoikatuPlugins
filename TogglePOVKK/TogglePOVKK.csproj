@@ -52,8 +52,8 @@
   <ItemGroup>
     <Compile Include="BaseMono.cs" />
     <Compile Include="DragManager.cs" />
-    <Compile Include="KKMono.cs" />
-    <Compile Include="TogglePOVInit.cs" />
+    <Compile Include="HSceneMono.cs" />
+    <Compile Include="TogglePOV.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -8,7 +8,7 @@ using Manager;
 
 namespace TogglePOVKK
 {
-    class KKMono : BaseMono
+    class HSceneMono : BaseMono
     {
         private CameraControl_Ver2 camera => Singleton<CameraControl_Ver2>.Instance;
 

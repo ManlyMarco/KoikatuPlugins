@@ -55,6 +55,9 @@ namespace DefaultParamEditor
         {
             public bool saved = false;
 
+            /// <summary>
+            /// Make sure to make copies, not use by reference
+            /// </summary>
             public byte[] clothesState;
             public byte shoesType;
             public float hohoAkaRate;

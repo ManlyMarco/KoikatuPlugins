@@ -26,7 +26,7 @@ namespace DefaultParamEditor
             {
                 var status = selected[0].charFileStatus;
 
-                _charaData.clothesState = status.clothesState;
+                _charaData.clothesState = status.clothesState.ToArray();
                 _charaData.shoesType = status.shoesType;
                 _charaData.hohoAkaRate = status.hohoAkaRate;
                 _charaData.nipStandRate = status.nipStandRate;
@@ -61,7 +61,7 @@ namespace DefaultParamEditor
             {
                 Log(LogLevel.Debug, "Loading defaults for a new character");
 
-                __instance.clothesState = _charaData.clothesState;
+                __instance.clothesState = _charaData.clothesState.ToArray();
                 __instance.shoesType = _charaData.shoesType;
                 __instance.hohoAkaRate = _charaData.hohoAkaRate;
                 __instance.nipStandRate = _charaData.nipStandRate;

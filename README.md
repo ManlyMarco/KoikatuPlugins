@@ -60,8 +60,8 @@ Simultaneous FK & IK and better object manipulation controls.
 A port of the TogglePOV mod from HS.
 
 #### UnlockHPositions - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/first/UnlockHPositions.v1.0.0.zip)
-Unlock all H positions right away without having a save file with them unlocked.  
-Optionally every position can be unlocked regardless of if it was meant to be used in that spot or not.
+Unlock all H positions right away without having a save file to unlock them.  
+Optionally every possible position can be unlocked regardless of if it was meant to be used in that spot or not.
 
 #### TitleShortcuts - [Download](https://github.com/Keelhauled/KoikatuPlugins/releases/download/third/TitleShortcuts.v1.1.1.zip)
 Title menu keyboard shortcuts to open different modes.  

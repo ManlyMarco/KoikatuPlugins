@@ -18,7 +18,7 @@ namespace DefaultParamEditor
 
         [Browsable(true)]
         [DisplayName("Set default character parameters")]
-        [Description("Saves paramerers like Blinking, Type of shoes, Eye follow, etc.\nas the default values for newly loaded characters.\n\n" +
+        [Description("Saves parameters like Blinking, Type of shoes, Eye follow, etc.\nas the default values for newly loaded characters.\n\n" +
                      "Values are taken from the currently selected character.")]
         [CustomSettingDraw(nameof(CharaParamSettingDrawer))]
         [DefaultValue(ResetValue)]
@@ -38,7 +38,7 @@ namespace DefaultParamEditor
 
         [Browsable(true)]
         [DisplayName("Set default scene parameters")]
-        [Description("Saves paramerers like Bloom, Vignette, Shading, etc.\nas the default values for newly created scenes.\n\n" +
+        [Description("Saves parameters like Bloom, Vignette, Shading, etc.\nas the default values for newly created scenes.\n\n" +
                      "Values are taken from the current scene. They are used when starting Studio and when resetting the current scene.")]
         [CustomSettingDraw(nameof(SceneParamSettingDrawer))]
         [DefaultValue(ResetValue)]

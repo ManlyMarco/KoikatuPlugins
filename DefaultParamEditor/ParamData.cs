@@ -111,6 +111,7 @@ namespace DefaultParamEditor
 
             // parameters to add
             // all character lighting options
+            // default fov
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using BepInEx;
+using UnityEngine;
 
 namespace UnlockHPositions
 {
@@ -11,8 +12,9 @@ namespace UnlockHPositions
     {
         [DisplayName("Unlock all positions")]
         [Description("Unlocks every possible position, including ones that are not supposed to be used in that spot.\n" +
+                     "Warning: May break everything.\n" +
                      "Scene restart required for changes to take effect.")]
-        public static ConfigWrapper<bool> UnlockAll { get; set; }
+        static ConfigWrapper<bool> UnlockAll { get; set; }
 
         Unlocker()
         {
@@ -52,6 +54,21 @@ namespace UnlockHPositions
             }
 
             return false;
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "CreateMotionList")]
+        public static void HarmonyPatch_HSprite_CreateMotionList(HSprite __instance, ref int _kind)
+        {
+            if(_kind == 2 && UnlockAll.Value && __instance.menuActionSub.GetActive(5))
+            {
+                var go = __instance.menuAction.GetObject(_kind);
+                var rectTransform = go.transform as RectTransform;
+                go = __instance.menuActionSub.GetObject(5);
+                var rectTransform2 = go.transform as RectTransform;
+                var anchoredPosition = rectTransform2.anchoredPosition;
+                anchoredPosition.y = rectTransform.anchoredPosition.y + 350f; // may cause issues with different resolutions, fuck it
+                rectTransform2.anchoredPosition = anchoredPosition;
+            }
         }
     }
 }

@@ -253,21 +253,30 @@ namespace LockOnPluginKK
         {
             if(LockOnPlugin.ShowInfoMsg.Value && Guitime.info > 0f)
             {
-                Utils.DebugGUI(Guitime.pos.x, Guitime.pos.y, 200f, 45f, Guitime.msg);
+                DebugGUI(Guitime.pos.x, Guitime.pos.y, 200f, 45f, Guitime.msg);
                 Guitime.info -= Time.deltaTime;
             }
 
             if(Guitime.angle > 0f)
             {
-                Utils.DebugGUI(0.5f, 0.5f, 100f, 50f, "Camera tilt\n" + CameraAngle.z.ToString("0.0"));
+                DebugGUI(0.5f, 0.5f, 100f, 50f, "Camera tilt\n" + CameraAngle.z.ToString("0.0"));
                 Guitime.angle -= Time.deltaTime;
             }
 
             if(Guitime.fov > 0f)
             {
-                Utils.DebugGUI(0.5f, 0.5f, 100f, 50f, "Field of view\n" + CameraFov.ToString("0.0"));
+                DebugGUI(0.5f, 0.5f, 100f, 50f, "Field of view\n" + CameraFov.ToString("0.0"));
                 Guitime.fov -= Time.deltaTime;
             }
+        }
+
+        public static bool DebugGUI(float screenWidthMult, float screenHeightMult, float width, float height, string msg)
+        {
+            float xpos = Screen.width * screenWidthMult - width / 2f;
+            float ypos = Screen.height * screenHeightMult - height / 2f;
+            xpos = Mathf.Clamp(xpos, 0f, Screen.width - width);
+            ypos = Mathf.Clamp(ypos, 0f, Screen.height - height);
+            return GUI.Button(new Rect(xpos, ypos, width, height), msg);
         }
 
         protected virtual bool LockOn()

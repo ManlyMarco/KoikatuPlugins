@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace LockOnPluginKK
 {
     internal static class FileManager
     {
-        //private static string settingsPath = Environment.CurrentDirectory + "\\BepInEx\\TargetSettings\\";
         private static string settingsPath = Path.Combine(Environment.CurrentDirectory, @"BepInEx\TargetSettings");
         private static string quickFemaleTargetNamesPath = Path.Combine(settingsPath, "quicktargetsfemale.txt");
         private static string quickMaleTargetNamesPath = Path.Combine(settingsPath, "quicktargetsmale.txt");
@@ -80,20 +78,6 @@ namespace LockOnPluginKK
             }
 
             return text;
-        }
-        
-        public static void Log(string filename, string msg)
-        {
-            string path = Environment.CurrentDirectory + "\\Plugins\\";
-            StreamWriter sw = File.AppendText(path + filename);
-            try
-            {
-                sw.WriteLine(msg);
-            }
-            finally
-            {
-                sw.Close();
-            }
         }
     }
 }

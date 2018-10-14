@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Studio;
+using Harmony;
 
 namespace LockOnPluginKK
 {
@@ -21,7 +22,7 @@ namespace LockOnPluginKK
         {
             base.Start();
 
-            cameraData = Utils.GetSecureField<Studio.CameraControl.CameraData, Studio.CameraControl>("cameraData", camera);
+            cameraData = Traverse.Create(camera).Field("cameraData").GetValue<Studio.CameraControl.CameraData>();
             treeNodeCtrl.onSelect += new Action<TreeNodeObject>(OnSelectWork);
             studio.onDelete += new Action<ObjectCtrlInfo>(OnDeleteWork);
             Transform systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");

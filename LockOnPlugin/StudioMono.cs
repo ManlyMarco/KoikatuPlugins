@@ -1,0 +1,147 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Studio;
+
+namespace LockOnPluginKK
+{
+    internal partial class StudioMono : LockOnBase
+    {
+        private Studio.Studio studio = Studio.Studio.Instance;
+        private Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
+        private TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
+        private GuideObjectManager guideObjectManager = GuideObjectManager.Instance;
+
+        private Studio.CameraControl.CameraData cameraData;
+        private OCIChar currentCharaOCI;
+
+        protected override void Start()
+        {
+            base.Start();
+
+            cameraData = Utils.GetSecureField<Studio.CameraControl.CameraData, Studio.CameraControl>("cameraData", camera);
+            treeNodeCtrl.onSelect += new Action<TreeNodeObject>(OnSelectWork);
+            studio.onDelete += new Action<ObjectCtrlInfo>(OnDeleteWork);
+            Transform systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");
+            systemMenuContent.Find("Load").GetComponent<Button>().onClick.AddListener(() => ResetModState());
+            systemMenuContent.Find("End").GetComponent<Button>().onClick.AddListener(() => HideLockOnTargets());
+
+            LockOnPlugin.ManageCursorVisibility.Value = false;
+            Guitime.pos = new Vector2(1f, 1f);
+        }
+
+        private void OnSelectWork(TreeNodeObject node)
+        {
+            if(studio.dicInfo.TryGetValue(node, out ObjectCtrlInfo objectCtrlInfo))
+            {
+                if(objectCtrlInfo.kind == 0)
+                {
+                    OCIChar ocichar = objectCtrlInfo as OCIChar;
+
+                    if(ocichar != currentCharaOCI)
+                    {
+                        currentCharaOCI = ocichar;
+                        currentCharaInfo = ocichar.charInfo;
+                        shouldResetLock = true;
+
+                        if(LockOnPlugin.AutoSwitchLock.Value && lockOnTarget)
+                        {
+                            if(LockOn(lockOnTarget.name, true, false))
+                            {
+                                shouldResetLock = false;
+                            }
+                            else
+                            {
+                                LockOnRelease();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        currentCharaOCI = ocichar;
+                        currentCharaInfo = ocichar.charInfo;
+                    }
+
+                    return;
+                }
+            }
+
+            currentCharaOCI = null;
+            currentCharaInfo = null;
+        }
+
+        private void OnDeleteWork(ObjectCtrlInfo info)
+        {
+            if(info.kind == 0)
+            {
+                currentCharaOCI = null;
+                currentCharaInfo = null;
+            }
+        }
+
+        protected override bool LockOn()
+        {
+            if(base.LockOn()) return true;
+
+            List<TreeNodeObject> charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
+            if(charaNodes.Count > 0)
+            {
+                studio.treeNodeCtrl.SelectSingle(charaNodes[0]);
+                if(base.LockOn()) return true;
+            }
+
+            return false;
+        }
+
+        protected override void CharaSwitch(bool scrollDown = true)
+        {
+            List<TreeNodeObject> charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
+
+            for(int i = 0; i < charaNodes.Count; i++)
+            {
+                if(charaNodes[i] == treeNodeCtrl.selectNode)
+                {
+                    int next = i + 1 > charaNodes.Count - 1 ? 0 : i + 1;
+                    if(!scrollDown) next = i - 1 < 0 ? charaNodes.Count - 1 : i - 1;
+                    treeNodeCtrl.SelectSingle(charaNodes[next]);
+                    return;
+                }
+            }
+
+            if(charaNodes.Count > 0)
+            {
+                treeNodeCtrl.SelectSingle(charaNodes[0]);
+            }
+        }
+
+        protected override void ResetModState()
+        {
+            base.ResetModState();
+            currentCharaOCI = null;
+            treeNodeCtrl.SelectSingle(null);
+        }
+
+        private List<TreeNodeObject> GetCharaNodes<CharaType>()
+        {
+            List<TreeNodeObject> charaNodes = new List<TreeNodeObject>();
+
+            int n = 0; TreeNodeObject nthNode;
+            while(nthNode = treeNodeCtrl.GetNode(n))
+            {
+                ObjectCtrlInfo objectCtrlInfo = null;
+                if(nthNode.visible && studio.dicInfo.TryGetValue(nthNode, out objectCtrlInfo))
+                {
+                    if(objectCtrlInfo is CharaType)
+                    {
+                        charaNodes.Add(nthNode);
+                    }
+                }
+                n++;
+            }
+
+            return charaNodes;
+        }
+    }
+}

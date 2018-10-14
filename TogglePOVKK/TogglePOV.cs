@@ -1,6 +1,4 @@
-﻿using System;
-using BepInEx;
-using UnityEngine;
+﻿using BepInEx;
 using UnityEngine.SceneManagement;
 
 namespace TogglePOVKK
@@ -10,15 +8,8 @@ namespace TogglePOVKK
     {
         void Awake()
         {
-            if(Application.productName == "CharaStudio")
-            {
-
-            }
-            else
-            {
-                SceneLoaded();
-                SceneManager.sceneLoaded += SceneLoaded;
-            }
+            SceneLoaded();
+            SceneManager.sceneLoaded += SceneLoaded;
         }
 
         void OnDestroy()
@@ -33,18 +24,15 @@ namespace TogglePOVKK
 
         void SceneLoaded()
         {
-            var hsceneObject = gameObject.GetComponent<HSceneMono>();
+            var comp = gameObject.GetComponent<BaseMono>();
 
             if(FindObjectOfType<HScene>())
             {
-                if(!hsceneObject)
-                {
-                    gameObject.AddComponent<HSceneMono>();
-                }
+                if(!comp) gameObject.AddComponent<HSceneMono>();
             }
-            else if(hsceneObject)
+            else if(comp)
             {
-                Destroy(hsceneObject);
+                Destroy(comp);
                 Destroy(gameObject.GetComponent<DragManager>());
             }
         }

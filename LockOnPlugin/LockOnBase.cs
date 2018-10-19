@@ -179,6 +179,7 @@ namespace LockOnPluginKK
                 {
                     float trackingSpeed;
                     float leash;
+
                     if(lockOnTarget.name == CameraTargetManager.MOVEMENTPOINT_NAME)
                     {
                         trackingSpeed = trackingSpeedMax;

@@ -14,7 +14,7 @@ namespace HideUIKK
     {
         string path;
         Dictionary<string, CacheObject> canvasCache;
-        public SavedKeyboardShortcut HideUIHotkey { get; }
+        SavedKeyboardShortcut HideUIHotkey { get; }
 
         HideUI()
         {

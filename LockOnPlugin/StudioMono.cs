@@ -25,7 +25,7 @@ namespace LockOnPluginKK
             cameraData = Traverse.Create(camera).Field("cameraData").GetValue<Studio.CameraControl.CameraData>();
             treeNodeCtrl.onSelect += new Action<TreeNodeObject>(OnSelectWork);
             studio.onDelete += new Action<ObjectCtrlInfo>(OnDeleteWork);
-            Transform systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");
+            var systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");
             systemMenuContent.Find("Load").GetComponent<Button>().onClick.AddListener(() => ResetModState());
             systemMenuContent.Find("End").GetComponent<Button>().onClick.AddListener(() => HideLockOnTargets());
 
@@ -84,9 +84,18 @@ namespace LockOnPluginKK
 
         protected override bool LockOn()
         {
+            if(guideObjectManager.selectObject)
+            {
+                if(!studio.dicObjectCtrl.TryGetValue(guideObjectManager.selectObject.dicKey, out _))
+                {
+                    LockOn(guideObjectManager.selectObject.transform.gameObject);
+                    return true;
+                }
+            }
+
             if(base.LockOn()) return true;
 
-            List<TreeNodeObject> charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
+            var charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
             if(charaNodes.Count > 0)
             {
                 studio.treeNodeCtrl.SelectSingle(charaNodes[0]);
@@ -98,7 +107,7 @@ namespace LockOnPluginKK
 
         protected override void CharaSwitch(bool scrollDown = true)
         {
-            List<TreeNodeObject> charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
+            var charaNodes = LockOnPlugin.ScrollThroughMalesToo.Value ? GetCharaNodes<OCIChar>() : GetCharaNodes<OCICharFemale>();
 
             for(int i = 0; i < charaNodes.Count; i++)
             {
@@ -126,13 +135,12 @@ namespace LockOnPluginKK
 
         private List<TreeNodeObject> GetCharaNodes<CharaType>()
         {
-            List<TreeNodeObject> charaNodes = new List<TreeNodeObject>();
+            var charaNodes = new List<TreeNodeObject>();
 
             int n = 0; TreeNodeObject nthNode;
             while(nthNode = treeNodeCtrl.GetNode(n))
             {
-                ObjectCtrlInfo objectCtrlInfo = null;
-                if(nthNode.visible && studio.dicInfo.TryGetValue(nthNode, out objectCtrlInfo))
+                if(nthNode.visible && studio.dicInfo.TryGetValue(nthNode, out ObjectCtrlInfo objectCtrlInfo))
                 {
                     if(objectCtrlInfo is CharaType)
                     {

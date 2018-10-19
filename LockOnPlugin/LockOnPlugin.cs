@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BepInEx;
+using ParadoxNotion.Serialization;
 
 namespace LockOnPluginKK
 {
@@ -44,6 +48,9 @@ namespace LockOnPluginKK
         [DisplayName("Select next character")]
         public static SavedKeyboardShortcut NextCharaKey { get; private set; }
 
+        public static TargetData targetData;
+        string fileName = "LockOnPlugin.json";
+
         LockOnPlugin()
         {
             TrackingSpeedNormal = new ConfigWrapper<float>("LockedTrackingSpeed", this, 0.1f);
@@ -61,6 +68,27 @@ namespace LockOnPluginKK
 
         void Awake()
         {
+            string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), fileName);
+
+            if(File.Exists(dataPath))
+            {
+                try
+                {
+                    var data = File.ReadAllText(dataPath);
+                    targetData = JSONSerializer.Deserialize<TargetData>(data);
+                }
+                catch(Exception)
+                {
+                    Console.WriteLine("Failed to deserialize target data. Loading backup.");
+                    LoadResourceData();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Loading default target data.");
+                LoadResourceData();
+            }
+
             SceneLoaded();
             SceneManager.sceneLoaded += SceneLoaded;
         }
@@ -68,6 +96,19 @@ namespace LockOnPluginKK
         void OnDestroy() // for ScriptEngine
         {
             SceneManager.sceneLoaded += SceneLoaded;
+        }
+
+        void LoadResourceData()
+        {
+            var resourceName = nameof(LockOnPluginKK) + fileName;
+            using(Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using(StreamReader reader = new StreamReader(stream))
+                {
+                    string result = reader.ReadToEnd();
+                    targetData = JSONSerializer.Deserialize<TargetData>(result);
+                }
+            }
         }
 
         void SceneLoaded(Scene scene, LoadSceneMode mode)

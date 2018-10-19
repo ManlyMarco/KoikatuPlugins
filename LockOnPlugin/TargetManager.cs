@@ -120,10 +120,10 @@ namespace LockOnPluginKK
             //string prefix = character is CharFemale ? "cf_" : "cm_";
             string prefix = "cf_";
 
-            foreach(string targetName in FileManager.GetNormalTargetNames())
+            foreach(var targetName in LockOnPlugin.targetData.normalTargets)
             {
                 GameObject bone = character.objBodyBone.transform.FindLoop(prefix + targetName);
-                Console.WriteLine($"Bone '{prefix + targetName}' found: {bone != null}");
+                //Console.WriteLine($"Bone '{prefix + targetName}' found: {bone != null}");
                 if(bone) normalTargets.Add(bone);
             }
 
@@ -136,19 +136,19 @@ namespace LockOnPluginKK
             //string prefix = character is CharFemale ? "cf_" : "cm_";
             string prefix = "cf_";
 
-            foreach(List<string> data in FileManager.GetCustomTargetNames())
+            foreach(var data in LockOnPlugin.targetData.customTargets)
             {
-                GameObject point1 = character.objBodyBone.transform.FindLoop(prefix + data[1]);
-                GameObject point2 = character.objBodyBone.transform.FindLoop(prefix + data[2]);
+                GameObject point1 = character.objBodyBone.transform.FindLoop(prefix + data.point1);
+                GameObject point2 = character.objBodyBone.transform.FindLoop(prefix + data.point2);
 
                 foreach(CustomTarget target in customTargets)
                 {
-                    if(target.GetTarget().name == data[1])
+                    if(target.GetTarget().name == data.point1)
                     {
                         point1 = target.GetTarget();
                     }
 
-                    if(target.GetTarget().name == data[2])
+                    if(target.GetTarget().name == data.point2)
                     {
                         point2 = target.GetTarget();
                     }
@@ -156,16 +156,7 @@ namespace LockOnPluginKK
 
                 if(point1 && point2)
                 {
-                    float midpoint = 0.5f;
-                    if(data.ElementAtOrDefault(3) != null)
-                    {
-                        if(!float.TryParse(data[3], out midpoint))
-                        {
-                            midpoint = 0.5f;
-                        }
-                    }
-
-                    CustomTarget target = new CustomTarget(data[0], point1, point2, midpoint);
+                    CustomTarget target = new CustomTarget(data.target, point1, point2, data.midpoint);
                     target.GetTarget().transform.SetParent(character.transform);
                     customTargets.Add(target);
                 }
@@ -226,15 +217,10 @@ namespace LockOnPluginKK
                 //string prefix = character is CharFemale ? "cf_" : "cm_";
                 string prefix = "cf_";
 
-                foreach(List<string> data in FileManager.GetCenterTargetWeights())
+                foreach(var data in LockOnPlugin.targetData.centerWeigths)
                 {
-                    GameObject point = character.objBodyBone.transform.FindLoop(prefix + data[0]);
-                    float weight = 1f;
-                    if(!float.TryParse(data[1], out weight))
-                    {
-                        weight = 1f;
-                    }
-                    points.Add(new WeightPoint(point, weight));
+                    GameObject point = character.objBodyBone.transform.FindLoop(prefix + data.bone);
+                    points.Add(new WeightPoint(point, data.weigth));
                 }
 
                 if(points.Count > 0)

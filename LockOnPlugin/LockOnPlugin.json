@@ -1,0 +1,32 @@
+{
+    "normalTargets":
+    [
+        "J_FaceUp_tz",
+        "j_spine03",
+        "j_hips",
+        "d_kokan"
+    ],
+
+    "femaleTargets":
+    [
+        "cf_d_kokan",
+        "cf_J_FaceUp_tz",
+        "cf_j_spine03",
+        "cf_j_hips"
+    ],
+
+    "maleTargets":
+    [
+        
+    ],
+
+    "customTargets":
+    [
+        
+    ],
+
+    "centerWeigths":
+    [
+        
+    ]
+}

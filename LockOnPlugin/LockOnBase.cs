@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -285,7 +284,7 @@ namespace LockOnPluginKK
             if(currentCharaInfo)
             {
                 //List<string> targetList = currentCharaInfo is CharFemale ? FileManager.GetQuickFemaleTargetNames() : FileManager.GetQuickMaleTargetNames();
-                List<string> targetList = FileManager.GetQuickFemaleTargetNames();
+                var targetList = LockOnPlugin.targetData.femaleTargets;
 
                 if(shouldResetLock)
                 {

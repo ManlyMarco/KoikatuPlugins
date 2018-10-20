@@ -39,7 +39,7 @@ namespace LockOnPluginKK
             {
                 if(objectCtrlInfo.kind == 0)
                 {
-                    OCIChar ocichar = objectCtrlInfo as OCIChar;
+                    var ocichar = objectCtrlInfo as OCIChar;
 
                     if(ocichar != currentCharaOCI)
                     {
@@ -86,6 +86,7 @@ namespace LockOnPluginKK
         {
             if(guideObjectManager.selectObject)
             {
+                // hacky way to find out if the target is an FK/IK node
                 if(!studio.dicObjectCtrl.TryGetValue(guideObjectManager.selectObject.dicKey, out _))
                 {
                     LockOn(guideObjectManager.selectObject.transform.gameObject);

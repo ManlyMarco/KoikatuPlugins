@@ -49,7 +49,7 @@ namespace LockOnPluginKK
         public static SavedKeyboardShortcut NextCharaKey { get; private set; }
 
         public static TargetData targetData;
-        string fileName = "LockOnPlugin.json";
+        const string dataFileName = "LockOnPluginData.json";
 
         LockOnPlugin()
         {
@@ -68,7 +68,7 @@ namespace LockOnPluginKK
 
         void Awake()
         {
-            string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), fileName);
+            string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dataFileName);
 
             if(File.Exists(dataPath))
             {
@@ -93,22 +93,22 @@ namespace LockOnPluginKK
             SceneManager.sceneLoaded += SceneLoaded;
         }
 
-        void OnDestroy() // for ScriptEngine
-        {
-            SceneManager.sceneLoaded += SceneLoaded;
-        }
-
         void LoadResourceData()
         {
-            var resourceName = nameof(LockOnPluginKK) + fileName;
-            using(Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            string resourceName = $"{nameof(LockOnPluginKK)}.{dataFileName}";
+            using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
-                using(StreamReader reader = new StreamReader(stream))
+                using(var reader = new StreamReader(stream))
                 {
                     string result = reader.ReadToEnd();
                     targetData = JSONSerializer.Deserialize<TargetData>(result);
                 }
             }
+        }
+
+        void OnDestroy() // for ScriptEngine
+        {
+            SceneManager.sceneLoaded += SceneLoaded;
         }
 
         void SceneLoaded(Scene scene, LoadSceneMode mode)

@@ -191,7 +191,8 @@ namespace LockOnPluginKK
                     }
 
                     float distance = Vector3.Distance(CameraTargetPos, lastTargetPos.Value);
-                    if(distance > leash + 0.00001f) CameraTargetPos = Vector3.MoveTowards(CameraTargetPos, LockOnTargetPos + targetOffsetSize, (distance - leash) * trackingSpeed * Time.deltaTime * 60f);
+                    if(distance > leash + 0.00001f)
+                        CameraTargetPos = Vector3.MoveTowards(CameraTargetPos, LockOnTargetPos + targetOffsetSize, (distance - leash) * trackingSpeed * Time.deltaTime * 60f);
                     CameraTargetPos += targetOffsetSize - targetOffsetSizeAdded;
                     targetOffsetSizeAdded = targetOffsetSize;
                     lastTargetPos = LockOnTargetPos + targetOffsetSize; 
@@ -327,7 +328,7 @@ namespace LockOnPluginKK
 
         protected virtual bool LockOn(string targetName, bool lockOnAnyway = false, bool resetOffset = true)
         {
-            foreach(GameObject target in CameraTargetManager.GetTargetManager(currentCharaInfo).GetAllTargets())
+            foreach(var target in CameraTargetManager.GetTargetManager(currentCharaInfo).GetAllTargets())
             {
                 if(target.name.Substring(3) == targetName.Substring(3))
                 {

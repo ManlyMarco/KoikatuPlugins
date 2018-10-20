@@ -105,7 +105,7 @@ namespace LockOnPluginKK
 
                 for(int i = 0; i < customTargets.Count; i++)
                 {
-                    GameObject.Destroy(customTargets[i].GetTarget());
+                    Destroy(customTargets[i].GetTarget());
                 }
 
                 allTargets = new List<GameObject>();
@@ -132,16 +132,16 @@ namespace LockOnPluginKK
 
         private List<CustomTarget> UpdateCustomTargets(ChaInfo character)
         {
-            List<CustomTarget> customTargets = new List<CustomTarget>();
+            var customTargets = new List<CustomTarget>();
             //string prefix = character is CharFemale ? "cf_" : "cm_";
             string prefix = "cf_";
 
             foreach(var data in LockOnPlugin.targetData.customTargets)
             {
-                GameObject point1 = character.objBodyBone.transform.FindLoop(prefix + data.point1);
-                GameObject point2 = character.objBodyBone.transform.FindLoop(prefix + data.point2);
+                var point1 = character.objBodyBone.transform.FindLoop(prefix + data.point1);
+                var point2 = character.objBodyBone.transform.FindLoop(prefix + data.point2);
 
-                foreach(CustomTarget target in customTargets)
+                foreach(var target in customTargets)
                 {
                     if(target.GetTarget().name == data.point1)
                     {
@@ -156,7 +156,7 @@ namespace LockOnPluginKK
 
                 if(point1 && point2)
                 {
-                    CustomTarget target = new CustomTarget(data.target, point1, point2, data.midpoint);
+                    var target = new CustomTarget(data.target, point1, point2, data.midpoint);
                     target.GetTarget().transform.SetParent(character.transform);
                     customTargets.Add(target);
                 }
@@ -194,15 +194,15 @@ namespace LockOnPluginKK
 
             private void UpdatePosition()
             {
-                Vector3 pos1 = point1.transform.position;
-                Vector3 pos2 = point2.transform.position;
+                var pos1 = point1.transform.position;
+                var pos2 = point2.transform.position;
                 target.transform.position = Vector3.Lerp(pos1, pos2, midpoint);
             }
 
             private void UpdateRotation()
             {
-                Quaternion rot1 = point1.transform.rotation;
-                Quaternion rot2 = point2.transform.rotation;
+                var rot1 = point1.transform.rotation;
+                var rot2 = point2.transform.rotation;
                 target.transform.rotation = Quaternion.Slerp(rot1, rot2, 0.5f);
             }
         }
@@ -219,7 +219,7 @@ namespace LockOnPluginKK
 
                 foreach(var data in LockOnPlugin.targetData.centerWeigths)
                 {
-                    GameObject point = character.objBodyBone.transform.FindLoop(prefix + data.bone);
+                    var point = character.objBodyBone.transform.FindLoop(prefix + data.bone);
                     points.Add(new WeightPoint(point, data.weigth));
                 }
 
@@ -247,7 +247,7 @@ namespace LockOnPluginKK
 
             private Vector3 CalculateCenterPoint(List<WeightPoint> points)
             {
-                Vector3 center = new Vector3();
+                var center = new Vector3();
                 float totalWeight = 0f;
                 for(int i = 0; i < points.Count; i++)
                 {

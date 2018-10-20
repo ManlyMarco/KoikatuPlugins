@@ -13,7 +13,8 @@ namespace LockOnPluginKK
 
         public static void LoadData()
         {
-            string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dataFileName);
+            var ass = Assembly.GetExecutingAssembly();
+            string dataPath = Path.Combine(Path.GetDirectoryName(ass.Location), dataFileName);
 
             if(File.Exists(dataPath))
             {
@@ -21,10 +22,11 @@ namespace LockOnPluginKK
                 {
                     var json = File.ReadAllText(dataPath);
                     data = JSONSerializer.Deserialize<TargetData>(json);
+                    Console.WriteLine("Loading custom target data.");
                 }
                 catch(Exception)
                 {
-                    Console.WriteLine("Failed to deserialize target data. Loading backup.");
+                    Console.WriteLine("Failed to deserialize custom target data. Loading default target data.");
                     LoadResourceData();
                 }
             }

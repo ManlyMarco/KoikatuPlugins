@@ -32,6 +32,10 @@ namespace LockOnPluginKK
         [Description("Lock on automatically after switching characters.")]
         public static ConfigWrapper<bool> AutoSwitchLock { get; private set; }
 
+        [Advanced(true)]
+        [DisplayName("Show debug targets")]
+        public static ConfigWrapper<bool> ShowDebugTargets { get; private set; }
+
         [DisplayName("!Lock on")]
         public static SavedKeyboardShortcut LockOnKey { get; private set; }
 
@@ -52,6 +56,7 @@ namespace LockOnPluginKK
             ShowInfoMsg = new ConfigWrapper<bool>("ShowInfoMsg", this, true);
             LockLeashLength = new ConfigWrapper<float>("LockLeashLength", this, 0f);
             AutoSwitchLock = new ConfigWrapper<bool>("AutoSwitchLock", this, false);
+            ShowDebugTargets = new ConfigWrapper<bool>("ShowDebugTargets", this, false);
 
             LockOnKey = new SavedKeyboardShortcut("LockOnKey", this, new KeyboardShortcut(KeyCode.N));
             LockOnGuiKey = new SavedKeyboardShortcut("LockOnGuiKey", this, new KeyboardShortcut(KeyCode.None));

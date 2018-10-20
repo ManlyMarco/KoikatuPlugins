@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using IllusionUtility.GetUtility;
-using Studio;
 
 namespace LockOnPluginKK
 {
@@ -14,6 +13,7 @@ namespace LockOnPluginKK
 
         float targetSize = 25f;
         bool showLockOnTargets = false;
+        ChaInfo chara;
         
         List<GameObject> quickTargets = new List<GameObject>();
         List<CustomTarget> customTargets = new List<CustomTarget>();
@@ -26,6 +26,7 @@ namespace LockOnPluginKK
             {
                 targetManager = chara.gameObject.AddComponent<CameraTargetManager>();
                 targetManager.UpdateAllTargets(chara);
+                targetManager.chara = chara;
             }
 
             return targetManager;
@@ -65,14 +66,9 @@ namespace LockOnPluginKK
         {
             if(showLockOnTargets)
             {
-                var list = (from v in GuideObjectManager.Instance.selectObjectKey
-                            select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
-                            where v != null
-                            select v).ToList();
-
-                if(list.Count > 0)
+                if(LockOnPlugin.ShowDebugTargets.Value)
                 {
-                    var boneList = list[0].charInfo.objBodyBone.transform.GetComponentsInChildren<Component>().ToList();
+                    var boneList = chara.objBodyBone.transform.GetComponentsInChildren<Component>().ToList();
 
                     for(int i = 0; i < boneList.Count; i++)
                     {
@@ -83,18 +79,21 @@ namespace LockOnPluginKK
                         }
                     }
                 }
-
-                //List<GameObject> targets = GetAllTargets();
-                //for(int i = 0; i < targets.Count; i++)
-                //{
-                //    Vector3 pos = Camera.main.WorldToScreenPoint(targets[i].transform.position);
-                //    if(pos.z > 0f && GUI.Button(new Rect(pos.x - targetSize / 2f, Screen.height - pos.y - targetSize / 2f, targetSize, targetSize), "L"))
-                //    {
-                //        //CameraTargetPos += targetOffsetSize;
-                //        //targetOffsetSize = new Vector3();
-                //        LockOnBase.instance.LockOn(targets[i]);
-                //    }
-                //}
+                else
+                {
+                    List<GameObject> targets = GetTargets();
+                    for(int i = 0; i < targets.Count; i++)
+                    {
+                        Vector3 pos = Camera.main.WorldToScreenPoint(targets[i].transform.position);
+                        if(pos.z > 0f && GUI.Button(new Rect(pos.x - targetSize / 2f, Screen.height - pos.y - targetSize / 2f, targetSize, targetSize), "L"))
+                        {
+                            //CameraTargetPos += targetOffsetSize;
+                            //targetOffsetSize = new Vector3();
+                            //LockOnBase.instance.LockOn(targets[i]);
+                            Console.WriteLine(targets[i].name);
+                        }
+                    }
+                }
             }
         }
 

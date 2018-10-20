@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 namespace LockOnPluginKK
 {
-    internal class Hotkey
+    class Hotkey
     {
         public static bool allowHotkeys = true;
 
-        private SavedKeyboardShortcut key;
-        private float procTime = 0f;
-        private float timeHeld = 0f;
-        private bool released = true;
-        private bool enabled = true;
+        SavedKeyboardShortcut key;
+        float procTime = 0f;
+        float timeHeld = 0f;
+        bool released = true;
+        bool enabled = true;
 
         public Hotkey(SavedKeyboardShortcut newKey, float newProcTime = 0f)
         {
@@ -69,7 +69,7 @@ namespace LockOnPluginKK
             }
         }
 
-        private bool ResetIfShould()
+        bool ResetIfShould()
         {
             bool shouldReset = false;
 

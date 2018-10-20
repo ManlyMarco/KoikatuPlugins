@@ -1,16 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.IO;
+﻿using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BepInEx;
-using ParadoxNotion.Serialization;
 
 namespace LockOnPluginKK
 {
     [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPluginKK", "1.0.0")]
-    public class LockOnPlugin : BaseUnityPlugin
+    class LockOnPlugin : BaseUnityPlugin
     {
         [DisplayName("!Tracking speed")]
         [Description("The speed at which the target is followed.")]
@@ -48,9 +44,6 @@ namespace LockOnPluginKK
         [DisplayName("Select next character")]
         public static SavedKeyboardShortcut NextCharaKey { get; private set; }
 
-        public static TargetData targetData;
-        const string dataFileName = "LockOnPluginData.json";
-
         LockOnPlugin()
         {
             TrackingSpeedNormal = new ConfigWrapper<float>("LockedTrackingSpeed", this, 0.1f);
@@ -61,49 +54,16 @@ namespace LockOnPluginKK
             AutoSwitchLock = new ConfigWrapper<bool>("AutoSwitchLock", this, false);
 
             LockOnKey = new SavedKeyboardShortcut("LockOnKey", this, new KeyboardShortcut(KeyCode.N));
-            LockOnGuiKey = new SavedKeyboardShortcut("LockOnGuiKey", this, new KeyboardShortcut(KeyCode.L));
+            LockOnGuiKey = new SavedKeyboardShortcut("LockOnGuiKey", this, new KeyboardShortcut(KeyCode.None));
             PrevCharaKey = new SavedKeyboardShortcut("PrevCharaKey", this, new KeyboardShortcut(KeyCode.None));
             NextCharaKey = new SavedKeyboardShortcut("NextCharaKey", this, new KeyboardShortcut(KeyCode.None));
         }
 
         void Awake()
         {
-            string dataPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dataFileName);
-
-            if(File.Exists(dataPath))
-            {
-                try
-                {
-                    var data = File.ReadAllText(dataPath);
-                    targetData = JSONSerializer.Deserialize<TargetData>(data);
-                }
-                catch(Exception)
-                {
-                    Console.WriteLine("Failed to deserialize target data. Loading backup.");
-                    LoadResourceData();
-                }
-            }
-            else
-            {
-                Console.WriteLine("Loading default target data.");
-                LoadResourceData();
-            }
-
+            TargetData.LoadData();
             SceneLoaded();
             SceneManager.sceneLoaded += SceneLoaded;
-        }
-
-        void LoadResourceData()
-        {
-            string resourceName = $"{nameof(LockOnPluginKK)}.{dataFileName}";
-            using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-            {
-                using(var reader = new StreamReader(stream))
-                {
-                    string result = reader.ReadToEnd();
-                    targetData = JSONSerializer.Deserialize<TargetData>(result);
-                }
-            }
         }
 
         void OnDestroy() // for ScriptEngine

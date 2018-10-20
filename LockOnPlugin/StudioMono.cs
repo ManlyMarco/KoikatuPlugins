@@ -7,15 +7,15 @@ using Harmony;
 
 namespace LockOnPluginKK
 {
-    internal partial class StudioMono : LockOnBase
+    partial class StudioMono : LockOnBase
     {
-        private Studio.Studio studio = Studio.Studio.Instance;
-        private Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
-        private TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
-        private GuideObjectManager guideObjectManager = GuideObjectManager.Instance;
+        Studio.Studio studio = Studio.Studio.Instance;
+        Studio.CameraControl camera = Studio.Studio.Instance.cameraCtrl;
+        TreeNodeCtrl treeNodeCtrl = Studio.Studio.Instance.treeNodeCtrl;
+        GuideObjectManager guideObjectManager = GuideObjectManager.Instance;
 
-        private Studio.CameraControl.CameraData cameraData;
-        private OCIChar currentCharaOCI;
+        Studio.CameraControl.CameraData cameraData;
+        OCIChar currentCharaOCI;
 
         protected override void Start()
         {
@@ -25,14 +25,14 @@ namespace LockOnPluginKK
             treeNodeCtrl.onSelect += new Action<TreeNodeObject>(OnSelectWork);
             studio.onDelete += new Action<ObjectCtrlInfo>(OnDeleteWork);
             var systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");
-            systemMenuContent.Find("Load").GetComponent<Button>().onClick.AddListener(() => ResetModState());
-            systemMenuContent.Find("End").GetComponent<Button>().onClick.AddListener(() => HideLockOnTargets());
+            systemMenuContent.Find("Load").GetComponent<Button>().onClick.AddListener(ResetModState);
+            systemMenuContent.Find("End").GetComponent<Button>().onClick.AddListener(HideLockOnTargets);
 
             LockOnPlugin.ManageCursorVisibility.Value = false;
             Guitime.pos = new Vector2(1f, 1f);
         }
 
-        private void OnSelectWork(TreeNodeObject node)
+        void OnSelectWork(TreeNodeObject node)
         {
             if(studio.dicInfo.TryGetValue(node, out ObjectCtrlInfo objectCtrlInfo))
             {
@@ -72,7 +72,7 @@ namespace LockOnPluginKK
             currentCharaInfo = null;
         }
 
-        private void OnDeleteWork(ObjectCtrlInfo info)
+        void OnDeleteWork(ObjectCtrlInfo info)
         {
             if(info.kind == 0)
             {
@@ -133,7 +133,7 @@ namespace LockOnPluginKK
             treeNodeCtrl.SelectSingle(null);
         }
 
-        private List<TreeNodeObject> GetCharaNodes<CharaType>()
+        List<TreeNodeObject> GetCharaNodes<CharaType>()
         {
             var charaNodes = new List<TreeNodeObject>();
 

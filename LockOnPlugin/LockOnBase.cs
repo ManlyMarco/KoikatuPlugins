@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -27,11 +26,14 @@ namespace LockOnPluginKK
         protected virtual bool InputFieldSelected => EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<InputField>() != null;
         
         protected Hotkey lockOnHotkey;
-        
+        protected Hotkey lockOnGUIHotkey;
+        protected Hotkey prevCharaHotkey;
+        protected Hotkey nextCharaHotkey;
+
         protected float trackingSpeedMax = 0.3f;
 
         protected ChaInfo currentCharaInfo;
-        public GameObject lockOnTarget;
+        protected GameObject lockOnTarget;
         protected Vector3? lastTargetPos;
         protected float defaultCameraSpeed;
 
@@ -50,6 +52,9 @@ namespace LockOnPluginKK
         {
             defaultCameraSpeed = CameraMoveSpeed;
             lockOnHotkey = new Hotkey(LockOnPlugin.LockOnKey, 0.4f);
+            lockOnGUIHotkey = new Hotkey(LockOnPlugin.LockOnGuiKey);
+            prevCharaHotkey = new Hotkey(LockOnPlugin.PrevCharaKey);
+            nextCharaHotkey = new Hotkey(LockOnPlugin.NextCharaKey);
         }
 
         protected virtual void OnDestroy()
@@ -67,15 +72,9 @@ namespace LockOnPluginKK
             
             lockOnHotkey.KeyHoldAction(LockOnRelease);
             lockOnHotkey.KeyUpAction(() => LockOn());
-
-            if(LockOnPlugin.LockOnGuiKey.IsDown())
-                ToggleLockOnGUI();
-
-            if(LockOnPlugin.PrevCharaKey.IsDown())
-                CharaSwitch(false);
-
-            if(LockOnPlugin.NextCharaKey.IsDown())
-                CharaSwitch(true);
+            lockOnGUIHotkey.KeyDownAction(ToggleLockOnGUI);
+            prevCharaHotkey.KeyDownAction(() => CharaSwitch(false));
+            nextCharaHotkey.KeyDownAction(() => CharaSwitch(true));
 
             if(lockOnTarget && CameraEnabled)
             {
@@ -164,7 +163,7 @@ namespace LockOnPluginKK
                     // add this as a setting
                     if(targetOffsetSize.magnitude > 0.00001f)
                     {
-                        float trackingSpeed = lockOnTarget.name == CameraTargetManager.MOVEMENTPOINT_NAME ? trackingSpeedMax : LockOnPlugin.TrackingSpeedNormal.Value;
+                        float trackingSpeed = CameraTargetManager.IsMovementPoint(lockOnTarget) ? trackingSpeedMax : LockOnPlugin.TrackingSpeedNormal.Value;
                         targetOffsetSize = Vector3.MoveTowards(targetOffsetSize, new Vector3(), targetOffsetSize.magnitude / (1f / trackingSpeed)); 
                     }
                     else
@@ -179,7 +178,7 @@ namespace LockOnPluginKK
                     float trackingSpeed;
                     float leash;
 
-                    if(lockOnTarget.name == CameraTargetManager.MOVEMENTPOINT_NAME)
+                    if(CameraTargetManager.IsMovementPoint(lockOnTarget))
                     {
                         trackingSpeed = trackingSpeedMax;
                         leash = 0f;
@@ -245,7 +244,8 @@ namespace LockOnPluginKK
                         }
                     }
 
-                    if(cursorLocked) WinCursor.SetCursorPos(lockPos.x, lockPos.y);
+                    if(cursorLocked)
+                        WinCursor.SetCursorPos(lockPos.x, lockPos.y);
                 }
             }
         }
@@ -271,7 +271,7 @@ namespace LockOnPluginKK
             }
         }
 
-        public static bool DebugGUI(float screenWidthMult, float screenHeightMult, float width, float height, string msg)
+        static bool DebugGUI(float screenWidthMult, float screenHeightMult, float width, float height, string msg)
         {
             float xpos = Screen.width * screenWidthMult - width / 2f;
             float ypos = Screen.height * screenHeightMult - height / 2f;
@@ -383,7 +383,7 @@ namespace LockOnPluginKK
             if(currentCharaInfo)
             {
                 var targetManager = CameraTargetManager.GetTargetManager(currentCharaInfo);
-                targetManager.showLockOnTargets = !targetManager.showLockOnTargets;
+                targetManager.ToggleGUITargets();
             }
         }
 
@@ -391,7 +391,7 @@ namespace LockOnPluginKK
         {
             foreach(var targetManager in FindObjectsOfType<CameraTargetManager>())
             {
-                targetManager.showLockOnTargets = false;
+                targetManager.ShowGUITargets(false);
             }
         }
 
@@ -424,26 +424,6 @@ namespace LockOnPluginKK
             {
                 msg = newMsg;
                 info = time;
-            }
-        }
-
-        protected static class WinCursor
-        {
-            [DllImport("user32.dll")]
-            public static extern bool SetCursorPos(int X, int Y);
-
-            [DllImport("user32.dll")]
-            public static extern bool GetCursorPos(out Point pos);
-
-            public struct Point
-            {
-                public int x;
-                public int y;
-
-                public static implicit operator Vector2(Point point)
-                {
-                    return new Vector2(point.x, point.y);
-                }
             }
         }
     }

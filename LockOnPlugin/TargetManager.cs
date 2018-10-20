@@ -7,19 +7,17 @@ using Studio;
 
 namespace LockOnPluginKK
 {
-    internal class CameraTargetManager : MonoBehaviour
+    class CameraTargetManager : MonoBehaviour
     {
-        public const string MOVEMENTPOINT_NAME = "MovementPoint";
-        public const string CENTERPOINT_NAME = "CenterPoint";
+        const string MOVEMENTPOINT_NAME = "MovementPoint";
+        const string CENTERPOINT_NAME = "CenterPoint";
 
-        static float targetSize = 25f;
-        public bool showLockOnTargets = false;
-        public ChaInfo chara;
-
-        public List<GameObject> GetTargets() => quickTargets;
-        private List<GameObject> quickTargets = new List<GameObject>();
-        private List<CustomTarget> customTargets = new List<CustomTarget>();
-        private CenterPoint centerPoint;
+        float targetSize = 25f;
+        bool showLockOnTargets = false;
+        
+        List<GameObject> quickTargets = new List<GameObject>();
+        List<CustomTarget> customTargets = new List<CustomTarget>();
+        CenterPoint centerPoint;
 
         public static CameraTargetManager GetTargetManager(ChaInfo chara)
         {
@@ -28,10 +26,34 @@ namespace LockOnPluginKK
             {
                 targetManager = chara.gameObject.AddComponent<CameraTargetManager>();
                 targetManager.UpdateAllTargets(chara);
-                targetManager.chara = chara;
             }
 
             return targetManager;
+        }
+
+        public static bool IsCenterPoint(GameObject point)
+        {
+            return point.name == CENTERPOINT_NAME;
+        }
+
+        public static bool IsMovementPoint(GameObject point)
+        {
+            return point.name == MOVEMENTPOINT_NAME;
+        }
+
+        public void ShowGUITargets(bool flag)
+        {
+            showLockOnTargets = flag;
+        }
+
+        public void ToggleGUITargets()
+        {
+            showLockOnTargets = !showLockOnTargets;
+        }
+
+        public List<GameObject> GetTargets()
+        {
+            return quickTargets;
         }
 
         void Update()
@@ -39,7 +61,7 @@ namespace LockOnPluginKK
             UpdateCustomTargetTransforms();
         }
 
-        protected virtual void OnGUI()
+        void OnGUI()
         {
             if(showLockOnTargets)
             {
@@ -75,14 +97,14 @@ namespace LockOnPluginKK
                 //}
             }
         }
-        
-        public void UpdateCustomTargetTransforms()
+
+        void UpdateCustomTargetTransforms()
         {
             for(int i = 0; i < customTargets.Count; i++) customTargets[i].UpdateTransform();
             if(centerPoint != null && centerPoint.GetPoint()) centerPoint.UpdatePosition();
         }
 
-        public void UpdateAllTargets(ChaInfo character)
+        void UpdateAllTargets(ChaInfo character)
         {
             if(character)
             {
@@ -92,11 +114,11 @@ namespace LockOnPluginKK
             }
         }
 
-        private List<GameObject> UpdateQuickTargets(ChaInfo character)
+        List<GameObject> UpdateQuickTargets(ChaInfo character)
         {
             var quickTargets = new List<GameObject>();
 
-            foreach(var targetName in LockOnPlugin.targetData.quickTargets)
+            foreach(var targetName in TargetData.data.quickTargets)
             {
                 bool customFound = false;
 
@@ -125,22 +147,22 @@ namespace LockOnPluginKK
             return quickTargets;
         }
 
-        private List<CustomTarget> UpdateCustomTargets(ChaInfo character)
+        List<CustomTarget> UpdateCustomTargets(ChaInfo character)
         {
             var customTargets = new List<CustomTarget>();
 
-            foreach(var data in LockOnPlugin.targetData.customTargets)
+            foreach(var data in TargetData.data.customTargets)
             {
                 bool targetInUse = false;
 
-                if(LockOnPlugin.targetData.quickTargets.Contains(data.target))
+                if(TargetData.data.quickTargets.Contains(data.target))
                 {
                     targetInUse = true;
                 }
 
                 if(!targetInUse)
                 {
-                    foreach(var target in LockOnPlugin.targetData.customTargets)
+                    foreach(var target in TargetData.data.customTargets)
                     {
                         if(target.point1 == data.target || target.point2 == data.target)
                         {
@@ -188,12 +210,12 @@ namespace LockOnPluginKK
             return customTargets;
         }
 
-        private class CustomTarget
+        class CustomTarget
         {
-            private GameObject target;
-            private GameObject point1;
-            private GameObject point2;
-            private float midpoint;
+            GameObject target;
+            GameObject point1;
+            GameObject point2;
+            float midpoint;
 
             public CustomTarget(string name, GameObject point1, GameObject point2, float midpoint = 0.5f)
             {
@@ -215,14 +237,14 @@ namespace LockOnPluginKK
                 UpdateRotation();
             }
 
-            private void UpdatePosition()
+            void UpdatePosition()
             {
                 var pos1 = point1.transform.position;
                 var pos2 = point2.transform.position;
                 target.transform.position = Vector3.Lerp(pos1, pos2, midpoint);
             }
 
-            private void UpdateRotation()
+            void UpdateRotation()
             {
                 var rot1 = point1.transform.rotation;
                 var rot2 = point2.transform.rotation;
@@ -230,14 +252,14 @@ namespace LockOnPluginKK
             }
         }
 
-        private class CenterPoint
+        class CenterPoint
         {
-            private List<WeightPoint> points = new List<WeightPoint>();
-            private GameObject point;
+            List<WeightPoint> points = new List<WeightPoint>();
+            GameObject point;
 
             public CenterPoint(ChaInfo character)
             {
-                foreach(var data in LockOnPlugin.targetData.centerWeigths)
+                foreach(var data in TargetData.data.centerWeigths)
                 {
                     var point = character.objBodyBone.transform.FindLoop(data.bone);
                     points.Add(new WeightPoint(point, data.weigth));
@@ -265,7 +287,7 @@ namespace LockOnPluginKK
                 point.transform.position = CalculateCenterPoint(points);
             }
 
-            private Vector3 CalculateCenterPoint(List<WeightPoint> points)
+            Vector3 CalculateCenterPoint(List<WeightPoint> points)
             {
                 var center = new Vector3();
                 float totalWeight = 0f;
@@ -279,7 +301,7 @@ namespace LockOnPluginKK
             }
         }
 
-        private struct WeightPoint
+        class WeightPoint
         {
             public GameObject point;
             public float weight;

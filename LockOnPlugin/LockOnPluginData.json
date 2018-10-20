@@ -1,19 +1,44 @@
 {
-    "quickTargets":
-    [
-        "cf_d_kokan",
-        "cf_J_FaceUp_tz",
-        "cf_j_spine03",
-        "cf_j_hips"
-    ],
+	"quickTargets":
+	[
+		"cf_J_FaceUp_tz",
+		"cf_j_spine03",
+		"cf_j_hips",
+		"cf_d_kokan",
+		"BetweenKnees",
+		"BetweenFeet"
+	],
 
-    "customTargets":
-    [
-        
-    ],
+	"customTargets":
+	[
+		{
+			"target": "BetweenThighs",
+			"point1": "cf_d_thigh02_R",
+			"point2": "cf_d_thigh02_L",
+			"midpoint": 0.5
+		},
+		{
+			"target": "BetweenKnees",
+			"point1": "cf_j_leg01_R",
+			"point2": "cf_j_leg01_L",
+			"midpoint": 0.5
+		},
+		{
+			"target": "BetweenShins",
+			"point1": "cf_hit_leg01_R",
+			"point2": "cf_hit_leg01_L",
+			"midpoint": 0.5
+		},
+		{
+			"target": "BetweenFeet",
+			"point1": "cf_hit_leg02_R",
+			"point2": "cf_hit_leg02_L",
+			"midpoint": 0.5
+		}
+	],
 
-    "centerWeigths":
-    [
-        
-    ]
+	"centerWeigths":
+	[
+		
+	]
 }

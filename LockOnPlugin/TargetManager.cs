@@ -16,7 +16,8 @@ namespace LockOnPluginKK
         public bool showLockOnTargets = false;
         public ChaInfo chara;
 
-        public List<GameObject> quickTargets = new List<GameObject>();
+        public List<GameObject> GetTargets() => quickTargets;
+        private List<GameObject> quickTargets = new List<GameObject>();
         private List<CustomTarget> customTargets = new List<CustomTarget>();
         private CenterPoint centerPoint;
 
@@ -85,9 +86,8 @@ namespace LockOnPluginKK
         {
             if(character)
             {
+                customTargets = UpdateCustomTargets(character);
                 quickTargets = UpdateQuickTargets(character);
-                //customTargets = UpdateCustomTargets(character);
-                //customTargets.ForEach(target => allTargets.Add(target.GetTarget()));
                 //centerPoint = new CenterPoint(character);
                 //if(centerPoint != null && centerPoint.GetPoint()) allTargets.Add(centerPoint.GetPoint());
             }
@@ -99,8 +99,22 @@ namespace LockOnPluginKK
 
             foreach(var targetName in LockOnPlugin.targetData.quickTargets)
             {
-                var bone = character.objBodyBone.transform.FindLoop(targetName);
-                if(bone) quickTargets.Add(bone);
+                bool customFound = false;
+
+                foreach(var customTarget in customTargets)
+                {
+                    if(customTarget.GetTarget().name == targetName)
+                    {
+                        quickTargets.Add(customTarget.GetTarget());
+                        customFound = true;
+                    }
+                }
+
+                if(!customFound)
+                {
+                    var bone = character.objBodyBone.transform.FindLoop(targetName);
+                    if(bone) quickTargets.Add(bone); 
+                }
             }
 
             return quickTargets;
@@ -133,6 +147,10 @@ namespace LockOnPluginKK
                     var target = new CustomTarget(data.target, point1, point2, data.midpoint);
                     target.GetTarget().transform.SetParent(character.transform);
                     customTargets.Add(target);
+                }
+                else
+                {
+                    Console.WriteLine($"CustomTarget '{data.target}' failed");
                 }
             }
 

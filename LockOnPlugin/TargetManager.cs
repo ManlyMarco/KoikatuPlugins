@@ -131,31 +131,57 @@ namespace LockOnPluginKK
 
             foreach(var data in LockOnPlugin.targetData.customTargets)
             {
-                var point1 = character.objBodyBone.transform.FindLoop(data.point1);
-                var point2 = character.objBodyBone.transform.FindLoop(data.point2);
+                bool targetInUse = false;
 
-                foreach(var target in customTargets)
+                if(LockOnPlugin.targetData.quickTargets.Contains(data.target))
                 {
-                    if(target.GetTarget().name == data.point1)
-                    {
-                        point1 = target.GetTarget();
-                    }
-
-                    if(target.GetTarget().name == data.point2)
-                    {
-                        point2 = target.GetTarget();
-                    }
+                    targetInUse = true;
                 }
 
-                if(point1 && point2)
+                if(!targetInUse)
                 {
-                    var target = new CustomTarget(data.target, point1, point2, data.midpoint);
-                    target.GetTarget().transform.SetParent(character.transform);
-                    customTargets.Add(target);
+                    foreach(var target in LockOnPlugin.targetData.customTargets)
+                    {
+                        if(target.point1 == data.target || target.point2 == data.target)
+                        {
+                            targetInUse = true;
+                            continue;
+                        }
+                    } 
+                }
+
+                if(targetInUse)
+                {
+                    var point1 = character.objBodyBone.transform.FindLoop(data.point1);
+                    var point2 = character.objBodyBone.transform.FindLoop(data.point2);
+
+                    foreach(var target in customTargets)
+                    {
+                        if(target.GetTarget().name == data.point1)
+                        {
+                            point1 = target.GetTarget();
+                        }
+
+                        if(target.GetTarget().name == data.point2)
+                        {
+                            point2 = target.GetTarget();
+                        }
+                    }
+
+                    if(point1 && point2)
+                    {
+                        var target = new CustomTarget(data.target, point1, point2, data.midpoint);
+                        target.GetTarget().transform.SetParent(character.transform);
+                        customTargets.Add(target);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"CustomTarget '{data.target}' failed");
+                    } 
                 }
                 else
                 {
-                    Console.WriteLine($"CustomTarget '{data.target}' failed");
+                    Console.WriteLine($"CustomTarget '{data.target}' skipped because it is not in use");
                 }
             }
 

@@ -54,11 +54,11 @@
         },
         {
             "bone": "cf_j_hand_R",
-            "weigth": 0.8
+            "weigth": 0.6
         },
         {
             "bone": "cf_j_hand_L",
-            "weigth": 0.8
+            "weigth": 0.6
         },
         {
             "bone": "cf_d_kokan",
@@ -66,19 +66,19 @@
         },
         {
             "bone": "cf_j_leg01_R",
-            "weigth": 0.8
+            "weigth": 0.7
         },
         {
             "bone": "cf_j_leg01_L",
-            "weigth": 0.8
+            "weigth": 0.7
         },
         {
             "bone": "cf_hit_leg02_R",
-            "weigth": 0.8
+            "weigth": 0.6
         },
         {
             "bone": "cf_hit_leg02_R",
-            "weigth": 0.8
+            "weigth": 0.6
         }
     ]
 }

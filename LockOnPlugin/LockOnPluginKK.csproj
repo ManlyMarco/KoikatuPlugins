@@ -63,6 +63,7 @@
     <Compile Include="Hotkey.cs" />
     <Compile Include="LockOnBase.cs" />
     <Compile Include="LockOnPlugin.cs" />
+    <Compile Include="MakerMono.cs" />
     <Compile Include="StudioMono.cs" />
     <Compile Include="StudioProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -89,6 +89,10 @@ namespace LockOnPluginKK
             {
                 if(!comp) gameObject.AddComponent<StudioMono>();
             }
+            else if(FindObjectOfType<CustomScene>())
+            {
+                if(!comp) gameObject.AddComponent<MakerMono>();
+            }
             else if(comp)
             {
                 Destroy(comp);

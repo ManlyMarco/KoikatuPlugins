@@ -4,9 +4,7 @@ namespace LockOnPluginKK
 {
     public class TargetData
     {
-        public List<string> normalTargets;
-        public List<string> femaleTargets;
-        public List<string> maleTargets;
+        public List<string> quickTargets;
         public List<CustomTarget> customTargets;
         public List<CenterWeigth> centerWeigths;
 

@@ -61,7 +61,7 @@ namespace LockOnPluginKK
         {
             if(!lockOnTarget && lockedOn)
             {
-                Console.WriteLine("[LockOnPlugin] Reset mod state");
+                Console.WriteLine("Reset LockOnPlugin");
                 ResetModState();
             }
             
@@ -284,13 +284,12 @@ namespace LockOnPluginKK
         {
             if(currentCharaInfo)
             {
-                //List<string> targetList = currentCharaInfo is CharFemale ? FileManager.GetQuickFemaleTargetNames() : FileManager.GetQuickMaleTargetNames();
-                var targetList = LockOnPlugin.targetData.femaleTargets;
+                var targets = CameraTargetManager.GetTargetManager(currentCharaInfo).quickTargets;
 
                 if(shouldResetLock)
                 {
                     shouldResetLock = false;
-                    return LockOn(targetList[0]);
+                    return LockOn(targets[0]);
                 }
 
                 if(reduceOffset == true)
@@ -306,20 +305,20 @@ namespace LockOnPluginKK
                 
                 if(!lockOnTarget)
                 {
-                    return LockOn(targetList[0]);
+                    return LockOn(targets[0]);
                 }
                 else
                 {
-                    for(int i = 0; i < targetList.Count; i++)
+                    for(int i = 0; i < targets.Count; i++)
                     {
-                        if(lockOnTarget.name == targetList[i])
+                        if(lockOnTarget == targets[i])
                         {
-                            int next = i + 1 > targetList.Count - 1 ? 0 : i + 1;
-                            return LockOn(targetList[next]);
+                            int next = i + 1 > targets.Count - 1 ? 0 : i + 1;
+                            return LockOn(targets[next]);
                         }
                     }
                     
-                    return LockOn(targetList[0]);
+                    return LockOn(targets[0]);
                 }
             }
 
@@ -328,9 +327,9 @@ namespace LockOnPluginKK
 
         protected virtual bool LockOn(string targetName, bool lockOnAnyway = false, bool resetOffset = true)
         {
-            foreach(var target in CameraTargetManager.GetTargetManager(currentCharaInfo).GetAllTargets())
+            foreach(var target in CameraTargetManager.GetTargetManager(currentCharaInfo).quickTargets)
             {
-                if(target.name.Substring(3) == targetName.Substring(3))
+                if(target.name == targetName)
                 {
                     if(LockOn(target, resetOffset))
                     {

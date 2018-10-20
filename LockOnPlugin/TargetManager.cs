@@ -1,9 +1,9 @@
-﻿using IllusionUtility.GetUtility;
-using Studio;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using IllusionUtility.GetUtility;
+using Studio;
 
 namespace LockOnPluginKK
 {
@@ -16,8 +16,7 @@ namespace LockOnPluginKK
         public bool showLockOnTargets = false;
         public ChaInfo chara;
 
-        private List<GameObject> allTargets = new List<GameObject>();
-        private List<GameObject> normalTargets = new List<GameObject>();
+        public List<GameObject> quickTargets = new List<GameObject>();
         private List<CustomTarget> customTargets = new List<CustomTarget>();
         private CenterPoint centerPoint;
 
@@ -46,7 +45,6 @@ namespace LockOnPluginKK
                 var list = (from v in GuideObjectManager.Instance.selectObjectKey
                             select Studio.Studio.GetCtrlInfo(v) as OCIChar into v
                             where v != null
-                            //where v.oiCharInfo.sex == 1
                             select v).ToList();
 
                 if(list.Count > 0)
@@ -76,9 +74,7 @@ namespace LockOnPluginKK
                 //}
             }
         }
-
-        public List<GameObject> GetAllTargets() => allTargets;
-
+        
         public void UpdateCustomTargetTransforms()
         {
             for(int i = 0; i < customTargets.Count; i++) customTargets[i].UpdateTransform();
@@ -89,57 +85,35 @@ namespace LockOnPluginKK
         {
             if(character)
             {
-                allTargets = normalTargets = UpdateNormalTargets(character);
-                customTargets = UpdateCustomTargets(character);
-                customTargets.ForEach(target => allTargets.Add(target.GetTarget()));
+                quickTargets = UpdateQuickTargets(character);
+                //customTargets = UpdateCustomTargets(character);
+                //customTargets.ForEach(target => allTargets.Add(target.GetTarget()));
                 //centerPoint = new CenterPoint(character);
                 //if(centerPoint != null && centerPoint.GetPoint()) allTargets.Add(centerPoint.GetPoint());
             }
-            else
-            {
-                //if(centerPoint != null)
-                //{
-                //    GameObject.Destroy(centerPoint.GetPoint());
-                //    centerPoint = null;
-                //}
-
-                for(int i = 0; i < customTargets.Count; i++)
-                {
-                    Destroy(customTargets[i].GetTarget());
-                }
-
-                allTargets = new List<GameObject>();
-                normalTargets = new List<GameObject>();
-                customTargets = new List<CustomTarget>();
-            }
         }
 
-        private List<GameObject> UpdateNormalTargets(ChaInfo character)
+        private List<GameObject> UpdateQuickTargets(ChaInfo character)
         {
-            List<GameObject> normalTargets = new List<GameObject>();
-            //string prefix = character is CharFemale ? "cf_" : "cm_";
-            string prefix = "cf_";
+            var quickTargets = new List<GameObject>();
 
-            foreach(var targetName in LockOnPlugin.targetData.normalTargets)
+            foreach(var targetName in LockOnPlugin.targetData.quickTargets)
             {
-                GameObject bone = character.objBodyBone.transform.FindLoop(prefix + targetName);
-                //Console.WriteLine($"Bone '{prefix + targetName}' found: {bone != null}");
-                if(bone) normalTargets.Add(bone);
+                var bone = character.objBodyBone.transform.FindLoop(targetName);
+                if(bone) quickTargets.Add(bone);
             }
 
-            return normalTargets;
+            return quickTargets;
         }
 
         private List<CustomTarget> UpdateCustomTargets(ChaInfo character)
         {
             var customTargets = new List<CustomTarget>();
-            //string prefix = character is CharFemale ? "cf_" : "cm_";
-            string prefix = "cf_";
 
             foreach(var data in LockOnPlugin.targetData.customTargets)
             {
-                var point1 = character.objBodyBone.transform.FindLoop(prefix + data.point1);
-                var point2 = character.objBodyBone.transform.FindLoop(prefix + data.point2);
+                var point1 = character.objBodyBone.transform.FindLoop(data.point1);
+                var point2 = character.objBodyBone.transform.FindLoop(data.point2);
 
                 foreach(var target in customTargets)
                 {
@@ -214,12 +188,9 @@ namespace LockOnPluginKK
 
             public CenterPoint(ChaInfo character)
             {
-                //string prefix = character is CharFemale ? "cf_" : "cm_";
-                string prefix = "cf_";
-
                 foreach(var data in LockOnPlugin.targetData.centerWeigths)
                 {
-                    var point = character.objBodyBone.transform.FindLoop(prefix + data.bone);
+                    var point = character.objBodyBone.transform.FindLoop(data.bone);
                     points.Add(new WeightPoint(point, data.weigth));
                 }
 

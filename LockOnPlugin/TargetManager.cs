@@ -86,10 +86,9 @@ namespace LockOnPluginKK
         {
             if(character)
             {
+                centerPoint = new CenterPoint(character);
                 customTargets = UpdateCustomTargets(character);
                 quickTargets = UpdateQuickTargets(character);
-                //centerPoint = new CenterPoint(character);
-                //if(centerPoint != null && centerPoint.GetPoint()) allTargets.Add(centerPoint.GetPoint());
             }
         }
 
@@ -100,6 +99,12 @@ namespace LockOnPluginKK
             foreach(var targetName in LockOnPlugin.targetData.quickTargets)
             {
                 bool customFound = false;
+
+                if(targetName == CENTERPOINT_NAME)
+                {
+                    quickTargets.Add(centerPoint.GetPoint());
+                    customFound = true;
+                }
 
                 foreach(var customTarget in customTargets)
                 {
@@ -231,7 +236,7 @@ namespace LockOnPluginKK
 
             public void UpdatePosition()
             {
-                //point.transform.position = CalculateCenterPoint(points);
+                point.transform.position = CalculateCenterPoint(points);
             }
 
             private Vector3 CalculateCenterPoint(List<WeightPoint> points)

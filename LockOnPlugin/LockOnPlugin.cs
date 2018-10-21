@@ -93,6 +93,10 @@ namespace LockOnPluginKK
             {
                 if(!comp) gameObject.AddComponent<MakerMono>();
             }
+            else if(FindObjectOfType<HSceneProc>())
+            {
+                if(!comp) gameObject.AddComponent<HSceneMono>();
+            }
             else if(comp)
             {
                 Destroy(comp);

@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hotkey.cs" />
+    <Compile Include="HSceneMono.cs" />
+    <Compile Include="HSceneParameters.cs" />
     <Compile Include="LockOnBase.cs" />
     <Compile Include="LockOnPlugin.cs" />
     <Compile Include="MakerMono.cs" />

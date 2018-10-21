@@ -2,22 +2,8 @@
 
 namespace LockOnPluginKK
 {
-    class MakerMono : LockOnBase
+    partial class HSceneMono : LockOnBase
     {
-        CameraControl_Ver2 camera = Singleton<CameraControl_Ver2>.Instance;
-
-        protected override void Start()
-        {
-            base.Start();
-            currentCharaInfo = FindObjectOfType<ChaInfo>();
-        }
-
-        protected override void ResetModState()
-        {
-            base.ResetModState();
-            currentCharaInfo = FindObjectOfType<ChaInfo>();
-        }
-
         protected override float CameraMoveSpeed
         {
             get { return camera.moveSpeed; }
@@ -76,6 +62,26 @@ namespace LockOnPluginKK
         protected override bool CameraEnabled
         {
             get { return camera.enabled; }
+        }
+
+        protected override Vector3 CameraForward
+        {
+            get { return camera.transBase.InverseTransformDirection(camera.transform.forward); }
+        }
+
+        protected override Vector3 CameraRight
+        {
+            get { return camera.transBase.InverseTransformDirection(camera.transform.right); }
+        }
+
+        protected override Vector3 CameraUp
+        {
+            get { return camera.transBase.InverseTransformDirection(camera.transform.up); }
+        }
+
+        protected override Vector3 LockOnTargetPos
+        {
+            get { return camera.transBase.InverseTransformPoint(lockOnTarget.transform.position); }
         }
     }
 }

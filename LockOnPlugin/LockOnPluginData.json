@@ -80,5 +80,13 @@
             "bone": "cf_hit_leg02_R",
             "weigth": 0.6
         }
+    ],
+
+    "presenceTargets":
+    [
+        "cf_J_FaceUp_tz",
+        "cf_j_spine03",
+        "cf_j_hips",
+        "cf_d_kokan"
     ]
 }

@@ -53,6 +53,7 @@ namespace LockOnPluginKK
         public List<string> quickTargets;
         public List<CustomTarget> customTargets;
         public List<CenterWeigth> centerWeigths;
+        public List<string> presenceTargets;
 
         public class CustomTarget
         {

@@ -47,8 +47,13 @@
       <HintPath>..\..\..\Koikatu_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\Koikatu_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CursorManager.cs" />
     <Compile Include="FixCompilation.cs" />
     <Compile Include="YamadamodFix.cs" />
     <Compile Include="MakerOptimization.cs" />

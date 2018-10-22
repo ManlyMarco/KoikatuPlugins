@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace FixCompilation
 {
-    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.0.1")]
+    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.0")]
     public class FixCompilation : BaseUnityPlugin
     {
         [DisplayName("Disable \"NEW\" indicator animation")]
@@ -30,6 +30,15 @@ namespace FixCompilation
         [Description("Hides the name box in the bottom right part of the maker, giving you a clearer look at the character.")]
         public static ConfigWrapper<bool> DisableCharaName { get; set; }
 
+        [DisplayName("Avoid yamadamod exceptions")]
+        [Description("Increases fps in certain situations where exceptions are being spammed. This fix may be unnecessary if you don't have sideloader.\n" +
+                     "Changes take effect after game restart.")]
+        public static ConfigWrapper<bool> EnableYamadamodFix { get; set; }
+
+        [DisplayName("Manage cursor in maker")]
+        [Description("Lock and hide the cursor when moving the camera in maker.")]
+        public static ConfigWrapper<bool> ManageCursor { get; set; }
+
         public FixCompilation()
         {
             DisableNewAnimation = new ConfigWrapper<bool>("DisableNewAnimation", this, true);
@@ -37,6 +46,8 @@ namespace FixCompilation
             DisableIKCalc = new ConfigWrapper<bool>("DisableIKCalc", this, true);
             DisableCameraTarget = new ConfigWrapper<bool>("DisableCameraTarget", this, false);
             DisableCharaName = new ConfigWrapper<bool>("DisableCharaName", this, true);
+            EnableYamadamodFix = new ConfigWrapper<bool>("EnableYamadamodFix", this, true);
+            ManageCursor = new ConfigWrapper<bool>("ManageCursor", this, true);
         }
 
         protected void Awake()
@@ -45,32 +56,40 @@ namespace FixCompilation
             DisableCameraTarget.SettingChanged += (sender, args) => ApplyPatches();
             DisableCharaName.SettingChanged += (sender, args) => ApplyPatches();
 
-            YamadamodFix.Patch();
+            if(EnableYamadamodFix.Value)
+                YamadamodFix.Patch();
 
             MakerOptimization.Patch();
         }
 
-        private static void SceneLoaded(Scene scene, LoadSceneMode mode)
+        private void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            //QualitySettings.shadowProjection = ShadowProjection.CloseFit;
-            //QualitySettings.shadowResolution = ShadowResolution.VeryHigh;
-
             ApplyPatches();
+
+            var cursorManager = gameObject.GetComponent<CursorManager>();
+
+            if(FindObjectOfType<CustomScene>())
+            {
+                if(!cursorManager) gameObject.AddComponent<CursorManager>();
+            }
+            else if(cursorManager)
+            {
+                Destroy(cursorManager);
+            }
         }
 
-        private static void ApplyPatches()
+        private void ApplyPatches()
         {
-            if (FindObjectOfType<StudioScene>())
+            if(FindObjectOfType<StudioScene>())
             {
                 GameObject.Find("StudioScene/Camera/Main Camera/CameraTarget")?.SetActive(!DisableCameraTarget.Value);
             }
-            else if (SceneManager.GetActiveScene().name == "CustomScene")
+            else if(FindObjectOfType<CustomScene>())
             {
                 GameObject.Find("CustomScene/CamBase/Camera/CameraTarget")?.SetActive(!DisableCameraTarget.Value);
-
                 GameObject.Find("CustomScene/CustomRoot/FrontUIGroup/CustomUIGroup/CvsCharaName")?.SetActive(!DisableCharaName.Value);
             }
-            else if (SceneManager.GetActiveScene().name == "H")
+            else if(FindObjectOfType<HSceneProc>())
             {
                 GameObject.Find("HScene/CameraBase/Camera/CameraTarget")?.SetActive(!DisableCameraTarget.Value);
             }

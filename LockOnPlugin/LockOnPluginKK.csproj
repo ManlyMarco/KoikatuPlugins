@@ -71,7 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TargetData.cs" />
     <Compile Include="TargetManager.cs" />
-    <Compile Include="WinCursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LockOnPluginData.json" />

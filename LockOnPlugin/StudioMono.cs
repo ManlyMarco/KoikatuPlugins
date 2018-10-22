@@ -27,8 +27,6 @@ namespace LockOnPluginKK
             var systemMenuContent = studio.transform.Find("Canvas Main Menu/04_System/Viewport/Content");
             systemMenuContent.Find("Load").GetComponent<Button>().onClick.AddListener(ResetModState);
             systemMenuContent.Find("End").GetComponent<Button>().onClick.AddListener(HideLockOnTargets);
-
-            LockOnPlugin.ManageCursorVisibility.Value = false;
             Guitime.pos = new Vector2(1f, 1f);
         }
 

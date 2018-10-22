@@ -10,6 +10,7 @@ namespace LockOnPluginKK
         {
             base.Start();
             currentCharaInfo = FindObjectOfType<ChaInfo>();
+            Guitime.pos = new Vector2(1f, 1f);
         }
 
         protected override void ResetModState()

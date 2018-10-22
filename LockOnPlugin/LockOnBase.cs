@@ -30,23 +30,17 @@ namespace LockOnPluginKK
         protected Hotkey prevCharaHotkey;
         protected Hotkey nextCharaHotkey;
 
-        protected float trackingSpeedMax = 0.3f;
-
         protected ChaInfo currentCharaInfo;
         protected GameObject lockOnTarget;
         protected Vector3? lastTargetPos;
         protected float defaultCameraSpeed;
+        protected float trackingSpeedMax = 0.3f;
+        protected bool shouldResetLock = false;
 
         protected Vector3 targetOffsetSize = new Vector3();
         protected Vector3 targetOffsetSizeAdded = new Vector3();
         protected float offsetKeyHeld = 0f;
         protected bool reduceOffset = false;
-
-        protected bool mouseButtonDown0 = false;
-        protected bool mouseButtonDown1 = false;
-        protected WinCursor.Point lockPos;
-        protected bool cursorLocked = false;
-        protected bool shouldResetLock = false;
 
         protected virtual void Start()
         {
@@ -201,52 +195,6 @@ namespace LockOnPluginKK
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 HideLockOnTargets();
-            }
-
-            if(LockOnPlugin.ManageCursorVisibility.Value)
-            {
-                if(!cursorLocked)
-                {
-                    if(GUIUtility.hotControl == 0 && !EventSystem.current.IsPointerOverGameObject() && Hotkey.allowHotkeys)
-                    {
-                        bool mouseDown0 = Input.GetMouseButtonDown(0);
-                        bool mouseDown1 = Input.GetMouseButtonDown(1);
-
-                        if(mouseDown0 || mouseDown1)
-                        {
-                            if(mouseDown0) mouseButtonDown0 = true;
-                            if(mouseDown1) mouseButtonDown1 = true;
-
-                            Cursor.visible = false;
-                            Cursor.lockState = CursorLockMode.Confined;
-
-                            cursorLocked = true;
-                            WinCursor.GetCursorPos(out lockPos);
-                        }
-                    }
-                }
-
-                if(cursorLocked)
-                {
-                    bool mouseUp0 = Input.GetMouseButtonUp(0);
-                    bool mouseUp1 = Input.GetMouseButtonUp(1);
-
-                    if((mouseButtonDown0 || mouseButtonDown1) && (mouseUp0 || mouseUp1))
-                    {
-                        if(mouseUp0) mouseButtonDown0 = false;
-                        if(mouseUp1) mouseButtonDown1 = false;
-
-                        if(!mouseButtonDown0 && !mouseButtonDown1)
-                        {
-                            Cursor.lockState = CursorLockMode.None;
-                            Cursor.visible = true;
-                            cursorLocked = false;
-                        }
-                    }
-
-                    if(cursorLocked)
-                        WinCursor.SetCursorPos(lockPos.x, lockPos.y);
-                }
             }
         }
         

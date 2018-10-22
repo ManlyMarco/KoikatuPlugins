@@ -13,9 +13,6 @@ namespace LockOnPluginKK
         [AcceptableValueRange(0.01f, 0.3f, true)]
         public static ConfigWrapper<float> TrackingSpeedNormal { get; private set; }
 
-        [DisplayName("Manage cursor visibility")]
-        public static ConfigWrapper<bool> ManageCursorVisibility { get; private set; }
-
         [DisplayName("Scroll through males")]
         [Description("When switching characters with the hotkeys, only females are selected by default.")]
         public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
@@ -51,7 +48,6 @@ namespace LockOnPluginKK
         LockOnPlugin()
         {
             TrackingSpeedNormal = new ConfigWrapper<float>("LockedTrackingSpeed", this, 0.1f);
-            ManageCursorVisibility = new ConfigWrapper<bool>("ManageCursorVisibility", this, false);
             ScrollThroughMalesToo = new ConfigWrapper<bool>("ScrollThroughMalesToo", this, true);
             ShowInfoMsg = new ConfigWrapper<bool>("ShowInfoMsg", this, true);
             LockLeashLength = new ConfigWrapper<float>("LockLeashLength", this, 0f);

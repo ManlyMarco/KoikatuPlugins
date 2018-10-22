@@ -45,7 +45,7 @@ namespace FixCompilation
             DisableCameraTarget.SettingChanged += (sender, args) => ApplyPatches();
             DisableCharaName.SettingChanged += (sender, args) => ApplyPatches();
 
-            CustomHairComponentFix.Patch();
+            YamadamodFix.Patch();
 
             MakerOptimization.Patch();
         }

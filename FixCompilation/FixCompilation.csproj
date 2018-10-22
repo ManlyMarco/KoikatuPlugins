@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixCompilation.cs" />
-    <Compile Include="CustomHairComponentFix.cs" />
+    <Compile Include="YamadamodFix.cs" />
     <Compile Include="MakerOptimization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

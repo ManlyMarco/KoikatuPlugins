@@ -13,7 +13,7 @@ namespace FixCompilation
         public static ConfigWrapper<bool> DisableNewAnimation { get; set; }
 
         [DisplayName("Disable \"NEW\" indicator for new items")]
-        [Description("Good performance improvement in maker if there are many new items. Changes take effect after maker restart.")]
+        [Description("Good performance improvement in maker if there are many new items.\n\nChanges take effect after maker restart.")]
         public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
 
         [DisplayName("Disable maker IK")]
@@ -30,6 +30,10 @@ namespace FixCompilation
         [Description("Hides the name box in the bottom right part of the maker, giving you a clearer look at the character.")]
         public static ConfigWrapper<bool> DisableCharaName { get; set; }
 
+        [DisplayName("Deactivate hidden tabs in maker")]
+        [Description("Major performance improvement at the cost of slower switching between tabs in maker.\n\nChanges take effect after maker restart.")]
+        public static ConfigWrapper<bool> DisableHiddenTabs { get; set; }
+        
         [DisplayName("Avoid yamadamod exceptions")]
         [Description("Increases fps in certain situations where exceptions are being spammed. This fix may be unnecessary if you don't have sideloader.\n" +
                      "Changes take effect after game restart.")]
@@ -46,6 +50,7 @@ namespace FixCompilation
             DisableIKCalc = new ConfigWrapper<bool>("DisableIKCalc", this, true);
             DisableCameraTarget = new ConfigWrapper<bool>("DisableCameraTarget", this, false);
             DisableCharaName = new ConfigWrapper<bool>("DisableCharaName", this, true);
+            DisableHiddenTabs = new ConfigWrapper<bool>("DisableHiddenTabs", this, true);
             EnableYamadamodFix = new ConfigWrapper<bool>("EnableYamadamodFix", this, true);
             ManageCursor = new ConfigWrapper<bool>("ManageCursor", this, true);
         }

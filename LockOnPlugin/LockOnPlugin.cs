@@ -10,19 +10,19 @@ namespace LockOnPluginKK
     {
         [DisplayName("!Tracking speed")]
         [Description("The speed at which the target is followed.")]
-        [AcceptableValueRange(0.01f, 0.3f, true)]
+        [AcceptableValueRange(0.01f, 0.3f, false)]
         public static ConfigWrapper<float> TrackingSpeedNormal { get; private set; }
 
         [DisplayName("Scroll through males")]
-        [Description("When switching characters with the hotkeys, only females are selected by default.")]
+        [Description("Choose whether to include males in the rotation when switching characters using the hotkeys from the mod.")]
         public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
         
-        [DisplayName("Show messages")]
+        [DisplayName("Show info messages")]
         public static ConfigWrapper<bool> ShowInfoMsg { get; private set; }
 
         [DisplayName("!Leash length")]
         [Description("The amount of slack allowed when tracking.")]
-        [AcceptableValueRange(0f, 0.5f, true)]
+        [AcceptableValueRange(0f, 0.5f, false)]
         public static ConfigWrapper<float> LockLeashLength { get; private set; }
 
         [DisplayName("Auto lock on switch")]

@@ -10,38 +10,38 @@ namespace FixCompilation
     {
         [DisplayName("Disable \"NEW\" indicator animation")]
         [Description("Major performance improvement in maker if there are many new items. Almost no visual effect.")]
-        public static ConfigWrapper<bool> DisableNewAnimation { get; set; }
+        public static ConfigWrapper<bool> DisableNewAnimation { get; private set; }
 
         [DisplayName("Disable \"NEW\" indicator for new items")]
         [Description("Good performance improvement in maker if there are many new items.\n\nChanges take effect after maker restart.")]
-        public static ConfigWrapper<bool> DisableNewIndicator { get; set; }
+        public static ConfigWrapper<bool> DisableNewIndicator { get; private set; }
 
         [DisplayName("Disable maker IK")]
         [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n\n" +
                      "Most noticeable on characters with wide hips where the hands are not moving with the hip line.\n\n" +
                      "Changes take effect after game restart.")]
-        public static ConfigWrapper<bool> DisableIKCalc { get; set; }
+        public static ConfigWrapper<bool> DisableIKCalc { get; private set; }
 
         [DisplayName("Disable camera target (white focus ring)")]
         [Description("Warning: This setting overrides any game setting that enables the ring.")]
-        public static ConfigWrapper<bool> DisableCameraTarget { get; set; }
+        public static ConfigWrapper<bool> DisableCameraTarget { get; private set; }
 
         [DisplayName("Disable character name box in maker")]
         [Description("Hides the name box in the bottom right part of the maker, giving you a clearer look at the character.")]
-        public static ConfigWrapper<bool> DisableCharaName { get; set; }
+        public static ConfigWrapper<bool> DisableCharaName { get; private set; }
 
         [DisplayName("Deactivate hidden tabs in maker")]
         [Description("Major performance improvement at the cost of slower switching between tabs in maker.\n\nChanges take effect after maker restart.")]
-        public static ConfigWrapper<bool> DisableHiddenTabs { get; set; }
+        public static ConfigWrapper<bool> DisableHiddenTabs { get; private set; }
         
         [DisplayName("Avoid yamadamod exceptions")]
-        [Description("Increases fps in certain situations where exceptions are being spammed. This fix may be unnecessary if you don't have sideloader.\n" +
+        [Description("Increases fps in certain situations where exceptions are being spammed. This fix may be unnecessary if you don't have sideloader.\n\n" +
                      "Changes take effect after game restart.")]
-        public static ConfigWrapper<bool> EnableYamadamodFix { get; set; }
+        public static ConfigWrapper<bool> EnableYamadamodFix { get; private set; }
 
         [DisplayName("Manage cursor in maker")]
         [Description("Lock and hide the cursor when moving the camera in maker.")]
-        public static ConfigWrapper<bool> ManageCursor { get; set; }
+        public static ConfigWrapper<bool> ManageCursor { get; private set; }
 
         public FixCompilation()
         {

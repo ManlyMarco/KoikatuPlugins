@@ -6,22 +6,14 @@ namespace FixCompilation
 {
     public class CursorManager : MonoBehaviour
     {
-        public delegate bool AllowFunc();
-        public static AllowFunc allowCursorManagement;
-
         bool mouseButtonDown0 = false;
         bool mouseButtonDown1 = false;
         WinCursor.Point lockPos;
         bool cursorLocked = false;
 
-        void Start()
-        {
-            allowCursorManagement = () => FixCompilation.ManageCursor.Value;
-        }
-
         void Update()
         {
-            if(allowCursorManagement())
+            if(FixCompilation.ManageCursor.Value && Application.isFocused)
             {
                 if(!cursorLocked)
                 {
@@ -37,7 +29,6 @@ namespace FixCompilation
 
                             Cursor.visible = false;
                             Cursor.lockState = CursorLockMode.Confined;
-
                             cursorLocked = true;
                             WinCursor.GetCursorPos(out lockPos);
                         }
@@ -73,24 +64,25 @@ namespace FixCompilation
                 cursorLocked = false;
             }
         }
-    }
 
-    static class WinCursor
-    {
-        [DllImport("user32.dll")]
-        public static extern bool SetCursorPos(int X, int Y);
-
-        [DllImport("user32.dll")]
-        public static extern bool GetCursorPos(out Point pos);
-
-        public struct Point
+        static class WinCursor
         {
-            public int x;
-            public int y;
+            [DllImport("user32.dll")]
+            public static extern bool SetCursorPos(int X, int Y);
 
-            public static implicit operator Vector2(Point point)
+            [DllImport("user32.dll")]
+            public static extern bool GetCursorPos(out Point pos);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct Point
             {
-                return new Vector2(point.x, point.y);
+                public int x;
+                public int y;
+
+                public static implicit operator Vector2(Point point)
+                {
+                    return new Vector2(point.x, point.y);
+                }
             }
         }
     }

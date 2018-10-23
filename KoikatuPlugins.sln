@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitleShortcuts", "TitleShor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefaultParamEditor", "DefaultParamEditor\DefaultParamEditor.csproj", "{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsSettings", "GraphicsSettings\GraphicsSettings.csproj", "{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C371D71-E8A8-43ED-B913-FB7F9835AE3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8367DD1-BD2D-4D2E-9C47-5852D17125E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using BepInEx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using BepInEx;
 
 namespace FixCompilation
 {
@@ -72,7 +72,6 @@ namespace FixCompilation
             ApplyPatches();
 
             var cursorManager = gameObject.GetComponent<CursorManager>();
-
             if(FindObjectOfType<CustomScene>())
             {
                 if(!cursorManager) gameObject.AddComponent<CursorManager>();

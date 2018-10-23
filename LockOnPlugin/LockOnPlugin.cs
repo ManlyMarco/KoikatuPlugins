@@ -14,7 +14,7 @@ namespace LockOnPluginKK
         public static ConfigWrapper<float> TrackingSpeedNormal { get; private set; }
 
         [DisplayName("Scroll through males")]
-        [Description("Choose whether to include males in the rotation when switching characters using the hotkeys from the mod.")]
+        [Description("Choose whether to include males in the rotation when switching between characters using the hotkeys from the mod.")]
         public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
         
         [DisplayName("Show info messages")]

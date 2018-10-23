@@ -11,11 +11,11 @@ using BepInEx.Logging;
 namespace TitleShortcuts
 {
     [BepInPlugin("keelhauled.titleshortcuts", "TitleShortcuts", "1.1.1")]
-    [BepInProcess("Koikatu.exe")]
+    [BepInProcess("Koikatu")]
     class TitleShortcuts : BaseUnityPlugin
     {
         [DisplayName("Automatic start mode")]
-        [Description("Choose which mode to start automatically when launching.\nDuring startup, hold esc to cancel automatic behaviour or hold another shortcut to use that instead.")]
+        [Description("Choose which mode to start automatically when launching.\nDuring startup, hold esc or F1 to cancel automatic behaviour or hold another shortcut to use that instead.")]
         ConfigWrapper<AutoStartOption> AutoStart { get; }
 
         [DisplayName("!Start female maker")]

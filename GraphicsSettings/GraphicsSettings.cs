@@ -22,11 +22,11 @@ namespace GraphicsSettings
         ConfigWrapper<bool> Fullscreen { get; }
 
         [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("!Resolution X")]
+        [DisplayName("!Horizontal resolution")]
         ConfigWrapper<int> ResolutionX { get; }
 
         [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("!Resolution Y")]
+        [DisplayName("!Vertical resolution")]
         ConfigWrapper<int> ResolutionY { get; }
 
         [Browsable(true)]
@@ -37,6 +37,9 @@ namespace GraphicsSettings
 
         [Category(CATEGORY_RENDER)]
         [DisplayName("VSync level")]
+        [Description("VSync synchronizes the output video of the graphics card to the refresh rate of the monitor. " +
+                     "This prevents tearing and produces a smoother video output.\n\n" +
+                     "Half vsync synchronizes the output to half the refresh rate of your monitor.")]
         ConfigWrapper<VSyncType> VSyncCount { get; }
 
         [Category(CATEGORY_RENDER)]
@@ -51,16 +54,18 @@ namespace GraphicsSettings
 
         [Category(CATEGORY_RENDER)]
         [DisplayName("Anti-aliasing")]
+        [Description("Smooths out jagged edges on objects.")]
         [AcceptableValueList(new object[]{0, 2, 4, 8})]
         ConfigWrapper<int> AntiAliasing { get; }
 
         [Category(CATEGORY_RENDER)]
         [DisplayName("Anisotropic filtering")]
+        [Description("Improves distant textures when they are being viewer from indirect angles.")]
         ConfigWrapper<AnisotropicFiltering> AnisotropicTextures { get; }
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow type")]
-        ConfigWrapper<ShadowQuality> ShadowType { get; }
+        ConfigWrapper<ShadowQuality2> ShadowType { get; }
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow resolution")]
@@ -68,26 +73,32 @@ namespace GraphicsSettings
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow projection")]
+        [Description("Close Fit renders higher resolution shadows but they can sometimes wobble slightly if the camera moves." +
+                     "Stable Fit is lower resolution but no wobble.")]
         ConfigWrapper<ShadowProjection> ShadowProject { get; }
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow cascades")]
+        [Description("Increasing the number of cascades lessens the effects of perspective aliasing on shadows.")]
         [AcceptableValueList(new object[]{0, 2, 4})]
         ConfigWrapper<int> ShadowCascades { get; }
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow distance")]
+        [Description("Increasing the distance lowers the shadow resolution slighly.")]
         [AcceptableValueRange(0f, 100f, false)]
         ConfigWrapper<float> ShadowDistance { get; }
 
         [Category(CATEGORY_SHADOW)]
         [DisplayName("Shadow near plane offset")]
+        [Description("A low shadow near plane offset value can create the appearance of holes in shadows.")]
         [AcceptableValueRange(0f, 4f, false)]
         ConfigWrapper<float> ShadowNearPlaneOffset { get; }
 
         // this value is not loaded on start yet
         [Category(CATEGORY_MISC)]
         [DisplayName("Camera near clip plane")]
+        [Description("Determines how close the camera can be to objects without clipping into them. Lower equals closer.")]
         [AcceptableValueRange(0.01f, 0.06f, false)]
         ConfigWrapper<float> CameraNearClipPlane { get; }
 
@@ -101,7 +112,7 @@ namespace GraphicsSettings
             TargetFrameRate = new ConfigWrapper<int>("TargetFrameRate", this, 60);
             AntiAliasing = new ConfigWrapper<int>("AntiAliasing", this, 8);
             AnisotropicTextures = new ConfigWrapper<AnisotropicFiltering>("AnisotropicTextures", this, AnisotropicFiltering.ForceEnable);
-            ShadowType = new ConfigWrapper<ShadowQuality>("ShadowType", this, ShadowQuality.All);
+            ShadowType = new ConfigWrapper<ShadowQuality2>("ShadowType", this, ShadowQuality2.SoftHard);
             ShadowRes = new ConfigWrapper<ShadowResolution>("ShadowRes", this, ShadowResolution.VeryHigh);
             ShadowProject = new ConfigWrapper<ShadowProjection>("ShadowProject", this, ShadowProjection.CloseFit);
             ShadowCascades = new ConfigWrapper<int>("ShadowCascades", this, 4);
@@ -136,8 +147,8 @@ namespace GraphicsSettings
             QualitySettings.anisotropicFiltering = AnisotropicTextures.Value;
             AnisotropicTextures.SettingChanged += (sender, args) => QualitySettings.anisotropicFiltering = AnisotropicTextures.Value;
 
-            QualitySettings.shadows = ShadowType.Value;
-            ShadowType.SettingChanged += (sender, args) => QualitySettings.shadows = ShadowType.Value;
+            QualitySettings.shadows = (ShadowQuality)ShadowType.Value;
+            ShadowType.SettingChanged += (sender, args) => QualitySettings.shadows = (ShadowQuality)ShadowType.Value;
 
             QualitySettings.shadowResolution = ShadowRes.Value;
             ShadowRes.SettingChanged += (sender, args) => QualitySettings.shadowResolution = ShadowRes.Value;
@@ -162,6 +173,15 @@ namespace GraphicsSettings
             Disabled,
             Enabled,
             Half
+        }
+
+        enum ShadowQuality2
+        {
+            Disabled = ShadowQuality.Disable,
+            [Description("Hard only")]
+            HardOnly = ShadowQuality.HardOnly,
+            [Description("Soft and hard")]
+            SoftHard = ShadowQuality.All
         }
     }
 }

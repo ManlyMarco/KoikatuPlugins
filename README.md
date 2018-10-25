@@ -6,8 +6,8 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 
 ## Installation
 1. Make sure BepInEx and BepisPlugins are installed.
-- Download the latest release from [here](https://github.com/Keelhauled/KoikatuPlugins/releases).
-- Drop the dll files you want into the folder `Koikatu\BepInEx`.
+2. Download the latest release from [here](https://github.com/Keelhauled/KoikatuPlugins/releases).
+3. Drop the dll files you want into the folder `Koikatu\BepInEx`.
 
 ## Plugins
 

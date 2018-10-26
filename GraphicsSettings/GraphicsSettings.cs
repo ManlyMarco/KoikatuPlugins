@@ -5,34 +5,21 @@ using BepInEx;
 
 namespace GraphicsSettings
 {
-    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.0")]
+    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.1")]
     public class GraphicsSettings : BaseUnityPlugin
     {
         // settings to add
         // rimlighting toggle
         // max fov adjustment
 
-        const string CATEGORY_RESOLUTION = "Resolution settings";
         const string CATEGORY_RENDER = "Rendering settings";
         const string CATEGORY_SHADOW = "Shadow settings";
         const string CATEGORY_MISC = "Misc settings";
 
-        [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("Fullscreen")]
-        ConfigWrapper<bool> Fullscreen { get; }
-
-        [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("!Horizontal resolution")]
-        ConfigWrapper<int> ResolutionX { get; }
-
-        [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("!Vertical resolution")]
-        ConfigWrapper<int> ResolutionY { get; }
-
         [Browsable(true)]
-        [Category(CATEGORY_RESOLUTION)]
-        [DisplayName("!")]
-        [CustomSettingDraw(nameof(ApplyResolutionDrawer))]
+        [Category(CATEGORY_RENDER)]
+        [DisplayName("!Resolution")]
+        [CustomSettingDraw(nameof(ResolutionDrawer))]
         string ApplyResolution { get; set; } = "";
 
         [Category(CATEGORY_RENDER)]
@@ -98,15 +85,13 @@ namespace GraphicsSettings
         // this value is not loaded on start yet
         [Category(CATEGORY_MISC)]
         [DisplayName("Camera near clip plane")]
-        [Description("Determines how close the camera can be to objects without clipping into them. Lower equals closer.")]
+        [Description("Determines how close the camera can be to objects without clipping into them. Lower equals closer.\n\n" +
+                     "Note: The saved value is not loaded at the start currently.")]
         [AcceptableValueRange(0.01f, 0.06f, false)]
         ConfigWrapper<float> CameraNearClipPlane { get; }
 
         GraphicsSettings()
         {
-            Fullscreen = new ConfigWrapper<bool>("Fullscreen", this, false);
-            ResolutionX = new ConfigWrapper<int>("ResolutionX", this, 1920);
-            ResolutionY = new ConfigWrapper<int>("ResolutionY", this, 1080);
             VSyncCount = new ConfigWrapper<VSyncType>("VSyncCount", this, VSyncType.Enabled);
             LimitFrameRate = new ConfigWrapper<bool>("EnableFramerateLimit", this, false);
             TargetFrameRate = new ConfigWrapper<int>("TargetFrameRate", this, 60);
@@ -121,19 +106,31 @@ namespace GraphicsSettings
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
         }
 
-        void ApplyResolutionDrawer()
+        bool fullscreen = Screen.fullScreen;
+        string resolutionX = Screen.width.ToString();
+        string resolutionY = Screen.height.ToString();
+
+        void ResolutionDrawer()
         {
-            if(GUILayout.Button("Apply resolution", GUILayout.ExpandWidth(true)))
+            fullscreen = GUILayout.Toggle(fullscreen, " Fullscreen", GUILayout.Width(90));
+            string resX = GUILayout.TextField(resolutionX, GUILayout.Width(60));
+            string resY = GUILayout.TextField(resolutionY, GUILayout.Width(60));
+
+            if(resX != resolutionX && int.TryParse(resX, out _)) resolutionX = resX;
+            if(resY != resolutionY && int.TryParse(resY, out _)) resolutionY = resY;
+
+            if(GUILayout.Button("Apply", GUILayout.ExpandWidth(true)))
             {
-                if(Screen.width != ResolutionX.Value || Screen.height != ResolutionY.Value)
-                    Screen.SetResolution(ResolutionX.Value, ResolutionY.Value, Screen.fullScreen);
+                int x = int.Parse(resolutionX);
+                int y = int.Parse(resolutionY);
+
+                if(Screen.width != x || Screen.height != y || Screen.fullScreen != fullscreen)
+                    Screen.SetResolution(x, y, fullscreen);
             }
         }
 
         void Awake()
         {
-            Fullscreen.SettingChanged += (sender, args) => Screen.SetResolution(Screen.width, Screen.height, Fullscreen.Value);
-
             QualitySettings.vSyncCount = (int)VSyncCount.Value;
             VSyncCount.SettingChanged += (sender, args) => QualitySettings.vSyncCount = (int)VSyncCount.Value;
 

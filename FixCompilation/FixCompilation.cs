@@ -5,7 +5,7 @@ using BepInEx;
 
 namespace FixCompilation
 {
-    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.0")]
+    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.1")]
     public class FixCompilation : BaseUnityPlugin
     {
         [DisplayName("Disable \"NEW\" indicator animation")]

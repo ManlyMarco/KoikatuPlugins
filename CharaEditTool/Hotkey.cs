@@ -1,8 +1,8 @@
 ﻿using BepInEx;
 using UnityEngine;
 using UnityEngine.Events;
-//using UnityEngine.EventSystems;
-//using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CharaEditTool
 {
@@ -73,15 +73,15 @@ namespace CharaEditTool
         {
             bool shouldReset = false;
 
-            //if(!allowHotkeys || GUIUtility.keyboardControl > 0)
-            //{
-            //    shouldReset = true;
-            //}
-            
-            //if(EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<InputField>() != null)
-            //{
-            //    shouldReset = true;
-            //}
+            if(!allowHotkeys || GUIUtility.keyboardControl > 0)
+            {
+                shouldReset = true;
+            }
+
+            if(EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<InputField>() != null)
+            {
+                shouldReset = true;
+            }
 
             if(shouldReset)
             {

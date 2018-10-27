@@ -11,6 +11,11 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 
 ## Plugins
 
+#### CharaEditTool
+Makes it easier to change hair colors when using accessories to create hair.  
+To use this, save a color by selecting a color from an accessory and then press the hotkey (V by default).  
+Then you can hold the hotkey to apply the saved color to every accessory color slot that has the same color as the selected color.  
+
 #### DefaultParamEditor
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
 This only affects parameters that make sense to be saved.
@@ -23,7 +28,7 @@ Random fixes and tweaks for the game.
 
 ```
 - Hide the cameratarget
-- Avoid exceptions caused certain hair accessories
+- Avoid exceptions caused by certain hair accessories
 - Huge performance gains in chara maker
 - Disable character name in maker
 - Prevent cursor movement in maker while moving the camera

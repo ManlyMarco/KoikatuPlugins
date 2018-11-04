@@ -14,7 +14,7 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 #### CharaEditTool
 Makes it easier to change hair colors when using accessories to create hair.  
 To use this, save a color by selecting a color from an accessory and then press the hotkey (V by default).  
-Then you can hold the hotkey to apply the saved color to every accessory color slot that has the same color as the selected color.  
+Then you can hold the hotkey to apply the saved color to every accessory color slot that has the same color as the selected color.
 
 #### DefaultParamEditor
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  
@@ -46,6 +46,7 @@ More menus can be added by editing `HideUI.txt`.
 Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).
 
 #### ObjectTreeDebugKK
+**Cheat Tools by Marco does everything this does better.** [link](https://github.com/ManlyMarco/KoikatuCheatTools#readme)  
 Show debug info about GameObjects in the scene.  
 Default hotkey is `right ctrl`.  
 Original version for HS made by Joan6694.

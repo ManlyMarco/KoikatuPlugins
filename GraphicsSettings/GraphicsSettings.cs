@@ -1,11 +1,11 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using UnityEngine;
 using BepInEx;
+using Manager;
 
 namespace GraphicsSettings
 {
-    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.1")]
+    [BepInPlugin("keelhauled.graphicssettings", "Graphics Settings", "1.0.2")]
     public class GraphicsSettings : BaseUnityPlugin
     {
         // settings to add
@@ -90,6 +90,13 @@ namespace GraphicsSettings
         [AcceptableValueRange(0.01f, 0.06f, false)]
         ConfigWrapper<float> CameraNearClipPlane { get; }
 
+        [Category(CATEGORY_MISC)]
+        [DisplayName("Run game in background")]
+        [Description("Should the game be running when it is in the background (when the window is not focused)?\n\n" + 
+                     "On \"no\", the game will stop completely when it is in the background.\n\n" +
+                     "On \"limited\", the game will only stop if it has been unfocused in a specific scene (studio, maker, H).")]
+        ConfigWrapper<BackgroundRun> RunInBackground { get; }
+
         GraphicsSettings()
         {
             VSyncCount = new ConfigWrapper<VSyncType>("VSyncCount", this, VSyncType.Enabled);
@@ -104,6 +111,7 @@ namespace GraphicsSettings
             ShadowDistance = new ConfigWrapper<float>("ShadowDistance", this, 50f);
             ShadowNearPlaneOffset = new ConfigWrapper<float>("ShadowNearPlaneOffset", this, 2f);
             CameraNearClipPlane = new ConfigWrapper<float>("CameraNearClipPlane", this, 0.06f);
+            RunInBackground = new ConfigWrapper<BackgroundRun>("RunInBackground", this, BackgroundRun.Yes);
         }
 
         bool fullscreen = Screen.fullScreen;
@@ -162,7 +170,48 @@ namespace GraphicsSettings
             QualitySettings.shadowNearPlaneOffset = ShadowNearPlaneOffset.Value;
             ShadowNearPlaneOffset.SettingChanged += (sender, args) => QualitySettings.shadowNearPlaneOffset = ShadowNearPlaneOffset.Value;
 
+            //SceneManager.sceneLoaded += (scene, mode) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
             CameraNearClipPlane.SettingChanged += (sender, args) => { if(Camera.main) Camera.main.nearClipPlane = CameraNearClipPlane.Value; };
+            
+            if(RunInBackground.Value == BackgroundRun.No)
+                Application.runInBackground = false;
+
+            RunInBackground.SettingChanged += (sender, args) =>
+            {
+                switch(RunInBackground.Value)
+                {
+                    case BackgroundRun.Limited:
+                        Application.runInBackground = true;
+                        break;
+
+                    case BackgroundRun.No:
+                        Application.runInBackground = false;
+                        break;
+
+                    case BackgroundRun.Yes:
+                        Application.runInBackground = true;
+                        break;
+                }
+            };
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if(RunInBackground.Value == BackgroundRun.Limited)
+            {
+                if(hasFocus)
+                {
+                    Application.runInBackground = true;
+                }
+                else
+                {
+                    if((FindObjectOfType<StudioScene>() || FindObjectOfType<HSceneProc>() || FindObjectOfType<CustomScene>()) &&
+                       (!Scene.Instance.IsNowLoading && !Scene.Instance.IsNowLoadingFade))
+                    {
+                        Application.runInBackground = false;
+                    }
+                }
+            }
         }
 
         enum VSyncType
@@ -179,6 +228,13 @@ namespace GraphicsSettings
             HardOnly = ShadowQuality.HardOnly,
             [Description("Soft and hard")]
             SoftHard = ShadowQuality.All
+        }
+
+        enum BackgroundRun
+        {
+            No,
+            Yes,
+            Limited
         }
     }
 }

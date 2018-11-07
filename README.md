@@ -24,7 +24,7 @@ To use, set your preferred settings normally and then save them in Configuration
 Now when loading a character or starting the studio these settings will be the defaults.
 
 #### FixCompilation
-Random fixes and tweaks for the game.
+Various fixes and tweaks for the game.
 
 ```
 - Hide the cameratarget
@@ -46,7 +46,7 @@ More menus can be added by editing `HideUI.txt`.
 Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).
 
 #### ObjectTreeDebugKK
-**Cheat Tools by Marco does everything this does better.** [link](https://github.com/ManlyMarco/KoikatuCheatTools#readme)  
+*Cheat Tools by Marco does everything this does and more.* [link](https://github.com/ManlyMarco/KoikatuCheatTools#readme)  
 Show debug info about GameObjects in the scene.  
 Default hotkey is `right ctrl`.  
 Original version for HS made by Joan6694.
@@ -57,7 +57,9 @@ Simultaneous FK & IK and better object manipulation controls.
 
 #### TitleShortcuts
 Title menu keyboard shortcuts to open different modes.  
-For example F to open the female editor.
+For example, press F to open the female editor.  
+Also has a setting to start certain modes automatically during startup.  
+Hold esc just before the title screen to cancel automatic startup.
 
 #### TogglePOVKK (*Not yet released*)
 A port of the TogglePOV mod from HS.

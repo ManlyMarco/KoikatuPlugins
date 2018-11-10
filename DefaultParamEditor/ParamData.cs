@@ -111,10 +111,11 @@ namespace DefaultParamEditor
             public float lineWidthG;
             public int rampG;
             public float ambientShadowG;
+            public float cameraNearClip;
+            public float fov;
 
             // parameters to add
             // all character lighting options
-            // default fov
         }
     }
 }

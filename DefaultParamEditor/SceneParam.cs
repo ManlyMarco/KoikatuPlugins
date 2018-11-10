@@ -2,6 +2,7 @@
 using Studio;
 using static BepInEx.Logger;
 using BepInEx.Logging;
+using UnityEngine;
 
 namespace DefaultParamEditor
 {
@@ -49,6 +50,8 @@ namespace DefaultParamEditor
                 _sceneData.lineWidthG = sceneInfo.lineWidthG;
                 _sceneData.lineColorG = sceneInfo.lineColorG;
                 _sceneData.ambientShadow = sceneInfo.ambientShadow;
+                _sceneData.cameraNearClip = Camera.main.nearClipPlane;
+                _sceneData.fov = Studio.Studio.Instance.cameraCtrl.fieldOfView;
 
                 _sceneData.saved = true;
                 Log(LogLevel.Message, "Default scene settings saved");
@@ -93,6 +96,8 @@ namespace DefaultParamEditor
                 __instance.lineWidthG = _sceneData.lineWidthG;
                 __instance.lineColorG = _sceneData.lineColorG;
                 __instance.ambientShadow = _sceneData.ambientShadow;
+                Camera.main.nearClipPlane = _sceneData.cameraNearClip;
+                Studio.Studio.Instance.cameraCtrl.fieldOfView = _sceneData.fov;
             }
         }
     }

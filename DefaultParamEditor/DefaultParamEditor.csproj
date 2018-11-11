@@ -38,10 +38,6 @@
       <HintPath>..\..\..\Koikatu_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\Koikatu_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\..\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>

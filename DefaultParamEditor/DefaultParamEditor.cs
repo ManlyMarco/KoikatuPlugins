@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
-using MessagePack;
 using UnityEngine;
 using Logger = BepInEx.Logger;
+using ParadoxNotion.Serialization;
 
 namespace DefaultParamEditor
 {
@@ -63,14 +63,14 @@ namespace DefaultParamEditor
 
         public DefaultParamEditor()
         {
-            savePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "DefaultParamEditorData.bin");
+            var ass = Assembly.GetExecutingAssembly();
+            savePath = Path.Combine(Path.GetDirectoryName(ass.Location), "DefaultParamEditorData.json");
         }
 
         private void SaveToFile()
         {
-            var bytes = MessagePackSerializer.Serialize(data);
-            File.WriteAllBytes(savePath, bytes);
-            //data.PrintData();
+            var json = JSONSerializer.Serialize(data.GetType(), data, true);
+            File.WriteAllText(savePath, json);
         }
 
         private void CharaParamSettingDrawer()
@@ -97,7 +97,8 @@ namespace DefaultParamEditor
             {
                 try
                 {
-                    data = MessagePackSerializer.Deserialize<ParamData>(File.ReadAllBytes(savePath));
+                    var json = File.ReadAllText(savePath);
+                    data = JSONSerializer.Deserialize<ParamData>(json);
                 }
                 catch (Exception ex)
                 {

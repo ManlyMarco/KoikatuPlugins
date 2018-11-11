@@ -1,11 +1,9 @@
 ﻿using System;
 using Harmony;
-using MessagePack;
 using UnityEngine;
 
 namespace DefaultParamEditor
 {
-    [MessagePackObject(true)]
     public class ParamData
     {
         public void PrintData()
@@ -50,7 +48,6 @@ namespace DefaultParamEditor
         public CharaData charaParamData = new CharaData();
         public SceneData sceneParamData = new SceneData();
 
-        [MessagePackObject(true)]
         public class CharaData
         {
             public bool saved = false;
@@ -80,7 +77,6 @@ namespace DefaultParamEditor
             // donger options
         }
 
-        [MessagePackObject(true)]
         public class SceneData
         {
             public bool saved = false;

@@ -2,6 +2,10 @@
 using UnityEngine;
 using BepInEx;
 using Manager;
+using Harmony;
+//using MadGoat_SSAA;
+using static BepInEx.Logger;
+using BepInEx.Logging;
 
 namespace GraphicsSettings
 {
@@ -139,6 +143,9 @@ namespace GraphicsSettings
 
         void Awake()
         {
+            //var harmony = HarmonyInstance.Create("keelhauled.graphicssettings.harmony");
+            //harmony.PatchAll(typeof(GraphicsSettings));
+
             QualitySettings.vSyncCount = (int)VSyncCount.Value;
             VSyncCount.SettingChanged += (sender, args) => QualitySettings.vSyncCount = (int)VSyncCount.Value;
 
@@ -213,6 +220,16 @@ namespace GraphicsSettings
                 }
             }
         }
+
+        //[HarmonyPrefix, HarmonyPatch(typeof(Studio.CameraControl), "Start")]
+        //public static void SSAAPatch(Studio.CameraControl __instance)
+        //{
+        //    var ssaa = __instance.gameObject.AddComponent<MadGoatSSAA>();
+        //    ssaa.SetAsSSAA(SSAAMode.SSAA_X2);
+        //    ssaa.SetAsCustom(2f, Filter.BICUBIC, 0f, 0f);
+        //    ssaa.SetAsAdaptive(1f, 2f);
+        //    Log(LogLevel.Message, $"SSAA status: {ssaa}");
+        //}
 
         enum VSyncType
         {

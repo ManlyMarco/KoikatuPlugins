@@ -100,7 +100,7 @@ namespace LockOnPluginKK
         void UpdateCustomTargetTransforms()
         {
             for(int i = 0; i < customTargets.Count; i++) customTargets[i].UpdateTransform();
-            if(centerPoint != null && centerPoint.GetPoint()) centerPoint.UpdatePosition();
+            centerPoint?.UpdatePosition();
         }
 
         void UpdateAllTargets(ChaInfo character)
@@ -283,7 +283,7 @@ namespace LockOnPluginKK
 
             public void UpdatePosition()
             {
-                point.transform.position = CalculateCenterPoint(points);
+                if(point) point.transform.position = CalculateCenterPoint(points);
             }
 
             Vector3 CalculateCenterPoint(List<WeightPoint> points)

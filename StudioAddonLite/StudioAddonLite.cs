@@ -63,10 +63,12 @@ namespace StudioAddonLite
             SceneManager.sceneLoaded -= SceneLoaded;
         }
 
+        bool done = false;
         void SceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if(FindObjectOfType<StudioScene>())
+            if(!done && FindObjectOfType<StudioScene>())
             {
+                done = true;
                 gameObject.AddComponent<ObjMoveRotAssistMgr>();
                 gameObject.AddComponent<FKIKAssistMgr>();
             }

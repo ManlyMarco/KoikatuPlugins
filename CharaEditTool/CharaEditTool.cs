@@ -12,6 +12,7 @@ using ChaCustom;
 
 namespace CharaEditTool
 {
+    [BepInProcess("Koikatu.exe")]
     [BepInPlugin("keelhauled.charaedittool", "CharaEditTool", "1.0.0")]
     class CharaEditTool : BaseUnityPlugin
     {

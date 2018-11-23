@@ -6,29 +6,38 @@ namespace MakerBridge.Remoting
     class RemotingMessenger : MarshalByRefObject, IMessenger
     {
         private static Object lockObj = new Object();
-        private Queue<byte[]> messages = new Queue<byte[]>();
+        private Dictionary<byte, Queue<byte[]>> messages;
 
-        public void SendMessage(byte[] message)
+        RemotingMessenger()
+        {
+            messages = new Dictionary<byte, Queue<byte[]>>
+            {
+                { 0, new Queue<byte[]>() },
+                { 1, new Queue<byte[]>() }
+            };
+        }
+
+        public void SendMessage(byte type, byte[] message)
         {
             lock(lockObj)
             {
-                messages.Enqueue(message);
+                messages[type].Enqueue(message);
             }
         }
 
-        public byte[] GetMessage()
+        public byte[] GetMessage(byte type)
         {
             lock(lockObj)
             {
-                return messages.Count > 0 ? messages.Dequeue() : null;  
+                return messages[type].Count > 0 ? messages[type].Dequeue() : null;  
             }
         }
 
-        public void ClearMessage()
+        public void ClearMessage(byte type)
         {
             lock(lockObj)
             {
-                messages.Clear();
+                messages[type].Clear();
             }
         }
     }

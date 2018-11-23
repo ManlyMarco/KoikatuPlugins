@@ -2,8 +2,8 @@
 {
     public interface IMessenger
     {
-        void SendMessage(byte[] message);
-        byte[] GetMessage();
-        void ClearMessage();
+        void SendMessage(byte type, byte[] message);
+        byte[] GetMessage(byte type);
+        void ClearMessage(byte type);
     }
 }

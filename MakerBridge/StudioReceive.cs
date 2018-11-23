@@ -15,12 +15,45 @@ namespace MakerBridge
     {
         void Start()
         {
-            RPCClient_Receive.Init(MakerBridge.ServerName, MakerBridge.ServerPort, (message) => LoadCharas(message));
+            RPCClient.Init(MakerBridge.ServerName, MakerBridge.ServerPort, 0, 1, (message) => UnityMainThreadDispatcher.instance.Enqueue(() => LoadCharas(message)));
+            RPCClient.Listen();
         }
 
         void OnDestroy()
         {
-            RPCClient_Receive.StopServer();
+            RPCClient.StopServer();
+        }
+
+        void Update()
+        {
+            if(MakerBridge.SendChara.IsDown())
+            {
+                RPCClient.SendMessage(GetData());
+            }
+        }
+
+        MsgObject GetData()
+        {
+            var characters = GetSelectedCharacters();
+            if(characters.Count > 0)
+            {
+                var chaFile = characters[0].charInfo.chaFile;
+
+                return new MsgObject
+                {
+                    face = chaFile.custom.face,
+                    body = chaFile.custom.body,
+                    hair = chaFile.custom.hair,
+                    param = chaFile.parameter,
+                    coord = ChaFile.GetCoordinateBytes(chaFile.coordinate)
+                };
+            }
+            else
+            {
+                Log(LogLevel.Message, "Select a character to send to maker");
+            }
+
+            return null;
         }
 
         void LoadCharas(MsgObject message)

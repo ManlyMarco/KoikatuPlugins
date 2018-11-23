@@ -72,9 +72,9 @@
     <Compile Include="Remoting\IMessenger.cs" />
     <Compile Include="Remoting\MsgObject.cs" />
     <Compile Include="Remoting\RemotingMessenger.cs" />
-    <Compile Include="Remoting\RPCClient_Receive.cs" />
-    <Compile Include="Remoting\RPCClient_Send.cs" />
+    <Compile Include="Remoting\RPCClient.cs" />
     <Compile Include="Remoting\RPCServer.cs" />
+    <Compile Include="Remoting\UnityMainThreadDispatcher.cs" />
     <Compile Include="StudioReceive.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

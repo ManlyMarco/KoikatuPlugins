@@ -26,6 +26,7 @@ namespace MakerBridge
 
             container = new GameObject("MakerBridge");
             container.transform.SetParent(gameObject.transform);
+            container.AddComponent<UnityMainThreadDispatcher>();
 
             var harmony = HarmonyInstance.Create("keelhauled.makerbridge.harmony");
             harmony.PatchAll(typeof(MakerBridge));

@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using IllusionUtility.GetUtility;
+using BepInEx.Logging;
+using static BepInEx.Logger;
 
 namespace TogglePOVKK
 {
@@ -14,14 +16,12 @@ namespace TogglePOVKK
         protected abstract bool CameraStopMoving();
         protected abstract ChaInfo GetChara(Vector3 targetPos);
 
-        private KeyCode hotkey = KeyCode.Backspace;
         private float sensitivityX = 0.5f;
         private float sensitivityY = 0.5f;
-        private float DEFAULT_FOV = 70f;
         private float MAXFOV = 120f;
-        private float MALE_OFFSET = 0.042f;
-        private float FEMALE_OFFSET = 0.0315f;
-        private bool SHOW_HAIR = false;
+        private float MALE_OFFSET;
+        private float FEMALE_OFFSET;
+        private bool SHOW_HAIR;
 
         private float currentfov;
         private bool currentHairState = true;
@@ -44,50 +44,17 @@ namespace TogglePOVKK
 
         protected virtual void Awake()
         {
-            LoadSettings();
             gameObject.AddComponent<DragManager>();
+            currentfov = TogglePOV.DefaultFov.Value;
+            SHOW_HAIR = TogglePOV.ShowHair.Value;
+            MALE_OFFSET = TogglePOV.MaleOffset.Value;
+            FEMALE_OFFSET = TogglePOV.FemaleOffset.Value;
         }
 
         void OnDestroy()
         {
             if(currentBody != null)
-            {
                 Restore();
-            }
-        }
-
-        protected bool LoadSettings()
-        {
-            //if(ModPrefs.GetString("TogglePOV", "Version", TogglePOVPlugin.PLUGIN_VERSION, true) != TogglePOVPlugin.PLUGIN_VERSION)
-            //{
-            //    ModPrefs.SetString("TogglePOV", "Version", TogglePOVPlugin.PLUGIN_VERSION);
-            //    ModPrefs.SetFloat("TogglePOV", "fFOV", DEFAULT_FOV);
-            //    ModPrefs.SetBool("TogglePOV", "bShowHair", SHOW_HAIR);
-            //    ModPrefs.SetFloat("TogglePOV", "fMaleOffset", MALE_OFFSET);
-            //    ModPrefs.SetFloat("TogglePOV", "fFemaleOffset", FEMALE_OFFSET);
-            //}
-            //else
-            //{
-            //    currentfov = DEFAULT_FOV = Mathf.Clamp(ModPrefs.GetFloat("TogglePOV", "fFOV", DEFAULT_FOV, true), 1f, MAXFOV);
-            //    SHOW_HAIR = ModPrefs.GetBool("TogglePOV", "bShowHair", SHOW_HAIR, true);
-            //    MALE_OFFSET = ModPrefs.GetFloat("TogglePOV", "fMaleOffset", MALE_OFFSET, true);
-            //    FEMALE_OFFSET = ModPrefs.GetFloat("TogglePOV", "fFemaleOffset", FEMALE_OFFSET, true);
-            //}
-
-            //try
-            //{
-            //    string keystring = ModPrefs.GetString("TogglePOV", "POVHotkey", hotkey.ToString(), true);
-            //    hotkey = (KeyCode)Enum.Parse(typeof(KeyCode), keystring, true);
-            //}
-            //catch(Exception)
-            //{
-            //    Console.WriteLine("Using default hotkey ({0})", hotkey.ToString());
-            //    return false;
-            //}
-
-            currentfov = DEFAULT_FOV = 70f;
-
-            return true;
         }
 
         protected virtual void Update()
@@ -95,14 +62,12 @@ namespace TogglePOVKK
             if(currentBody == null && povActive)
             {
                 Restore();
-                povActive = false;
-                currentHairState = true;
-                Console.WriteLine("TogglePOV reset");
+                Log(LogLevel.Debug, "TogglePOV reset");
             }
 
-            if(Input.GetKeyDown(hotkey))
+            if(TogglePOV.POVKey.IsDown())
             {
-                TogglePOV();
+                SetPOV();
             }
 
             if(currentBody != null)
@@ -113,7 +78,7 @@ namespace TogglePOVKK
             }
         }
 
-        public void TogglePOV()
+        public void SetPOV()
         {
             if(currentBody == null)
             {
@@ -170,7 +135,7 @@ namespace TogglePOVKK
 
             if(Input.GetKeyDown(KeyCode.Semicolon))
             {
-                currentfov = DEFAULT_FOV;
+                currentfov = TogglePOV.DefaultFov.Value;
             }
 
             if(Input.GetKey(KeyCode.Equals))
@@ -187,26 +152,18 @@ namespace TogglePOVKK
                 offset = Mathf.Min(offset + 0.0005f, 2f);
 
                 if(currentBody.sex == 0)
-                {
                     MALE_OFFSET = offset;
-                }
                 else
-                {
                     FEMALE_OFFSET = offset;
-                }
             }
             else if(Input.GetKeyDown(KeyCode.DownArrow))
             {
                 offset = Mathf.Max(offset - 0.0005f, -2f);
 
                 if(currentBody.sex == 0)
-                {
                     MALE_OFFSET = offset;
-                }
                 else
-                {
                     FEMALE_OFFSET = offset;
-                }
             }
 
             Camera.main.fieldOfView = currentfov;
@@ -276,12 +233,12 @@ namespace TogglePOVKK
             Shield = hideObstacle;
 
             povActive = false;
+            currentHairState = true;
         }
 
         private void ShowHair(bool show)
         {
             currentHairState = show;
-            //string sex = currentBody.sex == 0 ? "cm" : "cf";
             currentBody.transform.FindLoop("cf_j_head")?.SetActive(show);
             //currentBody.transform.FindLoop("cf_J_FaceBase")?.SetActive(show);
             //currentBody.transform.FindLoop("cf_O_mayuge")?.SetActive(show);

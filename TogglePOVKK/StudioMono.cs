@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Manager;
+using Studio;
 
 namespace TogglePOVKK
 {
-    class HSceneMono : BaseMono
+    class StudioMono : BaseMono
     {
-        private CameraControl_Ver2 camera => Singleton<CameraControl_Ver2>.Instance;
+        private Studio.CameraControl camera => Studio.Studio.Instance.cameraCtrl;
 
         protected override bool CameraEnabled
         {
@@ -16,7 +17,7 @@ namespace TogglePOVKK
 
         protected override Vector3 CameraTargetPos
         {
-            get { return camera.TargetPos; }
+            get { return camera.targetPos; }
         }
 
         protected override bool DepthOfField
@@ -33,7 +34,7 @@ namespace TogglePOVKK
 
         protected override bool CameraStopMoving()
         {
-            var noCtrlCondition = camera.NoCtrlCondition;
+            var noCtrlCondition = camera.noCtrlCondition;
             bool result = false;
             if(noCtrlCondition != null)
             {
@@ -44,7 +45,14 @@ namespace TogglePOVKK
 
         protected override ChaInfo GetClosestChara(Vector3 targetPos)
         {
-            return Character.Instance.dictEntryChara.Values.ToList()[1];
+            var characters = GetSelectedCharacters();
+            if(characters.Count > 0) return characters[0].charInfo;
+            return null;
+        }
+
+        List<OCIChar> GetSelectedCharacters()
+        {
+            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
     }
 }

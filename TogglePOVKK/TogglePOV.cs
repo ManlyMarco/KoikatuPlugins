@@ -30,6 +30,10 @@ namespace TogglePOVKK
             {
                 if(!comp) gameObject.AddComponent<HSceneMono>();
             }
+            if(FindObjectOfType<StudioScene>())
+            {
+                if(!comp) gameObject.AddComponent<StudioMono>();
+            }
             else if(comp)
             {
                 Destroy(comp);

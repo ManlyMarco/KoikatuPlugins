@@ -53,6 +53,7 @@
     <Compile Include="BaseMono.cs" />
     <Compile Include="DragManager.cs" />
     <Compile Include="HSceneMono.cs" />
+    <Compile Include="StudioMono.cs" />
     <Compile Include="TogglePOV.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

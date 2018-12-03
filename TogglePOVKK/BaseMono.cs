@@ -1,5 +1,4 @@
 using System;
-using BepInEx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using IllusionUtility.GetUtility;
@@ -42,6 +41,7 @@ namespace TogglePOVKK
         private Vector3 lastPosition;
         private bool lastDOF;
         private bool hideObstacle;
+        private NECK_LOOK_TYPE_VER2 lastNeck;
         protected bool povActive = false;
 
         protected virtual void Awake()
@@ -122,7 +122,7 @@ namespace TogglePOVKK
                 var chara = GetClosestChara(CameraTargetPos);
                 if(chara)
                 {
-                    Backup();
+                    Backup(chara);
                     Apply(chara);
                 }
             }
@@ -153,12 +153,12 @@ namespace TogglePOVKK
             {
                 if(Input.GetMouseButton(1))
                 {
-                    //GameCursor.Instance.SetCursorLock(true);
+                    GameCursor.Instance.SetCursorLock(true);
                     currentfov = Mathf.Clamp(currentfov + Input.GetAxis("Mouse X") * Time.deltaTime * 30f, 1f, MAXFOV);
                 }
                 else if(Input.GetMouseButton(0) && DragManager.allowCamera)
                 {
-                    //GameCursor.Instance.SetCursorLock(true);
+                    GameCursor.Instance.SetCursorLock(true);
                     float rateaddspeed = 2.5f;
                     float num = Input.GetAxis("Mouse X") * rateaddspeed;
                     float num2 = Input.GetAxis("Mouse Y") * rateaddspeed;
@@ -166,7 +166,7 @@ namespace TogglePOVKK
                 }
                 else
                 {
-                    //GameCursor.Instance.SetCursorLock(false);
+                    GameCursor.Instance.SetCursorLock(false);
                 }
             }
 
@@ -239,7 +239,7 @@ namespace TogglePOVKK
             rot = new Vector2(rot.x - angle.x, rot.y - angle.y);
         }
 
-        private void Backup()
+        private void Backup(ChaInfo body)
         {
             lastFOV = Camera.main.fieldOfView;
             lastNearClip = Camera.main.nearClipPlane;
@@ -247,13 +247,19 @@ namespace TogglePOVKK
             lastPosition = Camera.main.transform.position;
             lastDOF = DepthOfField;
             hideObstacle = Shield;
+            lastNeck = GetNeckLook(body);
         }
 
         protected void Restore()
         {
-            if(currentBody && !currentHairState)
+            if(currentBody)
             {
-                ShowHair(true);
+                SetNeckLook(lastNeck);
+
+                if(!currentHairState)
+                {
+                    ShowHair(true);
+                }
             }
 
             currentBody = null;
@@ -348,6 +354,11 @@ namespace TogglePOVKK
                     return;
                 }
             }
+        }
+
+        private NECK_LOOK_TYPE_VER2 GetNeckLook(ChaInfo body)
+        {
+            return body.neckLookCtrl.neckLookScript.neckTypeStates[body.neckLookCtrl.ptnNo].lookType;
         }
 
         private void FindNLR()

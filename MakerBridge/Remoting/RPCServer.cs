@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters;
 
 namespace MakerBridge.Remoting
 {
-    class RPCServer
+    static class RPCServer
     {
         static TcpChannel tcpChan;
 

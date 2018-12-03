@@ -12,7 +12,7 @@ namespace TogglePOVKK
         protected abstract bool DepthOfField { get; set; }
         protected abstract bool Shield { get; set; }
         protected abstract bool CameraStopMoving();
-        protected abstract ChaInfo GetClosestChara(Vector3 targetPos);
+        protected abstract ChaInfo GetChara(Vector3 targetPos);
 
         private KeyCode hotkey = KeyCode.Backspace;
         private float sensitivityX = 0.5f;
@@ -26,8 +26,6 @@ namespace TogglePOVKK
         private float currentfov;
         private bool currentHairState = true;
         protected ChaInfo currentBody;
-        private float targetRotDistance;
-        private float currentRotDistance;
         private Vector2 angle;
         private Vector2 rot;
         private float offset;
@@ -119,7 +117,7 @@ namespace TogglePOVKK
         {
             if(currentBody == null)
             {
-                var chara = GetClosestChara(CameraTargetPos);
+                var chara = GetChara(CameraTargetPos);
                 if(chara)
                 {
                     Backup(chara);

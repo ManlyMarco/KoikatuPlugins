@@ -42,7 +42,7 @@ namespace TogglePOVKK
             return result;
         }
 
-        protected override ChaInfo GetClosestChara(Vector3 targetPos)
+        protected override ChaInfo GetChara(Vector3 targetPos)
         {
             return Character.Instance.dictEntryChara.Values.ToList()[1];
         }

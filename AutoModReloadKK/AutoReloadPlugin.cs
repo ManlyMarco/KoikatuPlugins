@@ -10,16 +10,11 @@ using UnityEngine.SceneManagement;
 
 namespace AutoModReloadKK
 {
-    [BepInPlugin("com.keelhauled.autoreloadkk", "AutoModReloadKK", "1.0.0")]
+    [BepInPlugin("com.keelhauled.autoreloadkk", "AutoModReload", "1.0.0")]
     public class AutoReloadPlugin : BaseUnityPlugin
     {
         static string XML_PATH = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/AutoModReload.xml";
         Dictionary<string, AssemblyInfo> classes = new Dictionary<string, AssemblyInfo>();
-
-        void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
 
         void Update()
         {

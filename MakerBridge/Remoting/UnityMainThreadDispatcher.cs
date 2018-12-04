@@ -30,7 +30,6 @@ namespace MakerBridge.Remoting
 
         void Start()
         {
-            DontDestroyOnLoad(this);
             instance = this;
         }
 
@@ -72,11 +71,6 @@ namespace MakerBridge.Remoting
         {
             a();
             yield return null;
-        }
-
-        void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
         }
     } 
 }

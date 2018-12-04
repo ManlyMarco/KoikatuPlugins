@@ -12,7 +12,7 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 ## Plugins
 
 #### CharaEditTool
-Makes it easier to change hair colors when using accessories to create hair.  
+Makes it easier to change hair colors when using accessories to create hair. [Video preview](https://gfycat.com/MiserlyViciousJaeger)  
 To use this, save a color by selecting a color from an accessory and then press the hotkey (V by default).  
 Then you can hold the hotkey to apply the saved color to every accessory color slot that has the same color as the selected color.
 
@@ -42,8 +42,10 @@ The default settings on the plugin may be too heavy for some computers so rememb
 Hide all the UI with one click, hotkey is `M` by default.  
 More menus can be added by editing `HideUI.txt`.
 
-#### LockOnPluginKK (*Not yet released*)
-Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).
+#### LockOnPluginKK
+Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlugin/).  
+The only changes are that now data files are contained inside the dll and that individual FK/IK points can be locked on to.  
+Default hotkey to lock on is one of the extra mouse buttons. If you don't have those, change the key with ConfigurationManager.
 
 #### ObjectTreeDebugKK
 *Cheat Tools by Marco does everything this does and more.* [link](https://github.com/ManlyMarco/KoikatuCheatTools#readme)  

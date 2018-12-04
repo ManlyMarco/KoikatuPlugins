@@ -5,7 +5,7 @@ using BepInEx;
 
 namespace LockOnPluginKK
 {
-    [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPluginKK", "1.0.0")]
+    [BepInPlugin("keelhauled.lockonpluginkk", "LockOnPlugin", "1.0.0")]
     class LockOnPlugin : BaseUnityPlugin
     {
         [DisplayName("!Tracking speed")]
@@ -14,7 +14,7 @@ namespace LockOnPluginKK
         public static ConfigWrapper<float> TrackingSpeedNormal { get; private set; }
 
         [DisplayName("Scroll through males")]
-        [Description("Choose whether to include males in the rotation when switching between characters using the hotkeys from the mod.")]
+        [Description("Choose whether to include males in the rotation when switching between characters using the hotkeys from the plugin.")]
         public static ConfigWrapper<bool> ScrollThroughMalesToo { get; private set; }
         
         [DisplayName("Show info messages")]
@@ -54,7 +54,7 @@ namespace LockOnPluginKK
             AutoSwitchLock = new ConfigWrapper<bool>("AutoSwitchLock", this, false);
             ShowDebugTargets = new ConfigWrapper<bool>("ShowDebugTargets", this, false);
 
-            LockOnKey = new SavedKeyboardShortcut("LockOnKey", this, new KeyboardShortcut(KeyCode.N));
+            LockOnKey = new SavedKeyboardShortcut("LockOnKey", this, new KeyboardShortcut(KeyCode.Mouse4));
             LockOnGuiKey = new SavedKeyboardShortcut("LockOnGuiKey", this, new KeyboardShortcut(KeyCode.None));
             PrevCharaKey = new SavedKeyboardShortcut("PrevCharaKey", this, new KeyboardShortcut(KeyCode.None));
             NextCharaKey = new SavedKeyboardShortcut("NextCharaKey", this, new KeyboardShortcut(KeyCode.None));

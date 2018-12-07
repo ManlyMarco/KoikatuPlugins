@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MakerBridge.cs" />
-    <Compile Include="MakerSender.cs" />
+    <Compile Include="MakerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\IMessenger.cs" />
     <Compile Include="Remoting\MsgObject.cs" />
@@ -75,7 +75,7 @@
     <Compile Include="Remoting\RPCClient.cs" />
     <Compile Include="Remoting\RPCServer.cs" />
     <Compile Include="Remoting\UnityMainThreadDispatcher.cs" />
-    <Compile Include="StudioReceive.cs" />
+    <Compile Include="StudioHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

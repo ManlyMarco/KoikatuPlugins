@@ -11,7 +11,7 @@ using MakerBridge.Remoting;
 
 namespace MakerBridge
 {
-    class StudioReceive : MonoBehaviour
+    class StudioHandler : MonoBehaviour
     {
         void Start()
         {

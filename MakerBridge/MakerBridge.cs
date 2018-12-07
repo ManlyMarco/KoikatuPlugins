@@ -40,22 +40,22 @@ namespace MakerBridge
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]
         public static void CustomSceneInit()
         {
-            var comp = container.GetComponent<MakerSender>();
-            if(!comp) container.AddComponent<MakerSender>();
+            var comp = container.GetComponent<MakerHandler>();
+            if(!comp) container.AddComponent<MakerHandler>();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "OnDestroy")]
         public static void CustomSceneStop()
         {
-            var comp = container.GetComponent<MakerSender>();
+            var comp = container.GetComponent<MakerHandler>();
             if(comp) Destroy(comp);
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(StudioScene), "Start")]
         public static void StudioSceneInit()
         {
-            var comp = container.GetComponent<StudioReceive>();
-            if(!comp) container.AddComponent<StudioReceive>();
+            var comp = container.GetComponent<StudioHandler>();
+            if(!comp) container.AddComponent<StudioHandler>();
         }
     }
 }

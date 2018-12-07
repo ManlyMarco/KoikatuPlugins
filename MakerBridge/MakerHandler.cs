@@ -4,7 +4,7 @@ using MakerBridge.Remoting;
 
 namespace MakerBridge
 {
-    class MakerSender : MonoBehaviour
+    class MakerHandler : MonoBehaviour
     {
         void Start()
         {

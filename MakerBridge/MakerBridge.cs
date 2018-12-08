@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿using System.IO;
+using System.ComponentModel;
+using BepInEx;
 using Harmony;
 using UnityEngine;
 using MakerBridge.Remoting;
@@ -10,10 +12,11 @@ namespace MakerBridge
     {
         public static string ServerName = "MakerBridge";
         public static int ServerPort = 9236;
-
-        public static SavedKeyboardShortcut SendChara { get; set; }
-
+        public static string TempFilePath;
         static GameObject container;
+
+        [DisplayName("Send character")]
+        public static SavedKeyboardShortcut SendChara { get; set; }
 
         MakerBridge()
         {
@@ -22,6 +25,8 @@ namespace MakerBridge
 
         void Awake()
         {
+            TempFilePath = Path.Combine(Paths.PluginPath, "makerbridgecard.png");
+
             RPCServer.Start(ServerName, ServerPort);
 
             container = new GameObject("MakerBridge");

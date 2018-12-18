@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.IO;
+using System.Threading;
+using UnityEngine;
 using ChaCustom;
-using MakerBridge.Remoting;
 
 namespace MakerBridge
 {
@@ -8,13 +10,35 @@ namespace MakerBridge
     {
         void Start()
         {
-            RPCClient.Init(MakerBridge.ServerName, MakerBridge.ServerPort, 1, 0, (msg) => UnityMainThreadDispatcher.instance.Enqueue(() => LoadChara(msg.path, true, true, true, true, true)));
-            RPCClient.Listen();
+            var watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(MakerBridge.OtherCardPath),
+                Filter = Path.GetFileName(MakerBridge.OtherCardPath),
+                EnableRaisingEvents = true
+            };
+
+            watcher.Changed += FileChanged;
         }
 
-        void OnDestroy()
+        void FileChanged(object sender, FileSystemEventArgs e)
         {
-            RPCClient.StopServer();
+            bool fileIsBusy = true;
+            while(fileIsBusy)
+            {
+                try
+                {
+                    using(var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
+                    fileIsBusy = false;
+                }
+                catch(IOException)
+                {
+                    //The file is still arriving, give it time to finish copying and check again
+                    Console.WriteLine("File is still being written to, retrying.");
+                    Thread.Sleep(100);
+                }
+            }
+
+            UnityMainThreadDispatcher.instance.Enqueue(() => LoadChara(MakerBridge.OtherCardPath, true, true, true, true, true));
         }
 
         void Update()
@@ -23,8 +47,7 @@ namespace MakerBridge
             {
                 if(CustomBase.Instance)
                 {
-                    SaveCharacter(MakerBridge.TempFilePath);
-                    RPCClient.SendMessage(new MsgObject{ path = MakerBridge.TempFilePath });
+                    SaveCharacter(MakerBridge.MakerCardPath);
                 }
             }
         }

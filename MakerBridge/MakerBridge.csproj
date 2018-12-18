@@ -51,15 +51,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Runtime.Remoting">
-      <HintPath>DLL\System.Runtime.Remoting.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap">
-      <HintPath>DLL\System.Runtime.Serialization.Formatters.Soap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\CharaStudio_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -69,12 +60,7 @@
     <Compile Include="MakerBridge.cs" />
     <Compile Include="MakerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remoting\IMessenger.cs" />
-    <Compile Include="Remoting\MsgObject.cs" />
-    <Compile Include="Remoting\RemotingMessenger.cs" />
-    <Compile Include="Remoting\RPCClient.cs" />
-    <Compile Include="Remoting\RPCServer.cs" />
-    <Compile Include="Remoting\UnityMainThreadDispatcher.cs" />
+    <Compile Include="UnityMainThreadDispatcher.cs" />
     <Compile Include="StudioHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

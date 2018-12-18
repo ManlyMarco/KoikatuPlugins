@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Linq;
 using UnityEngine;
 using static BepInEx.Logger;
 using BepInEx.Logging;
 using Studio;
 using Harmony;
-using MakerBridge.Remoting;
-using System.IO;
 
 namespace MakerBridge
 {
@@ -14,24 +15,46 @@ namespace MakerBridge
     {
         void Start()
         {
-            RPCClient.Init(MakerBridge.ServerName, MakerBridge.ServerPort, 0, 1, (msg) => UnityMainThreadDispatcher.instance.Enqueue(() => LoadCharas(msg)));
-            RPCClient.Listen();
+            var watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(MakerBridge.MakerCardPath),
+                Filter = Path.GetFileName(MakerBridge.MakerCardPath),
+                EnableRaisingEvents = true
+            };
+
+            watcher.Changed += FileChanged;
         }
 
-        void OnDestroy()
+        void FileChanged(object sender, FileSystemEventArgs e)
         {
-            RPCClient.StopServer();
+            bool fileIsBusy = true;
+            while(fileIsBusy)
+            {
+                try
+                {
+                    using(var file = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
+                    fileIsBusy = false;
+                }
+                catch(IOException)
+                {
+                    //The file is still arriving, give it time to finish copying and check again
+                    Console.WriteLine("File is still being written to, retrying.");
+                    Thread.Sleep(100);
+                }
+            }
+
+            UnityMainThreadDispatcher.instance.Enqueue(() => LoadCharas());
         }
 
         void Update()
         {
             if(MakerBridge.SendChara.IsDown())
             {
-                SaveChara(MakerBridge.TempFilePath);
+                SaveChara();
             }
         }
 
-        void SaveChara(string path)
+        void SaveChara()
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
@@ -44,12 +67,10 @@ namespace MakerBridge
                 charFile.pngData = empty.EncodeToPNG();
                 charFile.facePngData = empty.EncodeToPNG();
 
-                using(var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                using(var fileStream = new FileStream(MakerBridge.OtherCardPath, FileMode.Create, FileAccess.Write))
                 {
                     charFile.SaveCharaFile(fileStream, true);
                 }
-
-                RPCClient.SendMessage(new MsgObject{ path = MakerBridge.TempFilePath });
             }
             else
             {
@@ -57,7 +78,7 @@ namespace MakerBridge
             }
         }
 
-        void LoadCharas(MsgObject message)
+        void LoadCharas()
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
@@ -66,7 +87,7 @@ namespace MakerBridge
                 
                 foreach(var chara in characters)
                 {
-                    chara.ChangeChara(message.path);
+                    chara.ChangeChara(MakerBridge.MakerCardPath);
                 }
 
                 UpdateStateInfo();

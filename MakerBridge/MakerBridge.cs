@@ -3,16 +3,14 @@ using System.ComponentModel;
 using BepInEx;
 using Harmony;
 using UnityEngine;
-using MakerBridge.Remoting;
 
 namespace MakerBridge
 {
     [BepInPlugin("keelhauled.makerbridge", "MakerBridge", "1.0.0")]
     public class MakerBridge : BaseUnityPlugin
     {
-        public static string ServerName = "MakerBridge";
-        public static int ServerPort = 9236;
-        public static string TempFilePath;
+        public static string MakerCardPath;
+        public static string OtherCardPath;
         static GameObject container;
 
         [DisplayName("Send character")]
@@ -25,9 +23,8 @@ namespace MakerBridge
 
         void Awake()
         {
-            TempFilePath = Path.Combine(Paths.PluginPath, "makerbridgecard.png");
-
-            RPCServer.Start(ServerName, ServerPort);
+            MakerCardPath = Path.Combine(Paths.PluginPath, "makerbridgecard.png");
+            OtherCardPath = Path.Combine(Paths.PluginPath, "makerbridgecard2.png");
 
             container = new GameObject("MakerBridge");
             container.transform.SetParent(gameObject.transform);
@@ -35,11 +32,6 @@ namespace MakerBridge
 
             var harmony = HarmonyInstance.Create("keelhauled.makerbridge.harmony");
             harmony.PatchAll(typeof(MakerBridge));
-        }
-
-        void OnDestroy()
-        {
-            RPCServer.Stop();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(CustomScene), "Start")]

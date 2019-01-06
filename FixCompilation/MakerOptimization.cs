@@ -14,32 +14,28 @@ namespace FixCompilation
 {
     public static class MakerOptimization
     {
-        private const BindingFlags FullBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-
-        public static void Patch()
+        public static void Patch(HarmonyInstance harmony)
         {
-            var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.makeroptimization.harmony");
-
             SetupSetting(harmony,
-                typeof(CustomSelectInfoComponent).GetMethod("Disvisible", FullBindingFlags),
-                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomSelectInfoComponent_Disvisible), FullBindingFlags),
+                typeof(CustomSelectInfoComponent).GetMethod("Disvisible", AccessTools.all),
+                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomSelectInfoComponent_Disvisible), AccessTools.all),
                 FixCompilation.DisableNewIndicator);
 
             SetupSetting(harmony,
-                typeof(CustomNewAnime).GetMethod("Update", FullBindingFlags),
-                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomNewAnime_Update), FullBindingFlags),
+                typeof(CustomNewAnime).GetMethod("Update", AccessTools.all),
+                typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomNewAnime_Update), AccessTools.all),
                 FixCompilation.DisableNewAnimation);
 
             if (FixCompilation.DisableIKCalc.Value)
             {
-                var replace = typeof(CustomBase).GetMethod("UpdateIKCalc", FullBindingFlags);
-                var prefix = typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomBase_UpdateIKCalc), FullBindingFlags);
+                var replace = typeof(CustomBase).GetMethod("UpdateIKCalc", AccessTools.all);
+                var prefix = typeof(MakerOptimization).GetMethod(nameof(HarmonyPatch_CustomBase_UpdateIKCalc), AccessTools.all);
                 harmony.Patch(replace, new HarmonyMethod(prefix), null);
             }
 
             {
-                var replace = typeof(CustomScene).GetMethod("Start", FullBindingFlags);
-                var prefix = typeof(MakerOptimization).GetMethod(nameof(MakerStartHook), FullBindingFlags);
+                var replace = typeof(CustomScene).GetMethod("Start", AccessTools.all);
+                var prefix = typeof(MakerOptimization).GetMethod(nameof(MakerStartHook), AccessTools.all);
                 harmony.Patch(replace, null, new HarmonyMethod(prefix));
             }
         }

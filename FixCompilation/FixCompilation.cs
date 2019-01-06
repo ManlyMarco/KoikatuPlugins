@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using BepInEx;
+using Harmony;
 
 namespace FixCompilation
 {
-    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.1")]
+    [BepInPlugin("keelhauled.fixcompilation", "FixCompilation", "1.1.2")]
     public class FixCompilation : BaseUnityPlugin
     {
         [DisplayName("Disable \"NEW\" indicator animation")]
@@ -19,6 +20,7 @@ namespace FixCompilation
         [DisplayName("Disable maker IK")]
         [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n\n" +
                      "Most noticeable on characters with wide hips where the hands are not moving with the hip line.\n\n" +
+                     "!!! Turn this setting off when using Stiletto. !!!\n\n" +
                      "Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; private set; }
 
@@ -61,10 +63,9 @@ namespace FixCompilation
             DisableCameraTarget.SettingChanged += (sender, args) => ApplyPatches();
             DisableCharaName.SettingChanged += (sender, args) => ApplyPatches();
 
-            if(EnableYamadamodFix.Value)
-                YamadamodFix.Patch();
-
-            MakerOptimization.Patch();
+            var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.harmony");
+            if(EnableYamadamodFix.Value) harmony.PatchAll(typeof(YamadamodFix));
+            MakerOptimization.Patch(harmony);
         }
 
         private void SceneLoaded(Scene scene, LoadSceneMode mode)

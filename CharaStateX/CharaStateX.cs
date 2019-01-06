@@ -1,0 +1,16 @@
+﻿using BepInEx;
+using Harmony;
+
+namespace CharaStateX
+{
+    [BepInPlugin("keelhauled.charastatex", "CharaStateX", "1.0.0")]
+    class CharaStateX : BaseUnityPlugin
+    {
+        void Awake()
+        {
+            var harmony = HarmonyInstance.Create("keelhauled.charastatex.harmony");
+            StateInfoPatch.Patch(harmony);
+            NeckLookPatch.Patch(harmony);
+        }
+    }
+}

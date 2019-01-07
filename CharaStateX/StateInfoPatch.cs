@@ -15,24 +15,24 @@ namespace CharaStateX
         {
             harmony = harmonyInstance;
             stateInfoType = typeof(MPCharCtrl).GetNestedType("StateInfo", AccessTools.all);
-            PatchStateInfoMethod("OnClickCosType", nameof(Patch_OnClickCosType));
-            PatchStateInfoMethod("OnClickShoesType", nameof(Patch_OnClickShoesType));
-            PatchStateInfoMethod("OnClickCosState", nameof(Patch_OnClickCosState));
-            PatchStateInfoMethod("OnClickClothingDetails", nameof(Patch_OnClickClothingDetails));
-            PatchStateInfoMethod("OnClickAccessories", nameof(Patch_OnClickAccessories));
-            PatchStateInfoMethod("OnClickLiquid", nameof(Patch_OnClickLiquid));
-            PatchStateInfoMethod("OnClickTears", nameof(Patch_OnClickTears));
-            PatchStateInfoMethod("OnValueChangedCheek", nameof(Patch_OnValueChangedCheek));
-            PatchStateInfoMethod("OnValueChangedNipple", nameof(Patch_OnValueChangedNipple));
-            PatchStateInfoMethod("OnValueChangedSon", nameof(Patch_OnValueChangedSon));
-            PatchStateInfoMethod("OnValueChangedSonLength", nameof(Patch_OnValueChangedSonLength));
+            PatchStateInfoMethod("OnClickCosType");
+            PatchStateInfoMethod("OnClickShoesType");
+            PatchStateInfoMethod("OnClickCosState");
+            PatchStateInfoMethod("OnClickClothingDetails");
+            PatchStateInfoMethod("OnClickAccessories");
+            PatchStateInfoMethod("OnClickLiquid");
+            PatchStateInfoMethod("OnClickTears");
+            PatchStateInfoMethod("OnValueChangedCheek");
+            PatchStateInfoMethod("OnValueChangedNipple");
+            PatchStateInfoMethod("OnValueChangedSon");
+            PatchStateInfoMethod("OnValueChangedSonLength");
         }
 
-        static void PatchStateInfoMethod(string targetName, string patchName)
+        static void PatchStateInfoMethod(string targetName)
         {
             var target = AccessTools.Method(stateInfoType, targetName);
-            var patch = AccessTools.Method(typeof(StateInfoPatch), patchName);
-            harmony.Patch(target, new HarmonyMethod(patch), null);
+            var patch = AccessTools.Method(typeof(StateInfoPatch), $"Patch_{targetName}");
+            harmony.Patch(target, null, new HarmonyMethod(patch));
         }
 
         static List<OCIChar> GetSelectedCharacters()

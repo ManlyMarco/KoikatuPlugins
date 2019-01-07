@@ -1,5 +1,8 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BepInEx;
 using Harmony;
+using Studio;
 
 namespace CharaStateX
 {
@@ -11,6 +14,9 @@ namespace CharaStateX
             var harmony = HarmonyInstance.Create("keelhauled.charastatex.harmony");
             StateInfoPatch.Patch(harmony);
             NeckLookPatch.Patch(harmony);
+            EtcInfoPatch.Patch(harmony);
+            HandInfoPatch.Patch(harmony);
+            harmony.PatchAll(typeof(AnimationPatch));
         }
     }
 }

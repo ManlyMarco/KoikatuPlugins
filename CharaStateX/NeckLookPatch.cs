@@ -7,6 +7,8 @@ namespace CharaStateX
 {
     static class NeckLookPatch
     {
+        static string charaParamName = "ociChar";
+
         public static void Patch(HarmonyInstance harmony)
         {
             {
@@ -29,17 +31,19 @@ namespace CharaStateX
             return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
 
-        static void Patch_LookAtInfo_OnClick(ref int _no)
+        static void Patch_LookAtInfo_OnClick(object __instance, ref int _no)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLookEyesPtn(_no, false);
         }
 
         static void Patch_NeckInfo_OnClick(object __instance, ref int _idx)
         {
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
             var patterns = Traverse.Create(__instance).Field("patterns").GetValue<int[]>();
 
-            foreach(var chara in GetSelectedCharacters())
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLookNeckPtn(patterns[_idx]);
         }
     }

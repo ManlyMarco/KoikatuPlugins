@@ -15,23 +15,59 @@ namespace CharaStateX
             var listPath = traverse.Field("listPath").GetValue<List<string>>();
             var select = traverse.Field("select").GetValue<int>();
 
-            foreach(var chara in GetSelectedCharacters())
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != __instance.ociChar))
+                PauseCtrl.Load(chara, listPath[select]);
+        }
+
+        static float animeOptionParam1;
+        static float animeOptionParam2;
+
+        [HarmonyPrefix, HarmonyPatch(typeof(MPCharCtrl), "LoadAnime")]
+        public static void LoadAnimePrefix(MPCharCtrl __instance, ref int _group, ref int _category, ref int _no)
+        {
+            //Console.WriteLine($"Group: {_group} | Category: {_category} | No: {_no}");
+
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != __instance.ociChar))
             {
-                if(chara != __instance.ociChar)
-                    PauseCtrl.Load(chara, listPath[select]);
+                float param1 = chara.animeOptionParam1;
+                float param2 = chara.animeOptionParam2;
+                chara.LoadAnime(MatchCategory(chara.sex, _group), _category, _no, 0f);
+                chara.animeOptionParam1 = param1;
+                chara.animeOptionParam2 = param2;
             }
+            
+            _group = MatchCategory(__instance.ociChar.sex, _group);
+            animeOptionParam1 = __instance.ociChar.animeOptionParam1;
+            animeOptionParam2 = __instance.ociChar.animeOptionParam2;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(MPCharCtrl), "LoadAnime")]
-        public static void LoadAnimePatch(MPCharCtrl __instance, ref AnimeGroupList.SEX _sex, ref int _group, ref int _category, ref int _no)
+        public static void LoadAnimePostfix(MPCharCtrl __instance)
         {
-            // use _sex to choose the right H anim to ease things further
+            __instance.ociChar.animeOptionParam1 = animeOptionParam1;
+            __instance.ociChar.animeOptionParam2 = animeOptionParam2;
+        }
 
-            foreach(var chara in GetSelectedCharacters())
+        static int MatchCategory(int sex, int group)
+        {
+            if(sex == 1)
             {
-                if(chara != __instance.ociChar)
-                    chara.LoadAnime(_group, _category, _no, 0f);
+                switch(group)
+                {
+                    case 3: return 2;
+                    case 5: return 4;
+                }
             }
+            else if(sex == 0)
+            {
+                switch(group)
+                {
+                    case 2: return 3;
+                    case 4: return 5;
+                }
+            }
+
+            return group;
         }
 
         static List<OCIChar> GetSelectedCharacters()

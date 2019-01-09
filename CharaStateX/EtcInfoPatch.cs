@@ -10,6 +10,7 @@ namespace CharaStateX
     {
         static HarmonyInstance harmony;
         static Type etcInfoType;
+        static string charaParamName = "ociChar";
 
         public static void Patch(HarmonyInstance harmonyInstance)
         {
@@ -33,57 +34,66 @@ namespace CharaStateX
             harmony.Patch(target, null, new HarmonyMethod(patch));
         }
 
-        static void Patch_ChangeEyebrowsPtn(ref int _no)
+        static void Patch_ChangeEyebrowsPtn(object __instance, ref int _no)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeEyebrowPtn(_no, true);
         }
 
-        static void Patch_OnValueChangedForegroundEyebrow(ref int _value)
+        static void Patch_OnValueChangedForegroundEyebrow(object __instance, ref int _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.foregroundEyebrow = (byte)_value;
         }
 
-        static void Patch_ChangeEyesPtn(ref int _no)
+        static void Patch_ChangeEyesPtn(object __instance, ref int _no)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeEyesPtn(_no, true);
         }
 
-        static void Patch_OnValueChangedEyesOpen(ref float _value)
+        static void Patch_OnValueChangedEyesOpen(object __instance, ref float _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeEyesOpen(_value);
         }
 
-        static void Patch_OnValueChangedEyesBlink(ref bool _value)
+        static void Patch_OnValueChangedEyesBlink(object __instance, ref bool _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeBlink(_value);
         }
 
-        static void Patch_OnValueChangedForegroundEyes(ref int _value)
+        static void Patch_OnValueChangedForegroundEyes(object __instance, ref int _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.foregroundEyes = (byte)_value;
         }
 
-        static void Patch_ChangeMouthPtn(ref int _no)
+        static void Patch_ChangeMouthPtn(object __instance, ref int _no)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeMouthPtn(_no, true);
         }
 
-        static void Patch_OnValueChangedMouthOpen(ref float _value)
+        static void Patch_OnValueChangedMouthOpen(object __instance, ref float _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeMouthOpen(_value);
         }
 
-        static void Patch_OnValueChangedLipSync(ref bool _value)
+        static void Patch_OnValueChangedLipSync(object __instance, ref bool _value)
         {
-            foreach(var chara in GetSelectedCharacters())
+            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLipSync(_value);
         }
 

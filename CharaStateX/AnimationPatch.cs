@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using Studio;
+using UnityEngine;
 
 namespace CharaStateX
 {
@@ -19,33 +19,37 @@ namespace CharaStateX
                 PauseCtrl.Load(chara, listPath[select]);
         }
 
-        static float animeOptionParam1;
-        static float animeOptionParam2;
-
         [HarmonyPrefix, HarmonyPatch(typeof(MPCharCtrl), "LoadAnime")]
-        public static void LoadAnimePrefix(MPCharCtrl __instance, ref int _group, ref int _category, ref int _no)
+        public static bool LoadAnimePrefix(MPCharCtrl __instance, ref int _group, ref int _category, ref int _no)
         {
-            //Console.WriteLine($"Group: {_group} | Category: {_category} | No: {_no}");
+            bool sexMatch = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != __instance.ociChar))
+            foreach(var chara in GetSelectedCharacters())
             {
-                float param1 = chara.animeOptionParam1;
-                float param2 = chara.animeOptionParam2;
-                chara.LoadAnime(MatchCategory(chara.sex, _group), _category, _no, 0f);
-                chara.animeOptionParam1 = param1;
-                chara.animeOptionParam2 = param2;
+                if(chara != __instance.ociChar)
+                {
+                    float param1 = chara.animeOptionParam1;
+                    float param2 = chara.animeOptionParam2;
+
+                    var soup = sexMatch ? MatchCategory(chara.sex, _group) : _group;
+                    chara.LoadAnime(soup, _category, _no, 0f);
+
+                    chara.animeOptionParam1 = param1;
+                    chara.animeOptionParam2 = param2;
+                }
             }
             
-            _group = MatchCategory(__instance.ociChar.sex, _group);
-            animeOptionParam1 = __instance.ociChar.animeOptionParam1;
-            animeOptionParam2 = __instance.ociChar.animeOptionParam2;
-        }
+            float animeOptionParam1 = __instance.ociChar.animeOptionParam1;
+            float animeOptionParam2 = __instance.ociChar.animeOptionParam2;
 
-        [HarmonyPostfix, HarmonyPatch(typeof(MPCharCtrl), "LoadAnime")]
-        public static void LoadAnimePostfix(MPCharCtrl __instance)
-        {
+            int group = sexMatch ? MatchCategory(__instance.ociChar.sex, _group) : _group;
+            __instance.ociChar.LoadAnime(group, _category, _no, 0f);
+            Traverse.Create(__instance).Field("animeControl").Method("UpdateInfo").GetValue();
+
             __instance.ociChar.animeOptionParam1 = animeOptionParam1;
             __instance.ociChar.animeOptionParam2 = animeOptionParam2;
+
+            return false;
         }
 
         static int MatchCategory(int sex, int group)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using Studio;
@@ -37,69 +36,64 @@ namespace CharaStateX
         static void Patch_ChangeEyebrowsPtn(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeEyebrowPtn(_no, true);
         }
 
         static void Patch_OnValueChangedForegroundEyebrow(object __instance, ref int _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.foregroundEyebrow = (byte)_value;
         }
 
         static void Patch_ChangeEyesPtn(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeEyesPtn(_no, true);
         }
 
         static void Patch_OnValueChangedEyesOpen(object __instance, ref float _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeEyesOpen(_value);
         }
 
         static void Patch_OnValueChangedEyesBlink(object __instance, ref bool _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeBlink(_value);
         }
 
         static void Patch_OnValueChangedForegroundEyes(object __instance, ref int _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.foregroundEyes = (byte)_value;
         }
 
         static void Patch_ChangeMouthPtn(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.charInfo.ChangeMouthPtn(_no, true);
         }
 
         static void Patch_OnValueChangedMouthOpen(object __instance, ref float _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeMouthOpen(_value);
         }
 
         static void Patch_OnValueChangedLipSync(object __instance, ref bool _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLipSync(_value);
-        }
-
-        static List<OCIChar> GetSelectedCharacters()
-        {
-            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
     }
 }

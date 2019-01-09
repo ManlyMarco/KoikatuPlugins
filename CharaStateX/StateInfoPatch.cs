@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using Studio;
@@ -36,85 +35,80 @@ namespace CharaStateX
             harmony.Patch(target, null, new HarmonyMethod(patch));
         }
 
-        static List<OCIChar> GetSelectedCharacters()
-        {
-            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
-        }
-
         static void Patch_OnClickCosType(object __instance, ref int _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetCoordinateInfo((ChaFileDefine.CoordinateType)_value, false);
         }
 
         static void Patch_OnClickShoesType(object __instance, ref int _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetShoesType(_value);
         }
 
         static void Patch_OnClickCosState(object __instance, ref int _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetClothesStateAll(_value);
         }
 
         static void Patch_OnClickClothingDetails(object __instance, ref int _id, ref byte _state)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetClothesState(_id, _state);
         }
 
         static void Patch_OnClickAccessories(object __instance, ref int _id, ref bool _flag)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ShowAccessory(_id, _flag);
         }
 
         static void Patch_OnClickLiquid(object __instance, ref ChaFileDefine.SiruParts _parts, ref byte _state)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetSiruFlags(_parts, _state);
         }
 
         static void Patch_OnClickTears(object __instance, ref byte _state)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetTearsLv(_state);
         }
 
         static void Patch_OnValueChangedCheek(object __instance, ref float _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetHohoAkaRate(_value);
         }
 
         static void Patch_OnValueChangedNipple(object __instance, ref float _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetNipStand(_value);
         }
 
         static void Patch_OnValueChangedSon(object __instance, ref bool _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetVisibleSon(_value);
         }
 
         static void Patch_OnValueChangedSonLength(object __instance, ref float _value)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.SetSonLength(_value);
         }
     }

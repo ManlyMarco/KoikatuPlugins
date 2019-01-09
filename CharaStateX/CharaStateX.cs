@@ -1,5 +1,8 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BepInEx;
 using Harmony;
+using Studio;
 
 namespace CharaStateX
 {
@@ -14,6 +17,12 @@ namespace CharaStateX
             EtcInfoPatch.Patch(harmony);
             HandInfoPatch.Patch(harmony);
             harmony.PatchAll(typeof(AnimationPatch));
+            JointInfoPatch.Patch(harmony);
+        }
+
+        public static List<OCIChar> GetSelectedCharacters()
+        {
+            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
     }
 }

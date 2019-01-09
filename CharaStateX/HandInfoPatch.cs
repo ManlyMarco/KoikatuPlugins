@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Harmony;
 using Studio;
 
@@ -26,22 +25,17 @@ namespace CharaStateX
             }
         }
 
-        static List<OCIChar> GetSelectedCharacters()
-        {
-            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
-        }
-
         static void Patch_ChangeLeftHandAnime(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeHandAnime(0, _no);
         }
 
         static void Patch_ChangeRightHandAnime(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeHandAnime(1, _no);
         }
     }

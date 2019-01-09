@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Harmony;
 using Studio;
 
@@ -26,15 +25,10 @@ namespace CharaStateX
             }
         }
 
-        static List<OCIChar> GetSelectedCharacters()
-        {
-            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
-        }
-
         static void Patch_LookAtInfo_OnClick(object __instance, ref int _no)
         {
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLookEyesPtn(_no, false);
         }
 
@@ -43,7 +37,7 @@ namespace CharaStateX
             var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
             var patterns = Traverse.Create(__instance).Field("patterns").GetValue<int[]>();
 
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
                 chara.ChangeLookNeckPtn(patterns[_idx]);
         }
     }

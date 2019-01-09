@@ -15,7 +15,7 @@ namespace CharaStateX
             var listPath = traverse.Field("listPath").GetValue<List<string>>();
             var select = traverse.Field("select").GetValue<int>();
 
-            foreach(var chara in GetSelectedCharacters().Where((x) => x != __instance.ociChar))
+            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != __instance.ociChar))
                 PauseCtrl.Load(chara, listPath[select]);
         }
 
@@ -24,7 +24,7 @@ namespace CharaStateX
         {
             bool sexMatch = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-            foreach(var chara in GetSelectedCharacters())
+            foreach(var chara in CharaStateX.GetSelectedCharacters())
             {
                 if(chara != __instance.ociChar)
                 {
@@ -72,11 +72,6 @@ namespace CharaStateX
             }
 
             return group;
-        }
-
-        static List<OCIChar> GetSelectedCharacters()
-        {
-            return GuideObjectManager.Instance.selectObjectKey.Select(x => Studio.Studio.GetCtrlInfo(x) as OCIChar).Where(x => x != null).ToList();
         }
     }
 }

@@ -59,6 +59,7 @@
     <Compile Include="AnimationPatch.cs" />
     <Compile Include="CharaStateX.cs" />
     <Compile Include="EtcInfoPatch.cs" />
+    <Compile Include="FKIKPatch.cs" />
     <Compile Include="HandInfoPatch.cs" />
     <Compile Include="JointInfoPatch.cs" />
     <Compile Include="NeckLookPatch.cs" />

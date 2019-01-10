@@ -18,6 +18,7 @@ namespace CharaStateX
             HandInfoPatch.Patch(harmony);
             harmony.PatchAll(typeof(AnimationPatch));
             JointInfoPatch.Patch(harmony);
+            FKIKPatch.Patch(harmony);
         }
 
         public static List<OCIChar> GetSelectedCharacters()

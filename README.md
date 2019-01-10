@@ -1,6 +1,5 @@
 # KoikatuPlugins
 
-## Description
 Various koikatu plugins.  
 ConfigurationManager from BepisPlugins is required to change settings for some of the plugins.
 
@@ -15,6 +14,14 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 Makes it easier to change hair colors when using accessories to create hair. [Video preview](https://gfycat.com/MiserlyViciousJaeger)  
 To use this, save a color by selecting a color from an accessory and then press the hotkey (V by default).  
 Then you can hold the hotkey to apply the saved color to every accessory color slot that has the same color as the selected color.
+
+### CharaStateX
+Allows editing the state of multiple studio characters at once.  
+Normally only a very few parameters such as animation speed/pattern can be edited for multiple characters at once.
+But now with this you can very easily load poses, change blinking state, switch animation, change clothing state, correct joints and so on for multiple characters at once.
+
+Another feature in this plugin is H animation matching.  
+By selecting a male and a female, holding the ctrl key and then clicking on an H anim in the list, the plugin automatically chooses the right H animation based on their sex.
 
 #### DefaultParamEditor
 Allows editing default settings for character/scene parameters such as eye blinking or shadow density.  

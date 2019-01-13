@@ -20,8 +20,9 @@ namespace CharaStateX
 
         static void JointInfoPostfix(object __instance, ref int _group, ref bool _value)
         {
-            var ociChar = Traverse.Create(__instance).Property("ociChar").GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.EnableExpressionCategory(_group, _value);
         }
 
@@ -47,7 +48,7 @@ namespace CharaStateX
 
             _crotchCorrectionToggle.onValueChanged.AddListener((x) =>
             {
-                foreach(var chara in CharaStateX.GetSelectedCharacters())
+                foreach(var chara in Utils.GetSelectedCharacters())
                 {
                     var poseTarget = chara.charInfo.gameObject.GetComponent("PoseController");
                     Traverse.Create(poseTarget).Property("crotchJointCorrection").SetValue(x);
@@ -56,7 +57,7 @@ namespace CharaStateX
 
             _leftFootCorrectionToggle.onValueChanged.AddListener((x) =>
             {
-                foreach(var chara in CharaStateX.GetSelectedCharacters())
+                foreach(var chara in Utils.GetSelectedCharacters())
                 {
                     var poseTarget = chara.charInfo.gameObject.GetComponent("PoseController");
                     Traverse.Create(poseTarget).Property("leftFootJointCorrection").SetValue(x);
@@ -65,7 +66,7 @@ namespace CharaStateX
 
             _rightFootCorrectionToggle.onValueChanged.AddListener((x) =>
             {
-                foreach(var chara in CharaStateX.GetSelectedCharacters())
+                foreach(var chara in Utils.GetSelectedCharacters())
                 {
                     var poseTarget = chara.charInfo.gameObject.GetComponent("PoseController");
                     Traverse.Create(poseTarget).Property("rightFootJointCorrection").SetValue(x);

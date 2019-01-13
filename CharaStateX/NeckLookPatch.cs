@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using Harmony;
+﻿using Harmony;
 using Studio;
 
 namespace CharaStateX
 {
     static class NeckLookPatch
     {
-        static string charaParamName = "ociChar";
-
         public static void Patch(HarmonyInstance harmony)
         {
             {
@@ -27,17 +24,18 @@ namespace CharaStateX
 
         static void Patch_LookAtInfo_OnClick(object __instance, ref int _no)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ChangeLookEyesPtn(_no, false);
         }
 
         static void Patch_NeckInfo_OnClick(object __instance, ref int _idx)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
+            if(Utils.GetIsUpdateInfo(__instance)) return;
             var patterns = Traverse.Create(__instance).Field("patterns").GetValue<int[]>();
 
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ChangeLookNeckPtn(patterns[_idx]);
         }
     }

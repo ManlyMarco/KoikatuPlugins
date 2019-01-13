@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using Harmony;
+﻿using Harmony;
 using Studio;
 
 namespace CharaStateX
 {
     static class HandInfoPatch
     {
-        static string charaParamName = "ociChar";
-
         public static void Patch(HarmonyInstance harmony)
         {
             var type = typeof(MPCharCtrl).GetNestedType("HandInfo", AccessTools.all);
@@ -27,15 +24,17 @@ namespace CharaStateX
 
         static void Patch_ChangeLeftHandAnime(object __instance, ref int _no)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ChangeHandAnime(0, _no);
         }
 
         static void Patch_ChangeRightHandAnime(object __instance, ref int _no)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ChangeHandAnime(1, _no);
         }
     }

@@ -1,13 +1,10 @@
-﻿using System.Linq;
-using Harmony;
+﻿using Harmony;
 using Studio;
 
 namespace CharaStateX
 {
     static class FKIKPatch
     {
-        static string charaParamName = "ociChar";
-
         public static void Patch(HarmonyInstance harmony)
         {
             {
@@ -27,15 +24,17 @@ namespace CharaStateX
 
         static void Patch_FKInfo_OnChangeValueFunction(object __instance, ref bool _value)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ActiveKinematicMode(OICharInfo.KinematicMode.FK, _value, false);
         }
 
         static void Patch_IKInfo_OnChangeValueFunction(object __instance, ref bool _value)
         {
-            var ociChar = Traverse.Create(__instance).Property(charaParamName).GetValue<OCIChar>();
-            foreach(var chara in CharaStateX.GetSelectedCharacters().Where((x) => x != ociChar))
+            if(Utils.GetIsUpdateInfo(__instance)) return;
+
+            foreach(var chara in Utils.GetAllSelectedButMain(__instance))
                 chara.ActiveKinematicMode(OICharInfo.KinematicMode.IK, _value, false);
         }
     }

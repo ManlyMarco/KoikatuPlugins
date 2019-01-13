@@ -3,7 +3,7 @@ using Harmony;
 
 namespace CharaStateX
 {
-    [BepInPlugin("keelhauled.charastatex", "CharaStateX", "1.0.0")]
+    [BepInPlugin("keelhauled.charastatex", "CharaStateX", "1.0.1")]
     class CharaStateX : BaseUnityPlugin
     {
         void Awake()

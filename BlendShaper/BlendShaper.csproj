@@ -58,8 +58,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlendSets.cs" />
     <Compile Include="BlendShaper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BlendSets.json" />
   </ItemGroup>
   <Import Project="..\UILib\UILib.projitems" Label="Shared" />
   <Import Project="..\HarmonyExtension\HarmonyExtension.projitems" Label="Shared" />

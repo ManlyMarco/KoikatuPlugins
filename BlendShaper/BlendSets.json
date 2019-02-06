@@ -1,0 +1,22 @@
+﻿{
+	"Categories":
+	[
+		{
+			"Name": "Eyes",
+			"Sets":
+			[
+				{
+					"Name": "Open",
+					"Shapes":
+					[
+						{ "Renderer": "cf_O_face", "Index": 0 },
+						{ "Renderer": "cf_O_eyeline", "Index": 0 },
+						{ "Renderer": "cf_O_eyeline_low", "Index": 0 },
+						{ "Renderer": "cf_Ohitomi_L", "Index": 0 },
+						{ "Renderer": "cf_Ohitomi_R", "Index": 0 },
+					]
+				},
+			]
+		},
+	]
+}

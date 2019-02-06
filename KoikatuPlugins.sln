@@ -55,10 +55,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UILib", "UILib\UILib.shproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendShaper", "BlendShaper\BlendShaper.csproj", "{158B291D-305B-4AFE-BCE7-6A3A229AB7AE}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtension", "HarmonyExtension\HarmonyExtension.shproj", "{2A3E933B-07C2-48C4-B7CF-5458E5443D34}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
+		HarmonyExtension\HarmonyExtension.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
+		HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

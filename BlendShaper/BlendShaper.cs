@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
@@ -8,28 +9,39 @@ using UILib;
 using UnityEngine;
 using UnityEngine.UI;
 using Studio;
+//using Harmony;
 
 namespace BlendShaper
 {
-    [BepInPlugin("keelhauled.blendshaper", "BlendShaper", "1.0.0")]
+    [BepInProcess("CharaStudio")]
+    [BepInPlugin("keelhauled.blendshaper", "BlendShaper", Version)]
     class BlendShaper : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+        //HarmonyInstance harmony;
+
         float UIScale = 1.0f;
         float elementSize = 20f;
 
         Canvas UISystem;
         ScrollRect rendererList;
         ScrollRect shapeList;
+        static List<Action> changes = new List<Action>();
 
         void Awake()
         {
+            //harmony = HarmonyInstance.Create("keelhauled.blendshaper.harmony");
+            //harmony.PatchAll(GetType());
+
             UIUtility.Init(nameof(BlendShaper));
 
-            var panel = CreateUIBase(400f, 400f);
+            var panel = CreateUIBase(600f, 400f);
             rendererList = CreateList(panel.transform, 0f, 0f, 0.3f, 1f);
             shapeList = CreateList(panel.transform, 0.3f, 0f, 1f, 1f);
 
-            UpdateUI(Studio.Studio.Instance.treeNodeCtrl.selectNode);
+            if(Studio.Studio.Instance.treeNodeCtrl.selectNode)
+                UpdateUI(Studio.Studio.Instance.treeNodeCtrl.selectNode);
+
             Studio.Studio.Instance.treeNodeCtrl.onSelect += UpdateUI;
             Studio.Studio.Instance.treeNodeCtrl.onDelete += ClearUI;
         }
@@ -39,6 +51,16 @@ namespace BlendShaper
             Destroy(UISystem);
             Studio.Studio.Instance.treeNodeCtrl.onSelect -= UpdateUI;
             Studio.Studio.Instance.treeNodeCtrl.onDelete -= ClearUI;
+            //harmony.UnpatchAll(GetType());
+        }
+
+        void LateUpdate()
+        {
+            if(changes.Count > 0)
+            {
+                foreach(var change in changes)
+                    change();
+            }
         }
 
         void UpdateUI(TreeNodeObject node)
@@ -62,7 +84,7 @@ namespace BlendShaper
 
         void UpdateBlend(SkinnedMeshRenderer renderer)
         {
-            foreach(var button in shapeList.gameObject.GetComponentsInChildren<Button>())
+            foreach(var button in shapeList.content.GetComponentsInChildren<Image>())
             {
                 button.gameObject.SetActive(false);
                 Destroy(button);
@@ -70,22 +92,34 @@ namespace BlendShaper
 
             for(int i = 0; i < renderer.sharedMesh.blendShapeCount; i++)
             {
-                var shapeName = renderer.sharedMesh.GetBlendShapeName(i);
-                var button = UIUtility.CreateButton("Button", shapeList.content.transform, shapeName);
-                button.gameObject.AddComponent<LayoutElement>().preferredHeight = elementSize;
-                button.onClick.AddListener(() => Log(LogLevel.Info, shapeName));
+                var index = i;
+
+                var panel = UIUtility.CreatePanel("ShapePanel", shapeList.content.transform);
+                panel.gameObject.AddComponent<LayoutElement>().preferredHeight = elementSize;
+                panel.color = new Color(1f, 1f, 1f, 1f);
+
+                var shapeName = renderer.sharedMesh.GetBlendShapeName(index);
+                var text = UIUtility.CreateText("ShapeName", panel.transform, shapeName);
+                text.transform.SetRect(0f, 0f, 0.3f, 1f);
+                text.color = Color.black;
+
+                var slider = UIUtility.CreateSlider("ShapeSlider", panel.transform);
+                slider.transform.SetRect(0.3f, 0f, 1f, 1f);
+                slider.maxValue = 100f; slider.minValue = 0f;
+                slider.value = renderer.GetBlendShapeWeight(index);
+                slider.onValueChanged.AddListener((value) => changes.Add(() => renderer.SetBlendShapeWeight(index, value)));
             }
         }
 
         void ClearUI(TreeNodeObject node)
         {
-            foreach(var button in rendererList.gameObject.GetComponentsInChildren<Button>())
+            foreach(var button in rendererList.content.GetComponentsInChildren<Button>())
             {
                 button.gameObject.SetActive(false);
                 Destroy(button);
             }
 
-            foreach(var button in shapeList.gameObject.GetComponentsInChildren<Button>())
+            foreach(var button in shapeList.content.GetComponentsInChildren<Image>())
             {
                 button.gameObject.SetActive(false);
                 Destroy(button);

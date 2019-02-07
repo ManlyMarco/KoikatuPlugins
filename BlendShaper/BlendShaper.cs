@@ -44,9 +44,9 @@ namespace BlendShaper
         {
             UIUtility.Init(nameof(BlendShaper));
 
-            var panel = CreateUIBase(600f, 400f);
-            categoryList = CreateList(panel.transform, 0f, 0f, 0.3f, 1f);
-            blendSetList = CreateList(panel.transform, 0.3f, 0f, 1f, 1f);
+            var panel = CreateUIBase(400f, 400f);
+            categoryList = CreateList(panel.transform, 0f, 0f, 0.25f, 1f);
+            blendSetList = CreateList(panel.transform, 0.25f, 0f, 1f, 1f);
 
             if(Studio.Studio.Instance.treeNodeCtrl.selectNode)
                 UpdateUI(Studio.Studio.Instance.treeNodeCtrl.selectNode);
@@ -107,14 +107,16 @@ namespace BlendShaper
                 var panel = UIUtility.CreatePanel("ShapePanel", blendSetList.content.transform);
                 panel.gameObject.AddComponent<LayoutElement>().preferredHeight = elementSize;
                 panel.color = new Color(1f, 1f, 1f, 1f);
-                
+
                 var text = UIUtility.CreateText("ShapeName", panel.transform, set.Name);
-                text.transform.SetRect(0f, 0f, 0.3f, 1f);
+                text.transform.SetRect(0.01f, 0.01f, 0.44f, 0.99f);
                 text.color = Color.black;
+                text.alignment = TextAnchor.MiddleCenter;
 
                 var slider = UIUtility.CreateSlider("ShapeSlider", panel.transform);
-                slider.transform.SetRect(0.3f, 0f, 1f, 1f);
-                slider.maxValue = 100f; slider.minValue = 0f;
+                slider.transform.SetRect(0.45f, 0.01f, 0.99f, 0.99f);
+                slider.maxValue = 100f;
+                slider.minValue = 0f;
                 slider.value = set.Value;
                 slider.onValueChanged.AddListener((value) => set.ChangeValue(value));
             }

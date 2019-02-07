@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using BepInEx;
-using BepInEx.Logging;
-using static BepInEx.Logger;
 using UILib;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,10 +63,7 @@ namespace BlendShaper
             foreach(var category in blendSets.Categories)
             {
                 foreach(var set in category.Sets)
-                {
-                    if(set.Enabled)
-                        set.Action();
-                }
+                    set.Execute();
             }
         }
 
@@ -102,7 +95,7 @@ namespace BlendShaper
 
             foreach(var set in sets)
             {
-                set.CreateAction(chara);
+                set.CreateActions(chara);
 
                 var panel = UIUtility.CreatePanel("ShapePanel", blendSetList.content.transform);
                 panel.gameObject.AddComponent<LayoutElement>().preferredHeight = elementSize;
@@ -147,7 +140,7 @@ namespace BlendShaper
             UISystem.transform.SetParent(gameObject.transform);
 
             var bg = UIUtility.CreatePanel("Background", UISystem.transform);
-            bg.transform.SetRect(0.5f, 0.3f, 0.5f, 0.3f, -width / 2f, -height / 2f, width / 2f, height / 2f);
+            bg.transform.SetRect(0.5f, 0.2f, 0.5f, 0.2f, -width / 2f, -height / 2f, width / 2f, height / 2f);
             bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, 1f);
 
             var drag = UIUtility.CreatePanel("Drag", bg.transform);

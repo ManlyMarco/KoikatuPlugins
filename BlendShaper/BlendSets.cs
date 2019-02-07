@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable 649 // disable never assigned warning
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,29 +44,37 @@ namespace BlendShaper
                 Value = value;
             }
 
-            public void CreateAction(OCIChar chara)
+            public void CreateActions(OCIChar chara)
             {
+                Actions.Clear();
+
                 var skinnedMeshRenderers = chara.charInfo.animBody.GetComponentsInChildren<SkinnedMeshRenderer>(true).Where(x => x.sharedMesh && x.sharedMesh.blendShapeCount > 0);
 
                 var firstShape = Shapes.First();
                 Value = skinnedMeshRenderers.FirstOrDefault((x) => x.name == firstShape.Renderer).GetBlendShapeWeight(firstShape.Index);
-
-                Action = () =>
+                
+                foreach(var renderer in skinnedMeshRenderers)
                 {
-                    foreach(var renderer in skinnedMeshRenderers)
+                    foreach(var shape in Shapes)
                     {
-                        foreach(var shape in Shapes)
-                        {
-                            if(renderer.name == shape.Renderer)
-                                renderer.SetBlendShapeWeight(shape.Index, Value);
-                        }
+                        if(renderer.name == shape.Renderer)
+                            Actions.Add(() => renderer.SetBlendShapeWeight(shape.Index, Value));
                     }
-                };
+                }
+            }
+
+            public void Execute()
+            {
+                if(Enabled)
+                {
+                    foreach(var action in Actions)
+                        action();
+                }
             }
 
             public bool Enabled = false;
             public float Value;
-            public Action Action;
+            public List<Action> Actions = new List<Action>();
 
             public string Name;
             public List<Shape> Shapes;

@@ -10,6 +10,9 @@ ConfigurationManager from BepisPlugins is required to change settings for some o
 
 ## Plugins
 
+#### BlendShaper (*Not yet released*)
+Simple and easy UI for blendshape editing.
+
 #### CharaEditTool
 Makes it easier to change hair colors when using accessories to create hair. [Video preview](https://gfycat.com/MiserlyViciousJaeger)  
 To use this, save a color by selecting a color from an accessory and then press the hotkey (V by default).  
@@ -54,12 +57,6 @@ Pretty much the same as the [HS version](https://keelhauled.github.io/LockOnPlug
 The only changes are that now data files are contained inside the dll and that individual FK/IK points can be locked on to.  
 Default hotkey to lock on is one of the extra mouse buttons. If you don't have those, change the key with ConfigurationManager.
 
-#### ObjectTreeDebugKK
-*Cheat Tools by Marco does everything this does and more.* [link](https://github.com/ManlyMarco/KoikatuCheatTools#readme)  
-Show debug info about GameObjects in the scene.  
-Default hotkey is `right ctrl`.  
-Original version for HS made by Joan6694.
-
 #### StudioAddonLite (*Not yet released*)
 A few HSStudioAddon features ported over to KK.  
 Simultaneous FK & IK and better object manipulation controls.
@@ -79,6 +76,5 @@ Optionally every possible position can be unlocked regardless of if it was meant
 
 ## Credits
 Keelhauled  
-MarC0  
-Joan6694 for ObjectTreeDebug  
+MarC0 for a few FixCompilation features  
 Original maker of TogglePOV

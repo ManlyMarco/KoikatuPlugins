@@ -17,7 +17,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\BepInEx\scripts\</OutputPath>
+    <OutputPath>C:\Games\Koikatu\BepInEx\scripts\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,28 +32,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\CharaStudio_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\CharaStudio_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\..\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="TextMeshPro-1.0.55.56.0b12">
-      <HintPath>..\..\..\CharaStudio_Data\Managed\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\CharaStudio_Data\Managed\TextMeshPro-1.0.55.56.0b12.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\CharaStudio_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\CharaStudio_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\CharaStudio_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\CharaStudio_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

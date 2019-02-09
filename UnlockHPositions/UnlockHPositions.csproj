@@ -16,7 +16,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\BepInEx\</OutputPath>
+    <OutputPath>C:\Games\Koikatu\BepInEx\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,20 +31,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\Koikatu_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\Koikatu_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\..\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\Koikatu_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>C:\Games\Koikatu\Koikatu_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

@@ -55,12 +55,16 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HarmonyExtension", "Harmony
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioAnimLoaderKK", "StudioAnimLoaderKK\StudioAnimLoaderKK.csproj", "{D30A1565-00C8-4909-97D4-BEA5A8356A39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spectacular", "Spectacular\Spectacular.csproj", "{BF90D338-CDB9-4BD2-8A70-C79ED68BDE94}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		UILib\UILib.projitems*{044c35db-98ca-4a9f-905d-93b61c8057a1}*SharedItemsImports = 13
 		HarmonyExtension\HarmonyExtension.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		UILib\UILib.projitems*{158b291d-305b-4afe-bce7-6a3a229ab7ae}*SharedItemsImports = 4
 		HarmonyExtension\HarmonyExtension.projitems*{2a3e933b-07c2-48c4-b7cf-5458e5443d34}*SharedItemsImports = 13
+		HarmonyExtension\HarmonyExtension.projitems*{bf90d338-cdb9-4bd2-8a70-c79ed68bde94}*SharedItemsImports = 4
+		HarmonyExtension\HarmonyExtension.projitems*{d30a1565-00c8-4909-97d4-bea5a8356a39}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +139,10 @@ Global
 		{D30A1565-00C8-4909-97D4-BEA5A8356A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D30A1565-00C8-4909-97D4-BEA5A8356A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D30A1565-00C8-4909-97D4-BEA5A8356A39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF90D338-CDB9-4BD2-8A70-C79ED68BDE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF90D338-CDB9-4BD2-8A70-C79ED68BDE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF90D338-CDB9-4BD2-8A70-C79ED68BDE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF90D338-CDB9-4BD2-8A70-C79ED68BDE94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,6 +33,8 @@ namespace StudioAnimLoader
 
         private void Start()
         {
+            Hooks.Patch();
+
             dir = Path.Combine(Paths.PluginPath, StudioAnimLoader.Name);
             extDir = Path.Combine(StudioAnimLoader.OtherGameDir.Value, "abdata");
             groupOffset = StudioAnimLoader.GroupOffset.Value;
@@ -47,6 +49,11 @@ namespace StudioAnimLoader
             }
 
             LoadAll();
+        }
+
+        private void OnDestroy()
+        {
+            Hooks.Unpatch();
         }
 
         private void LoadAll()
@@ -305,7 +312,7 @@ namespace StudioAnimLoader
                                 value = new Info.AnimeLoadInfo
                                 {
                                     name = array2[3],
-                                    bundlePath = extDir + array2[4],
+                                    bundlePath = Path.Combine(extDir, array2[4]),
                                     fileName = array2[5],
                                     clip = array2[6],
                                     //isBreastLayer = (array2[7] == "True"),
@@ -372,7 +379,7 @@ namespace StudioAnimLoader
                                 value = new Info.LoadCommonInfo
                                 {
                                     name = array2[3],
-                                    bundlePath = extDir + array2[4],
+                                    bundlePath = Path.Combine(extDir, array2[4]),
                                     fileName = array2[5]
                                 };
                             }

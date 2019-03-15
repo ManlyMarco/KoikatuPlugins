@@ -20,7 +20,7 @@ namespace FixCompilation
         [DisplayName("Disable maker IK")]
         [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n\n" +
                      "Most noticeable on characters with wide hips where the hands are not moving with the hip line.\n\n" +
-                     "Warning: This setting will get reset to false if Stiletto is intstalled to avoid issues!\n\n" +
+                     "Warning: This setting will get reset to false if Stiletto is installed to avoid issues!\n\n" +
                      "Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; private set; }
 

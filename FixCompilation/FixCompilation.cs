@@ -20,7 +20,7 @@ namespace FixCompilation
         [DisplayName("Disable maker IK")]
         [Description("Improves performance and reduces stuttering at the cost of not recalculating positions of some body parts.\n\n" +
                      "Most noticeable on characters with wide hips where the hands are not moving with the hip line.\n\n" +
-                     "!!! Turn this setting off when using Stiletto. !!!\n\n" +
+                     "Warning: This setting will get reset to false if Stiletto is installed to avoid issues!\n\n" +
                      "Changes take effect after game restart.")]
         public static ConfigWrapper<bool> DisableIKCalc { get; private set; }
 
@@ -66,6 +66,15 @@ namespace FixCompilation
             var harmony = HarmonyInstance.Create("keelhauled.fixcompilation.harmony");
             if(EnableYamadamodFix.Value) harmony.PatchAll(typeof(YamadamodFix));
             MakerOptimization.Patch(harmony);
+        }
+
+        private void Start()
+        {
+            if (DisableIKCalc.Value && BepInEx.Bootstrap.Chainloader.Plugins.Select(MetadataHelper.GetMetadata).Any(x => x.GUID == "com.essu.stiletto"))
+            {
+                DisableIKCalc.Value = false;
+                Logger.Log(LogLevel.Warning, "Stiletto detected, disabling the DisableIKCalc optimization");
+            }
         }
 
         private void SceneLoaded(Scene scene, LoadSceneMode mode)

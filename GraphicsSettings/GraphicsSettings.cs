@@ -102,7 +102,7 @@ namespace GraphicsSettings
         [Description("Should the game be running when it is in the background (when the window is not focused)?\n\n" +
                      "On \"no\", the game will stop completely when it is in the background.\n\n" +
                      "On \"limited\", the game will stop if it has been unfocused and not loading anything for a couple seconds.")]
-        private ConfigWrapper<BackgroundRun> RunInBackground { get; }
+        ConfigWrapper<BackgroundRun> RunInBackground { get; }
 
         //[Category(CATEGORY_NEW)]
         //[AcceptableValueRange(0f, 1f, false)]
@@ -221,10 +221,15 @@ namespace GraphicsSettings
         {
             if (RunInBackground.Value != BackgroundRun.Limited) return;
 
-            // Run for a bunch of frames to let the game load anything it's currently loading (scenes, cards, etc)
-            // When loading it sometimes advances a frame at which point it would stop without this
-            if (!Manager.Scene.Instance.IsNowLoadingFade && _focusFrameCounter++ >= 100)
-                Application.runInBackground = false;
+            if (!Manager.Scene.Instance.IsNowLoadingFade)
+            {
+                // Run for a bunch of frames to let the game load anything it's currently loading (scenes, cards, etc)
+                // When loading it sometimes advances a frame at which point it would stop without this
+                if (_focusFrameCounter < 100)
+                    _focusFrameCounter++;
+                else if (_focusFrameCounter == 100)
+                    Application.runInBackground = false;
+            }
         }
 
         void OnApplicationFocus(bool hasFocus)
